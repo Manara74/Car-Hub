@@ -2,14 +2,14 @@
  "date": "2026-11-06",
  "keys": {
   "B0": {
-   "n": 9346,
+   "n": 8860,
    "min": 1.569,
    "p5": 1.979,
    "med": 2.189,
    "p95": 2.299,
    "max": 2.999,
    "sotto_1.7": 2,
-   "sopra_2.4": 92,
+   "sopra_2.4": 93,
    "piu_bassi": [
     [
      1.569,
@@ -96,11 +96,11 @@
    ]
   },
   "B1": {
-   "n": 13793,
+   "n": 13058,
    "min": 1.569,
    "p5": 1.969,
    "med": 1.99,
-   "p95": 2.099,
+   "p95": 2.098,
    "max": 2.789,
    "sotto_1.7": 8,
    "sopra_2.4": 22,
@@ -190,14 +190,14 @@
    ]
   },
   "D0": {
-   "n": 9322,
+   "n": 8841,
    "min": 1.599,
-   "p5": 2.197,
+   "p5": 2.195,
    "med": 2.399,
    "p95": 2.549,
    "max": 3.175,
    "sotto_1.7": 5,
-   "sopra_2.4": 4291,
+   "sopra_2.4": 4060,
    "piu_bassi": [
     [
      1.599,
@@ -284,14 +284,14 @@
    ]
   },
   "D1": {
-   "n": 13775,
+   "n": 13043,
    "min": 1.589,
    "p5": 2.189,
    "med": 2.2,
    "p95": 2.349,
    "max": 2.799,
    "sotto_1.7": 13,
-   "sopra_2.4": 180,
+   "sopra_2.4": 176,
    "piu_bassi": [
     [
      1.589,
@@ -378,13 +378,13 @@
    ]
   },
   "G0": {
-   "n": 3087,
+   "n": 2924,
    "min": 0.549,
    "p5": 0.739,
    "med": 0.819,
-   "p95": 0.919,
+   "p95": 0.912,
    "max": 1.399,
-   "sotto_1.7": 3087,
+   "sotto_1.7": 2924,
    "sopra_2.4": 0,
    "piu_bassi": [
     [
@@ -412,11 +412,11 @@
      false
     ],
     [
-     0.639,
-     "55135",
-     "BRESSANA BOTTARONE",
-     "Bressana Bottarone",
-     "PV",
+     0.669,
+     "55084",
+     "GREEN GAS  STAZIONE DI SERVIZIO ",
+     "San Cipriano D'Aversa",
+     "CE",
      false
     ],
     [
@@ -472,13 +472,13 @@
    ]
   },
   "G1": {
-   "n": 113,
+   "n": 106,
    "min": 0.605,
    "p5": 0.702,
    "med": 0.799,
    "p95": 0.899,
    "max": 0.999,
-   "sotto_1.7": 113,
+   "sotto_1.7": 106,
    "sopra_2.4": 0,
    "piu_bassi": [
     [
@@ -566,14 +566,14 @@
    ]
   },
   "M0": {
-   "n": 1012,
+   "n": 965,
    "min": 0.936,
    "p5": 1.699,
-   "med": 2.114,
+   "med": 2.145,
    "p95": 2.499,
    "max": 4.999,
-   "sotto_1.7": 56,
-   "sopra_2.4": 100,
+   "sotto_1.7": 53,
+   "sopra_2.4": 102,
    "piu_bassi": [
     [
      0.936,
@@ -584,19 +584,19 @@
      false
     ],
     [
+     1.0,
+     "59581",
+     "Agrimetano Pottino",
+     "Resuttano",
+     "CL",
+     false
+    ],
+    [
      1.24,
      "16477",
      "STAR OIL",
      "Torre Santa Susanna",
      "BR",
-     false
-    ],
-    [
-     1.345,
-     "6550",
-     "ANTEGNATE VIA DEL COMMERCIO 3-SHOPPING CENTER",
-     "Antegnate",
-     "BG",
      false
     ],
     [
@@ -634,19 +634,19 @@
      false
     ],
     [
-     2.997,
+     2.999,
+     "47939",
+     "Castelfranco Veneto Azzalini Energie",
+     "Castelfranco Veneto",
+     "TV",
+     false
+    ],
+    [
+     3.297,
      "55363",
      "Azzalini Energie Belluno Metano",
      "Belluno",
      "BL",
-     false
-    ],
-    [
-     2.999,
-     "53156",
-     "DB Carburanti Cefalù",
-     "Cefalù",
-     "PA",
      false
     ],
     [
@@ -660,13 +660,13 @@
    ]
   },
   "M1": {
-   "n": 73,
+   "n": 70,
    "min": 1.49,
-   "p5": 1.625,
-   "med": 2.099,
+   "p5": 1.652,
+   "med": 2.149,
    "p95": 2.499,
-   "max": 2.997,
-   "sotto_1.7": 6,
+   "max": 3.297,
+   "sotto_1.7": 4,
    "sopra_2.4": 5,
    "piu_bassi": [
     [
@@ -675,14 +675,6 @@
      "Bosco Gerolo Valtrebbia Biometano",
      "Rivergaro",
      "PC",
-     false
-    ],
-    [
-     1.499,
-     "35428",
-     "ENI SAN DONATO METANO",
-     "San Donato Milanese",
-     "MI",
      false
     ],
     [
@@ -710,11 +702,19 @@
      false
     ],
     [
-     1.679,
-     "58277",
-     "IP",
-     "Cassano Magnago",
-     "VA",
+     1.749,
+     "61842",
+     "metano ostellato",
+     "Ostellato",
+     "FE",
+     false
+    ],
+    [
+     1.799,
+     "41226",
+     "fuccifuel",
+     "Andria",
+     "BT",
      false
     ]
    ],
@@ -736,7 +736,7 @@
      false
     ],
     [
-     2.699,
+     2.999,
      "47939",
      "Castelfranco Veneto Azzalini Energie",
      "Castelfranco Veneto",
@@ -744,7 +744,7 @@
      false
     ],
     [
-     2.997,
+     3.297,
      "55363",
      "Azzalini Energie Belluno Metano",
      "Belluno",
