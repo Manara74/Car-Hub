@@ -348,36 +348,60 @@ def averages(stations, prov):
     return out
 
 
+def mimit_raggiungibile():
+    """Prova veloce: il sito del MIMIT risponde? (da GitHub a volte non risponde per giorni)"""
+    import socket
+    try:
+        socket.create_connection(('www.mimit.gov.it', 443), timeout=20).close()
+        return True
+    except OSError:
+        return False
+
+
 # ------------------------------------------------------------------- main
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--prezzi')
     ap.add_argument('--anagrafica')
+    ap.add_argument('--fonte', choices=['auto', 'mimit', 'osservaprezzi'], default='auto',
+                    help='auto: file del MIMIT e, se non raggiungibili, il sito Osservaprezzi')
+    ap.add_argument('--base', help='file pompe.json locale da usare come elenco impianti (prove)')
     ap.add_argument('--out', default=os.path.join(ROOT, 'data'))
     ap.add_argument('--min-stations', type=int, default=8000,
                     help='sotto questa soglia i dati sono considerati incompleti')
     args = ap.parse_args()
 
     prov = Province(os.path.join(ROOT, 'province.json'))
-    if args.prezzi and args.anagrafica:
-        p_text = decode(open(args.prezzi, 'rb').read())
-        a_text = decode(open(args.anagrafica, 'rb').read())
+    fonte, note = 'mimit', {}
+    anomalies, stations = [], []
+    use_api = args.fonte == 'osservaprezzi'
+    if args.fonte == 'auto' and not (args.prezzi and args.anagrafica) and not mimit_raggiungibile():
+        print('Il sito del MIMIT non risponde da qui: uso il sito Osservaprezzi.', flush=True)
+        use_api = True
+    if use_api:
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        import osservaprezzi
+        stations, date, stale, note = osservaprezzi.collect(prov, title, brand_title, base_file=args.base)
+        fonte = 'osservaprezzi'
     else:
-        a_urls, p_urls = discover_urls()
-        a_text = fetch_first(a_urls, 'anagrafica')
-        p_text = fetch_first(p_urls, 'prezzi')
+        if args.prezzi and args.anagrafica:
+            p_text = decode(open(args.prezzi, 'rb').read())
+            a_text = decode(open(args.anagrafica, 'rb').read())
+        else:
+            a_urls, p_urls = discover_urls()
+            a_text = fetch_first(a_urls, 'anagrafica')
+            p_text = fetch_first(p_urls, 'prezzi')
 
-    anag, anomalies = read_anagrafica(a_text, prov)
-    prices, date, stale, ages = read_prezzi(p_text)
+        anag, anomalies = read_anagrafica(a_text, prov)
+        prices, date, stale, ages = read_prezzi(p_text)
 
-    stations = []
-    for sid, rec in anag.items():
-        if sid in prices:
-            rec = dict(rec)
-            rec['x'] = prices[sid]
-            if sid in ages:
-                rec['d'] = ages[sid]
-            stations.append(rec)
+        for sid, rec in anag.items():
+            if sid in prices:
+                rec = dict(rec)
+                rec['x'] = prices[sid]
+                if sid in ages:
+                    rec['d'] = ages[sid]
+                stations.append(rec)
     if len(stations) < args.min_stations:
         sys.exit('Troppo pochi impianti con prezzi (%d): non pubblico dati incompleti.' % len(stations))
 
@@ -393,7 +417,7 @@ def main():
     os.makedirs(args.out, exist_ok=True)
     with open(os.path.join(args.out, 'pompe.json'), 'w', encoding='utf-8') as f:
         f.write(body)
-    meta = {'date': date, 'n': len(stations), 'v': version, 'stale': stale, 'servizi': matched,
+    meta = {'date': date, 'n': len(stations), 'v': version, 'stale': stale, 'servizi': matched, 'fonte': fonte, 'note': note,
             'generated': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')}
     with open(os.path.join(args.out, 'meta.json'), 'w', encoding='utf-8') as f:
         json.dump(meta, f, separators=(',', ':'))
