@@ -2,14 +2,14 @@
  "date": "2026-11-06",
  "keys": {
   "B0": {
-   "n": 8860,
+   "n": 8699,
    "min": 1.569,
    "p5": 1.979,
    "med": 2.189,
    "p95": 2.299,
    "max": 2.999,
    "sotto_1.7": 2,
-   "sopra_2.4": 93,
+   "sopra_2.4": 89,
    "piu_bassi": [
     [
      1.569,
@@ -96,14 +96,14 @@
    ]
   },
   "B1": {
-   "n": 13058,
+   "n": 12820,
    "min": 1.569,
    "p5": 1.969,
    "med": 1.99,
    "p95": 2.098,
    "max": 2.789,
-   "sotto_1.7": 8,
-   "sopra_2.4": 22,
+   "sotto_1.7": 7,
+   "sopra_2.4": 21,
    "piu_bassi": [
     [
      1.569,
@@ -130,14 +130,6 @@
      false
     ],
     [
-     1.629,
-     "50120",
-     "Tamoil Orta",
-     "Orta San Giulio",
-     "NO",
-     false
-    ],
-    [
      1.659,
      "17918",
      "di vincenzo gennaro",
@@ -151,6 +143,14 @@
      "STAZIONE DI SERVIZIO ENI di Valsecchi Andrea",
      "Bergamo",
      "BG",
+     false
+    ],
+    [
+     1.699,
+     "52096",
+     "IP San Romano",
+     "Montopoli In Val D'Arno",
+     "PI",
      false
     ]
    ],
@@ -190,14 +190,14 @@
    ]
   },
   "D0": {
-   "n": 8841,
+   "n": 8680,
    "min": 1.599,
    "p5": 2.195,
    "med": 2.399,
    "p95": 2.549,
    "max": 3.175,
    "sotto_1.7": 5,
-   "sopra_2.4": 4060,
+   "sopra_2.4": 4007,
    "piu_bassi": [
     [
      1.599,
@@ -284,14 +284,14 @@
    ]
   },
   "D1": {
-   "n": 13043,
+   "n": 12805,
    "min": 1.589,
    "p5": 2.189,
    "med": 2.2,
    "p95": 2.349,
    "max": 2.799,
-   "sotto_1.7": 13,
-   "sopra_2.4": 176,
+   "sotto_1.7": 12,
+   "sopra_2.4": 167,
    "piu_bassi": [
     [
      1.589,
@@ -299,14 +299,6 @@
      "EASY SERVICE S.R.L. / PIOSSASCO",
      "Piossasco",
      "TO",
-     false
-    ],
-    [
-     1.589,
-     "50120",
-     "Tamoil Orta",
-     "Orta San Giulio",
-     "NO",
      false
     ],
     [
@@ -339,6 +331,14 @@
      "di vincenzo gennaro",
      "Calvizzano",
      "NA",
+     false
+    ],
+    [
+     1.649,
+     "50492",
+     "STAZIONE DI SERVIZIO ENI di Valsecchi Andrea",
+     "Bergamo",
+     "BG",
      false
     ]
    ],
@@ -378,13 +378,13 @@
    ]
   },
   "G0": {
-   "n": 2924,
+   "n": 2882,
    "min": 0.549,
    "p5": 0.739,
    "med": 0.819,
    "p95": 0.912,
    "max": 1.399,
-   "sotto_1.7": 2924,
+   "sotto_1.7": 2882,
    "sopra_2.4": 0,
    "piu_bassi": [
     [
@@ -413,14 +413,6 @@
     ],
     [
      0.669,
-     "55084",
-     "GREEN GAS  STAZIONE DI SERVIZIO ",
-     "San Cipriano D'Aversa",
-     "CE",
-     false
-    ],
-    [
-     0.669,
      "59551",
      "SHELL BERGAMO",
      "Bergamo",
@@ -433,6 +425,14 @@
      "TRUCK ONE VIA ROMA",
      "Martinsicuro",
      "TE",
+     false
+    ],
+    [
+     0.685,
+     "60753",
+     "IP",
+     "Sannicola",
+     "LE",
      false
     ]
    ],
@@ -472,13 +472,13 @@
    ]
   },
   "G1": {
-   "n": 106,
+   "n": 109,
    "min": 0.605,
    "p5": 0.702,
    "med": 0.799,
    "p95": 0.899,
    "max": 0.999,
-   "sotto_1.7": 106,
+   "sotto_1.7": 109,
    "sopra_2.4": 0,
    "piu_bassi": [
     [
@@ -566,14 +566,14 @@
    ]
   },
   "M0": {
-   "n": 965,
+   "n": 952,
    "min": 0.936,
    "p5": 1.699,
-   "med": 2.145,
+   "med": 2.14,
    "p95": 2.499,
    "max": 4.999,
-   "sotto_1.7": 53,
-   "sopra_2.4": 102,
+   "sotto_1.7": 51,
+   "sopra_2.4": 98,
    "piu_bassi": [
     [
      0.936,
@@ -660,7 +660,7 @@
    ]
   },
   "M1": {
-   "n": 70,
+   "n": 71,
    "min": 1.49,
    "p5": 1.652,
    "med": 2.149,
