@@ -1,0 +1,46 @@
+name: Prova Osservaprezzi (una tantum)
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  p:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prova
+        continue-on-error: true
+        run: |
+          mkdir -p data; o=data/probe.txt; : > $o
+          B=https://carburanti.mise.gov.it/ospzApi
+          UA="Mozilla/5.0 (compatible; PompaGiusta/1.0)"
+          echo "## Roma raggio 20" >> $o
+          curl -sS -m 40 -A "$UA" -H 'Content-Type: application/json' -H 'Accept: application/json' -X POST "$B/search/zone" \
+            -d '{"points":[{"lat":41.9028,"lng":12.4964}],"fuelType":"","priceOrder":"asc","radius":20}' -o /tmp/r.json -w "http %{http_code} %{size_download}B %{time_total}s\n" >> $o 2>&1
+          python3 - >> $o 2>&1 <<'PY'
+          import json
+          d=json.load(open('/tmp/r.json'))
+          print('chiavi:',list(d)[:10])
+          r=d.get('results') or []
+          print('n risultati:',len(r))
+          if r: print(json.dumps(r[0],ensure_ascii=False)[:900])
+          PY
+          echo "## Santa Marinella raggio 5" >> $o
+          curl -sS -m 40 -A "$UA" -H 'Content-Type: application/json' -X POST "$B/search/zone" \
+            -d '{"points":[{"lat":42.0291,"lng":11.9415}],"fuelType":"","priceOrder":"asc","radius":5}' -o /tmp/s.json -w "http %{http_code} %{size_download}B\n" >> $o 2>&1
+          python3 - >> $o 2>&1 <<'PY'
+          import json
+          d=json.load(open('/tmp/s.json'))
+          for x in d.get('results',[]): print(x.get('id'),x.get('name'),x.get('brand'),[ (f.get('name'),f.get('price'),f.get('isSelf'),f.get('insertDate')) for f in x.get('fuels',[])][:3])
+          PY
+          echo "## altri endpoint" >> $o
+          for p in search/zone registry/servicearea/60209 ; do
+            curl -sS -m 30 -A "$UA" -o /tmp/x -w "$p -> %{http_code} %{size_download}B\n" "$B/$p" >> $o 2>&1; head -c 300 /tmp/x >> $o; echo >> $o
+          done
+      - name: Salva
+        run: |
+          git config user.name "pompa-giusta-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add -f data/probe.txt
+          git commit -m "Esito prova" || exit 0
+          for i in 1 2 3 4 5; do git pull --rebase origin main && git push && break; sleep 3; done
