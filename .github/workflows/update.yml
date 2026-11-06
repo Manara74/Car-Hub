@@ -27,7 +27,14 @@ jobs:
     steps:
       - id: c
         run: |
-          if [ "${{ github.event_name }}" != "schedule" ] || [ "$(TZ=Europe/Rome date +%H)" = "12" ]; then echo "vai=si" >> "$GITHUB_OUTPUT"; else echo "vai=no" >> "$GITHUB_OUTPUT"; fi
+          # GitHub puo' far partire i lavori pianificati con ore di ritardo: conta l'orario pianificato, non quello di partenza
+          off=$(TZ=Europe/Rome date +%z)
+          s="${{ github.event.schedule }}"
+          if [ "${{ github.event_name }}" != "schedule" ]; then v=si
+          elif [ "$s" = "0 10 * * *" ] && [ "$off" = "+0200" ]; then v=si
+          elif [ "$s" = "0 11 * * *" ] && [ "$off" = "+0100" ]; then v=si
+          else v=no; fi
+          echo "vai=$v" >> "$GITHUB_OUTPUT"
 
   build:
     needs: ora
