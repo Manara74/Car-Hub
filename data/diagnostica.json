@@ -1,24 +1,16 @@
 {
- "date": "2026-10-15",
+ "date": "2026-11-06",
  "keys": {
   "B0": {
-   "n": 13497,
-   "min": 1.206,
-   "p5": 1.994,
-   "med": 2.2,
-   "p95": 2.349,
-   "max": 3.25,
-   "sotto_1.7": 14,
-   "sopra_2.4": 253,
+   "n": 9346,
+   "min": 1.569,
+   "p5": 1.979,
+   "med": 2.189,
+   "p95": 2.299,
+   "max": 2.999,
+   "sotto_1.7": 2,
+   "sopra_2.4": 92,
    "piu_bassi": [
-    [
-     1.206,
-     "9205",
-     "ENI TREPALLE",
-     "Livigno",
-     "SO",
-     false
-    ],
     [
      1.569,
      "36845",
@@ -28,121 +20,97 @@
      false
     ],
     [
-     1.613,
-     "51363",
-     "Global Srl",
-     "Livigno",
-     "SO",
+     1.669,
+     "54868",
+     "STAR OIL",
+     "Roma",
+     "RM",
      false
     ],
     [
-     1.615,
-     "51364",
-     "Q8 PETROL STATION & DUTY FREE",
-     "Livigno",
-     "SO",
+     1.739,
+     "58876",
+     "MONTEPORZIO",
+     "Monte Porzio Catone",
+     "RM",
      false
     ],
     [
-     1.618,
-     "21866",
-     "TOTAL ERG - LIVIGNO",
-     "Livigno",
-     "SO",
+     1.749,
+     "33454",
+     "ZENO CIRO",
+     "Torre Del Greco",
+     "NA",
      false
     ],
     [
-     1.618,
-     "21869",
-     "TOTAL ERG - LIVIGNO",
-     "Livigno",
-     "SO",
+     1.779,
+     "45516",
+     "EASY SERVICE S.R.L. / PIOSSASCO",
+     "Piossasco",
+     "TO",
+     false
+    ],
+    [
+     1.789,
+     "10464",
+     "ANGELI SABRINA",
+     "Cagli",
+     "PU",
      false
     ]
    ],
    "piu_alti": [
     [
-     2.839,
-     "60522",
-     "Esso PV 368318",
-     "Taranto",
-     "TA",
+     2.81,
+     "21783",
+     "IP MONDOVI' VIA CUNEO 107",
+     "Mondovì",
+     "CN",
      false
     ],
     [
-     2.869,
-     "12654",
-     "Staz. Carburanti De Simone Domenico",
-     "Milano",
-     "MI",
+     2.81,
+     "24518",
+     "IP VILLANOVA MONDOVI'",
+     "Villanova Mondovì",
+     "CN",
      false
     ],
     [
-     2.899,
-     "13214",
-     "Frasca Pompeo",
-     "Corigliano-Rossano",
-     "CS",
+     2.81,
+     "37545",
+     "IP FOSSANO - SAN LORENZO",
+     "Fossano",
+     "CN",
      false
     ],
     [
-     3.25,
-     "60141",
-     "NAUTILUS AVIATION SPA LINOSA",
-     "Lampedusa E Linosa",
-     "AG",
+     2.999,
+     "59919",
+     "SANTORO PETROLI -  TORELLA DEI LOMBARDI",
+     "Torella Dei Lombardi",
+     "AV",
      false
     ]
    ]
   },
   "B1": {
-   "n": 19866,
-   "min": 1.206,
-   "p5": 1.989,
-   "med": 1.999,
-   "p95": 2.169,
-   "max": 2.869,
-   "sotto_1.7": 26,
-   "sopra_2.4": 27,
+   "n": 13793,
+   "min": 1.569,
+   "p5": 1.969,
+   "med": 1.99,
+   "p95": 2.099,
+   "max": 2.789,
+   "sotto_1.7": 8,
+   "sopra_2.4": 22,
    "piu_bassi": [
-    [
-     1.206,
-     "22628",
-     "GES.CAR. SAS",
-     "Livigno",
-     "SO",
-     false
-    ],
-    [
-     1.206,
-     "9205",
-     "ENI TREPALLE",
-     "Livigno",
-     "SO",
-     false
-    ],
     [
      1.569,
      "36845",
      "Via Degli Angeli",
      "Roma",
      "RM",
-     false
-    ],
-    [
-     1.589,
-     "60094",
-     "Verona Via Unità d'Italia",
-     "Verona",
-     "VR",
-     false
-    ],
-    [
-     1.598,
-     "51363",
-     "Global Srl",
-     "Livigno",
-     "SO",
      false
     ],
     [
@@ -152,24 +120,56 @@
      "Terricciola",
      "PI",
      false
+    ],
+    [
+     1.629,
+     "45516",
+     "EASY SERVICE S.R.L. / PIOSSASCO",
+     "Piossasco",
+     "TO",
+     false
+    ],
+    [
+     1.629,
+     "50120",
+     "Tamoil Orta",
+     "Orta San Giulio",
+     "NO",
+     false
+    ],
+    [
+     1.659,
+     "17918",
+     "di vincenzo gennaro",
+     "Calvizzano",
+     "NA",
+     false
+    ],
+    [
+     1.668,
+     "50492",
+     "STAZIONE DI SERVIZIO ENI di Valsecchi Andrea",
+     "Bergamo",
+     "BG",
+     false
     ]
    ],
    "piu_alti": [
     [
-     2.699,
-     "61729",
-     "POSTUMIA NORD",
-     "Bolzano Vicentino",
-     "VI",
-     true
+     2.659,
+     "61542",
+     "GR Green Carburanti",
+     "Pantelleria",
+     "TP",
+     false
     ],
     [
      2.699,
-     "61730",
-     "POSTUMIA SUD",
-     "Bolzano Vicentino",
-     "VI",
-     true
+     "40673",
+     "Costanzo Carburanti s.r.l.",
+     "Lampedusa E Linosa",
+     "AG",
+     false
     ],
     [
      2.763,
@@ -180,31 +180,31 @@
      false
     ],
     [
-     2.869,
-     "12654",
-     "Staz. Carburanti De Simone Domenico",
-     "Milano",
-     "MI",
+     2.789,
+     "15315",
+     "RUBECA MARIO",
+     "Marsciano",
+     "PG",
      false
     ]
    ]
   },
   "D0": {
-   "n": 13473,
-   "min": 1.292,
-   "p5": 2.219,
-   "med": 2.4,
-   "p95": 2.56,
-   "max": 3.224,
-   "sotto_1.7": 6,
-   "sopra_2.4": 5900,
+   "n": 9322,
+   "min": 1.599,
+   "p5": 2.197,
+   "med": 2.399,
+   "p95": 2.549,
+   "max": 3.175,
+   "sotto_1.7": 5,
+   "sopra_2.4": 4291,
    "piu_bassi": [
     [
-     1.292,
-     "9205",
-     "ENI TREPALLE",
-     "Livigno",
-     "SO",
+     1.599,
+     "54868",
+     "STAR OIL",
+     "Roma",
+     "RM",
      false
     ],
     [
@@ -240,17 +240,25 @@
      false
     ],
     [
-     1.699,
-     "22181",
-     "moschettani",
-     "Cingoli",
-     "MC",
+     1.739,
+     "45516",
+     "EASY SERVICE S.R.L. / PIOSSASCO",
+     "Piossasco",
+     "TO",
      false
     ]
    ],
    "piu_alti": [
     [
-     3.224,
+     3.175,
+     "21782",
+     "IP SALUZZO LOC. RUATA EANDI",
+     "Saluzzo",
+     "CN",
+     false
+    ],
+    [
+     3.175,
      "21783",
      "IP MONDOVI' VIA CUNEO 107",
      "Mondovì",
@@ -258,15 +266,7 @@
      false
     ],
     [
-     3.224,
-     "22620",
-     "IP VERZUOLO",
-     "Verzuolo",
-     "CN",
-     false
-    ],
-    [
-     3.224,
+     3.175,
      "24518",
      "IP VILLANOVA MONDOVI'",
      "Villanova Mondovì",
@@ -274,7 +274,7 @@
      false
     ],
     [
-     3.224,
+     3.175,
      "37545",
      "IP FOSSANO - SAN LORENZO",
      "Fossano",
@@ -284,47 +284,15 @@
    ]
   },
   "D1": {
-   "n": 19874,
-   "min": 1.292,
-   "p5": 2.19,
-   "med": 2.25,
-   "p95": 2.379,
-   "max": 2.899,
-   "sotto_1.7": 23,
-   "sopra_2.4": 385,
+   "n": 13775,
+   "min": 1.589,
+   "p5": 2.189,
+   "med": 2.2,
+   "p95": 2.349,
+   "max": 2.799,
+   "sotto_1.7": 13,
+   "sopra_2.4": 180,
    "piu_bassi": [
-    [
-     1.292,
-     "22628",
-     "GES.CAR. SAS",
-     "Livigno",
-     "SO",
-     false
-    ],
-    [
-     1.292,
-     "9205",
-     "ENI TREPALLE",
-     "Livigno",
-     "SO",
-     false
-    ],
-    [
-     1.578,
-     "55763",
-     "SMAF 1031 - PULVILLO",
-     "Roma",
-     "RM",
-     false
-    ],
-    [
-     1.579,
-     "32991",
-     "EWA POINT MEZZANO",
-     "Caserta",
-     "CE",
-     false
-    ],
     [
      1.589,
      "45516",
@@ -340,9 +308,65 @@
      "Orta San Giulio",
      "NO",
      false
+    ],
+    [
+     1.619,
+     "62020",
+     "ALA TERRICCIOLA",
+     "Terricciola",
+     "PI",
+     false
+    ],
+    [
+     1.624,
+     "52096",
+     "IP San Romano",
+     "Montopoli In Val D'Arno",
+     "PI",
+     false
+    ],
+    [
+     1.629,
+     "55007",
+     "eni di donofrio gerardo e giuseppe e c. sas",
+     "Fano",
+     "PU",
+     false
+    ],
+    [
+     1.639,
+     "17918",
+     "di vincenzo gennaro",
+     "Calvizzano",
+     "NA",
+     false
     ]
    ],
    "piu_alti": [
+    [
+     2.779,
+     "40673",
+     "Costanzo Carburanti s.r.l.",
+     "Lampedusa E Linosa",
+     "AG",
+     false
+    ],
+    [
+     2.799,
+     "15315",
+     "RUBECA MARIO",
+     "Marsciano",
+     "PG",
+     false
+    ],
+    [
+     2.799,
+     "61198",
+     "TP114",
+     "Pantelleria",
+     "TP",
+     false
+    ],
     [
      2.799,
      "61542",
@@ -350,65 +374,25 @@
      "Pantelleria",
      "TP",
      false
-    ],
-    [
-     2.899,
-     "12654",
-     "Staz. Carburanti De Simone Domenico",
-     "Milano",
-     "MI",
-     false
-    ],
-    [
-     2.899,
-     "61729",
-     "POSTUMIA NORD",
-     "Bolzano Vicentino",
-     "VI",
-     true
-    ],
-    [
-     2.899,
-     "61730",
-     "POSTUMIA SUD",
-     "Bolzano Vicentino",
-     "VI",
-     true
     ]
    ]
   },
   "G0": {
-   "n": 4449,
-   "min": 0.599,
-   "p5": 0.699,
-   "med": 0.769,
-   "p95": 0.899,
+   "n": 3087,
+   "min": 0.549,
+   "p5": 0.739,
+   "med": 0.819,
+   "p95": 0.919,
    "max": 1.399,
-   "sotto_1.7": 4449,
+   "sotto_1.7": 3087,
    "sopra_2.4": 0,
    "piu_bassi": [
     [
-     0.599,
-     "58713",
-     "POMPA BIANCA GIOIA DEI MARSI LOC. AQUILELLA",
-     "Gioia Dei Marsi",
-     "AQ",
-     false
-    ],
-    [
-     0.609,
-     "51220",
-     "USAGAS SRL",
-     "San Giuseppe Vesuviano",
-     "NA",
-     false
-    ],
-    [
-     0.629,
-     "44651",
-     "I.P. Italiana Petroli",
-     "Calimera",
-     "LE",
+     0.549,
+     "32490",
+     "CASTEL VOLTURNO SS 7/IV DOMITIANA KM 30+800",
+     "Castel Volturno",
+     "CE",
      false
     ],
     [
@@ -420,37 +404,53 @@
      false
     ],
     [
-     0.629,
-     "50280",
-     "MONTE SAN GIUSTO",
-     "Monte San Giusto",
-     "MC",
-     false
-    ],
-    [
      0.634,
      "58163",
      "2597  SANNAZZARO DE' BURGONDI",
      "Sannazzaro De' Burgondi",
      "PV",
      false
+    ],
+    [
+     0.639,
+     "55135",
+     "BRESSANA BOTTARONE",
+     "Bressana Bottarone",
+     "PV",
+     false
+    ],
+    [
+     0.669,
+     "59551",
+     "SHELL BERGAMO",
+     "Bergamo",
+     "BG",
+     false
+    ],
+    [
+     0.679,
+     "52441",
+     "TRUCK ONE VIA ROMA",
+     "Martinsicuro",
+     "TE",
+     false
     ]
    ],
    "piu_alti": [
     [
-     1.0,
-     "45516",
-     "EASY SERVICE S.R.L. / PIOSSASCO",
-     "Piossasco",
-     "TO",
+     1.059,
+     "48025",
+     "Gas Point",
+     "Mineo",
+     "CT",
      false
     ],
     [
-     1.049,
-     "19409",
-     "STAZIONE DI SERVIZIO MELISSA",
-     "Jerzu",
-     "NU",
+     1.099,
+     "14928",
+     "SP Energia Siciliana",
+     "Borgetto",
+     "PA",
      false
     ],
     [
@@ -472,37 +472,21 @@
    ]
   },
   "G1": {
-   "n": 154,
-   "min": 0.669,
-   "p5": 0.689,
-   "med": 0.779,
-   "p95": 0.879,
-   "max": 0.989,
-   "sotto_1.7": 154,
+   "n": 113,
+   "min": 0.605,
+   "p5": 0.702,
+   "med": 0.799,
+   "p95": 0.899,
+   "max": 0.999,
+   "sotto_1.7": 113,
    "sopra_2.4": 0,
    "piu_bassi": [
     [
-     0.669,
-     "59062",
-     "STAR OIL PALOMBARESE",
-     "Sant'Angelo Romano",
-     "RM",
-     false
-    ],
-    [
-     0.677,
-     "58119",
-     "fp",
-     "San Cipirello",
-     "PA",
-     false
-    ],
-    [
-     0.679,
-     "62478",
-     "APRON UGENTO",
-     "Ugento",
-     "LE",
+     0.605,
+     "48202",
+     "SOCOGAS Orbassano",
+     "Orbassano",
+     "TO",
      false
     ],
     [
@@ -514,19 +498,35 @@
      false
     ],
     [
-     0.689,
-     "49434",
-     "PA136",
-     "Villabate",
+     0.697,
+     "28150",
+     "GNP CASTELNUOVO",
+     "Castelnuovo",
+     "TN",
+     false
+    ],
+    [
+     0.699,
+     "49437",
+     "PA135",
+     "Partinico",
      "PA",
      false
     ],
     [
-     0.689,
-     "50277",
-     "Casamassima",
-     "Casamassima",
-     "BA",
+     0.699,
+     "61178",
+     "ENI STATION",
+     "Mortegliano",
+     "UD",
+     false
+    ],
+    [
+     0.702,
+     "53336",
+     "FC carburanti di Francesco Cardamone",
+     "Spezzano Della Sila",
+     "CS",
      false
     ]
    ],
@@ -548,15 +548,15 @@
      false
     ],
     [
-     0.909,
-     "3918",
-     "CANTAGALLO OVEST",
-     "Casalecchio Di Reno",
-     "BO",
-     true
+     0.959,
+     "22116",
+     "area servizi Primante Massimo",
+     "Canosa Sannita",
+     "CH",
+     false
     ],
     [
-     0.989,
+     0.999,
      "48334",
      "CARGAS SAS RETITALIA",
      "Genova",
@@ -566,29 +566,21 @@
    ]
   },
   "M0": {
-   "n": 1442,
-   "min": 1.0,
-   "p5": 1.65,
-   "med": 1.949,
-   "p95": 2.199,
+   "n": 1012,
+   "min": 0.936,
+   "p5": 1.699,
+   "med": 2.114,
+   "p95": 2.499,
    "max": 4.999,
-   "sotto_1.7": 134,
-   "sopra_2.4": 11,
+   "sotto_1.7": 56,
+   "sopra_2.4": 100,
    "piu_bassi": [
     [
-     1.0,
-     "59581",
-     "Agrimetano Pottino",
-     "Resuttano",
-     "CL",
-     false
-    ],
-    [
-     1.0,
-     "61548",
-     "A.F. PETROLI MARANO VICENTINO",
-     "Marano Vicentino",
-     "VI",
+     0.936,
+     "6589",
+     "FIRENZE VIA SENESE 207/A",
+     "Firenze",
+     "FI",
      false
     ],
     [
@@ -600,45 +592,53 @@
      false
     ],
     [
-     1.319,
-     "53956",
-     "AREA DI SERVIZIO IP",
-     "Brescia",
-     "BS",
+     1.345,
+     "6550",
+     "ANTEGNATE VIA DEL COMMERCIO 3-SHOPPING CENTER",
+     "Antegnate",
+     "BG",
      false
     ],
     [
-     1.35,
-     "21779",
-     "METANO PER AUTO C.M.G.",
-     "Mortara",
-     "PV",
+     1.359,
+     "40678",
+     "Stazione di servizio F.ll.i Buono",
+     "Terzigno",
+     "NA",
      false
     ],
     [
-     1.377,
-     "49100",
-     "Smart Oil - Dogliola",
-     "Dogliola",
-     "CH",
+     1.359,
+     "59073",
+     "Ip Argenta",
+     "Argenta",
+     "FE",
+     false
+    ],
+    [
+     1.399,
+     "16331",
+     "miro impianto agip",
+     "Castelbelforte",
+     "MN",
      false
     ]
    ],
    "piu_alti": [
     [
-     2.697,
-     "60378",
-     "JONIA CARBURANTI",
-     "Riposto",
-     "CT",
+     2.899,
+     "40698",
+     "A2A Energia - Future Fuels srl",
+     "Brescia",
+     "BS",
      false
     ],
     [
-     2.699,
-     "14481",
-     "VALLICARBURANTI Conche",
-     "Codevigo",
-     "PD",
+     2.997,
+     "55363",
+     "Azzalini Energie Belluno Metano",
+     "Belluno",
+     "BL",
      false
     ],
     [
@@ -660,45 +660,21 @@
    ]
   },
   "M1": {
-   "n": 98,
-   "min": 1.315,
-   "p5": 1.499,
-   "med": 1.899,
-   "p95": 2.099,
-   "max": 2.28,
-   "sotto_1.7": 15,
-   "sopra_2.4": 0,
+   "n": 73,
+   "min": 1.49,
+   "p5": 1.625,
+   "med": 2.099,
+   "p95": 2.499,
+   "max": 2.997,
+   "sotto_1.7": 6,
+   "sopra_2.4": 5,
    "piu_bassi": [
     [
-     1.315,
-     "54303",
-     "IL GIGANTE SELF H24 -VILLASANTA-",
-     "Villasanta",
-     "MB",
-     false
-    ],
-    [
-     1.39,
+     1.49,
      "52329",
      "Bosco Gerolo Valtrebbia Biometano",
      "Rivergaro",
      "PC",
-     false
-    ],
-    [
-     1.399,
-     "41522",
-     "B.CARBURANTI Via Prov.le Pianura",
-     "Pozzuoli",
-     "NA",
-     false
-    ],
-    [
-     1.459,
-     "50291",
-     "Rezzato",
-     "Rezzato",
-     "BS",
      false
     ],
     [
@@ -710,45 +686,69 @@
      false
     ],
     [
-     1.599,
-     "46964",
-     "Il Gigante Self 24h",
-     "Montanaso Lombardo",
-     "LO",
+     1.499,
+     "41522",
+     "B.CARBURANTI Via Prov.le Pianura",
+     "Pozzuoli",
+     "NA",
+     false
+    ],
+    [
+     1.625,
+     "50291",
+     "Rezzato",
+     "Rezzato",
+     "BS",
+     false
+    ],
+    [
+     1.652,
+     "50282",
+     "Curno",
+     "Curno",
+     "BG",
+     false
+    ],
+    [
+     1.679,
+     "58277",
+     "IP",
+     "Cassano Magnago",
+     "VA",
      false
     ]
    ],
    "piu_alti": [
     [
-     2.099,
-     "62224",
-     "IP METANO GPL",
-     "Paolisi",
-     "BN",
+     2.499,
+     "20257",
+     "Q8 Eisenstecken Mebo 20",
+     "Bolzano",
+     "BZ",
      false
     ],
     [
-     2.199,
+     2.599,
+     "47341",
+     "DALOIL 1971",
+     "Vignate",
+     "MI",
+     false
+    ],
+    [
+     2.699,
+     "47939",
+     "Castelfranco Veneto Azzalini Energie",
+     "Castelfranco Veneto",
+     "TV",
+     false
+    ],
+    [
+     2.997,
      "55363",
      "Azzalini Energie Belluno Metano",
      "Belluno",
      "BL",
-     false
-    ],
-    [
-     2.199,
-     "56062",
-     "sanrocco carburanti srl",
-     "Altamura",
-     "BA",
-     false
-    ],
-    [
-     2.28,
-     "50943",
-     "ENI METANO MONTORIO",
-     "Verona",
-     "VR",
      false
     ]
    ]
