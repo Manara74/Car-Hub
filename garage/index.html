@@ -148,12 +148,13 @@ var r=document.documentElement;r.dataset.theme=d;r.dataset.accent=a})();
 
   <!-- STATISTICHE -->
   <section id="vStat" class="gview" hidden>
-    <div class="panel vbar" data-vbar></div>
+    <div class="panel vbar" data-vbar="stat"></div>
     <div class="field"><span>Periodo</span>
       <div class="seg" id="stPeriod" role="group" aria-label="Periodo"><button type="button" data-p="30">30 giorni</button><button type="button" data-p="365">12 mesi</button><button type="button" data-p="all">Sempre</button></div></div>
     <p class="empty" id="stEmpty" hidden>Registra qualche rifornimento o spesa per vedere le statistiche di questo mezzo.</p>
     <div id="stBody" class="gview">
       <div class="gstats" id="stCards"></div>
+      <div class="panel og" id="stVehBox" hidden><h3>Confronto tra i mezzi</h3><div id="stVeh" class="vtable"></div></div>
       <div class="panel og"><h3>Spesa mese per mese</h3><div id="stMonths" class="chart"></div></div>
       <div class="panel og"><h3>Come si divide la spesa</h3><div id="stBreak" class="bars"></div></div>
       <div class="panel og"><h3>Consumo nel tempo</h3><div id="stCons" class="chart"></div></div>

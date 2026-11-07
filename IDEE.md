@@ -27,7 +27,7 @@ Rivedere il progetto: Pompa Giusta diventerebbe un modulo dentro un ambiente pi�
 Fatto: Pompa Giusta con Opzioni, temi colore, fascia news, scheda Novità e preferiti. Garage (nome provvisorio) con menu, Scadenze auto, più mezzi, Diario rifornimenti, Spese dell'auto, Statistiche e Backup.
 
 ## Da fare (lista di Roberto)
-- **Statistiche «Tutti i mezzi» insieme**: oltre alla vista per singolo mezzo, una vista che somma carburante e spese di tutte le auto e moto, con confronto tra mezzi (7 novembre 2026).
+- ~~Statistiche «Tutti i mezzi» insieme~~ — fatto l'8 novembre 2026: oltre alla vista per singolo mezzo, la vista che somma carburante e spese di tutti i mezzi, con confronto tra mezzi.
 - ~~Collegare «Rinnovata» (Scadenze) alle Spese~~ — fatto l'8 novembre 2026: toccando «Rinnovata» l'app chiede quanto hai pagato e registra la spesa.
 - **Nome e logo definitivi di Garage**: oggi «Garage» e l'icona dell'auto sono provvisori. Da scegliere insieme (nome unico e riconoscibile, logo da brand professionale). Roberto porterà immagini di esempio per grafica e menu.
 - Collegare il rifornimento a un distributore scelto in Pompa Giusta (proposta).

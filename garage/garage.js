@@ -141,8 +141,9 @@ function renderScad() {
 function renderVbars() {
   const opts = D.vehicles.map(x => '<option value="' + esc(x.id) + '">' + esc(vName(x)) + (x.plate ? ' · ' + esc(x.plate) : '') + '</option>').join('');
   document.querySelectorAll('[data-vbar]').forEach(b => {
-    b.innerHTML = '<div class="field"><span>Mezzo</span><select data-vsel>' + opts + '</select></div><a class="btn small ghost" href="#mezzi">Gestisci</a>';
-    b.querySelector('select').value = D.active;
+    const all = b.dataset.vbar === 'stat' && D.vehicles.length > 1;
+    b.innerHTML = '<div class="field"><span>Mezzo</span><select data-vsel>' + (all ? '<option value="*">Tutti i mezzi</option>' : '') + opts + '</select></div><a class="btn small ghost" href="#mezzi">Gestisci</a>';
+    b.querySelector('select').value = all && STALL ? '*' : D.active;
   });
 }
 
@@ -310,7 +311,7 @@ function expAction(e) {
 }
 
 /* ---------- statistiche ---------- */
-let STP = '365';
+let STP = '365', STALL = false;
 const CATCOL = { carburante: 'var(--accent)', manutenzione: '#f0a24a', riparazione: '#e6765f', gomme: '#8d7cf0', assicurazione: '#4fc3b5', bollo: '#d6c24a', revisione: '#6fb8f0', pedaggio: '#c987d6', parcheggio: '#7aa66a', lavaggio: '#58b3c9', multa: '#e05a7a', accessori: '#a08f78', altro: '#8a98b4' };
 function fromDate(p) { if (p === 'all') return '0000-00-00'; const d = new Date(); d.setDate(d.getDate() - parseInt(p, 10)); return iso(d); }
 function periodTotals(v, p) {
@@ -319,30 +320,52 @@ function periodTotals(v, p) {
   const other = v.expenses.filter(x => x.date >= from).reduce((a, x) => a + x.amount, 0);
   return { fuel, other, total: fuel + other, from };
 }
+function vehStat(v, from) {
+  const fs = fillStats(v), inP = v.fills.filter(x => x.date >= from), ex = v.expenses.filter(x => x.date >= from);
+  const fuel = inP.reduce((a, x) => a + x.total, 0), lt = inP.reduce((a, x) => a + x.liters, 0), other = ex.reduce((a, x) => a + x.amount, 0);
+  const iv = fs.sorted.filter(x => x.date >= from && fs.res.has(x.id)).map(x => fs.res.get(x.id));
+  const kms = inP.map(x => x.km).concat(ex.filter(x => x.km != null).map(x => x.km));
+  const cats = {}; ex.forEach(x => { cats[x.cat] = (cats[x.cat] || 0) + x.amount; });
+  return { v, fuel, other, total: fuel + other, lt, n: inP.length, cats,
+    il: iv.reduce((a, r) => a + r.L, 0), id: iv.reduce((a, r) => a + r.dist, 0), ic: iv.reduce((a, r) => a + r.C, 0),
+    span: kms.length > 1 ? Math.max(...kms) - Math.min(...kms) : 0,
+    pts: fs.sorted.filter(x => fs.res.has(x.id) && x.date >= from).map(x => ({ d: x.date, c: fs.res.get(x.id).cons })) };
+}
+const VCOL = ['var(--accent)', 'var(--warn)', '#4fc3b5', '#c987d6', '#e6765f', '#7aa66a'];
 function renderStat() {
   renderVbars();
   document.querySelectorAll('#stPeriod button').forEach(b => b.classList.toggle('on', b.dataset.p === STP));
-  const v = cur(), has = v.fills.length || v.expenses.length;
-  $('stEmpty').hidden = !!has; $('stBody').hidden = !has; if (!has) return;
-  const P = periodTotals(v, STP), from = P.from, fs = fillStats(v);
-  const inP = v.fills.filter(x => x.date >= from), lt = inP.reduce((a, x) => a + x.liters, 0);
-  const iv = fs.sorted.filter(x => x.date >= from && fs.res.has(x.id)).map(x => fs.res.get(x.id));
-  const il = iv.reduce((a, r) => a + r.L, 0), id = iv.reduce((a, r) => a + r.dist, 0), ic = iv.reduce((a, r) => a + r.C, 0);
-  const kms = v.fills.filter(x => x.date >= from).map(x => x.km).concat(v.expenses.filter(x => x.date >= from && x.km != null).map(x => x.km));
-  const span = kms.length > 1 ? Math.max(...kms) - Math.min(...kms) : 0;
+  const multi = STALL && D.vehicles.length > 1, list = multi ? D.vehicles : [cur()];
+  const has = list.some(v => v.fills.length || v.expenses.length);
+  $('stEmpty').hidden = !!has; $('stBody').hidden = !has;
+  $('stEmpty').textContent = multi ? 'Registra qualche rifornimento o spesa per vedere le statistiche dei tuoi mezzi.' : 'Registra qualche rifornimento o spesa per vedere le statistiche di questo mezzo.';
+  if (!has) return;
+  const from = fromDate(STP), S = list.map(v => vehStat(v, from));
+  const sum = k => S.reduce((a, x) => a + x[k], 0);
+  const fuel = sum('fuel'), other = sum('other'), total = fuel + other, lt = sum('lt'), il = sum('il'), id = sum('id'), ic = sum('ic'), n = sum('n');
+  const withSpan = S.filter(x => x.span > 0), span = withSpan.reduce((a, x) => a + x.span, 0), spanCost = withSpan.reduce((a, x) => a + x.total, 0);
   const cell = (k, val, sub) => '<div><small>' + k + '</small><b class="num">' + val + '</b>' + (sub ? '<em>' + sub + '</em>' : '') + '</div>';
-  $('stCards').innerHTML =
-    cell('Spesa totale', fmtN(P.total, 2) + ' €', 'carburante ' + fmtN(P.fuel, 0) + ' · altre ' + fmtN(P.other, 0)) +
-    cell('Costo al km', span > 0 ? fmtN(P.total / span, 3) + ' €' : '—', span > 0 ? 'su ' + fmtN(span, 0) + ' km' : 'servono più chilometri') +
-    cell('Consumo medio', id > 0 ? fmtN(il / id * 100, 1) + ' l/100 km' : '—', id > 0 ? fmtN(id / il, 1) + ' km/l' : 'servono due pieni') +
-    cell('Prezzo medio', lt > 0 ? fmtN(P.fuel / lt, 3) + ' €/L' : '—', lt > 0 ? fmtN(lt, 1) + ' litri' : '') +
-    cell('Carburante al km', id > 0 ? fmtN(ic / id, 3) + ' €' : '—', 'solo carburante') +
-    cell('Rifornimenti', String(inP.length), inP.length ? 'in media ' + fmtN(P.fuel / inP.length, 0) + ' €' : '');
+  const c1 = cell('Spesa totale', fmtN(total, 2) + ' €', 'carburante ' + fmtN(fuel, 0) + ' · altre ' + fmtN(other, 0));
+  const c2 = cell('Costo al km', span > 0 ? fmtN(spanCost / span, 3) + ' €' : '—', span > 0 ? 'su ' + fmtN(span, 0) + ' km' : 'servono più chilometri');
+  const c4 = cell('Prezzo medio', lt > 0 ? fmtN(fuel / lt, 3) + ' €/L' : '—', lt > 0 ? fmtN(lt, 1) + ' litri' : '');
+  const c6 = cell('Rifornimenti', String(n), n ? 'in media ' + fmtN(fuel / n, 0) + ' €' : '');
+  $('stCards').innerHTML = multi
+    ? c1 + c2 + cell('Mezzi', String(S.length), S.map(x => x.v.type === 'moto' ? 'moto' : 'auto').join(' · ')) + c4 + cell('Km misurati', span > 0 ? fmtN(span, 0) : '—', 'somma dei mezzi') + c6
+    : c1 + c2 + cell('Consumo medio', id > 0 ? fmtN(il / id * 100, 1) + ' l/100 km' : '—', id > 0 ? fmtN(id / il, 1) + ' km/l' : 'servono due pieni') + c4 +
+      cell('Carburante al km', id > 0 ? fmtN(ic / id, 3) + ' €' : '—', 'solo carburante') + c6;
+  // confronto tra mezzi
+  $('stVehBox').hidden = !multi;
+  if (multi) $('stVeh').innerHTML = S.slice().sort((a, b) => b.total - a.total).map(x =>
+    '<div class="vrow"><span class="vdot" style="background:' + VCOL[D.vehicles.indexOf(x.v) % VCOL.length] + '"></span><div class="vi"><b>' + esc(vName(x.v)) + '</b><small>' +
+    [x.span > 0 ? fmtN(x.total / x.span, 3) + ' €/km' : '', x.id > 0 ? fmtN(x.il / x.id * 100, 1) + ' l/100 km' : '', plural(x.n, 'rifornimento', 'rifornimenti')].filter(Boolean).join(' · ') + '</small></div>' +
+    '<b class="num">' + fmtN(x.total, 2) + ' €</b></div>').join('');
   // mesi
   const now = new Date(), months = [];
   for (let i = 11; i >= 0; i--) { const d = new Date(now.getFullYear(), now.getMonth() - i, 1); months.push({ k: d.getFullYear() + '-' + pad(d.getMonth() + 1), m: d.getMonth(), f: 0, o: 0 }); }
-  v.fills.forEach(x => { const m = months.find(y => y.k === x.date.slice(0, 7)); if (m) m.f += x.total; });
-  v.expenses.forEach(x => { const m = months.find(y => y.k === x.date.slice(0, 7)); if (m) m.o += x.amount; });
+  list.forEach(v => {
+    v.fills.forEach(x => { const m = months.find(y => y.k === x.date.slice(0, 7)); if (m) m.f += x.total; });
+    v.expenses.forEach(x => { const m = months.find(y => y.k === x.date.slice(0, 7)); if (m) m.o += x.amount; });
+  });
   const MI = 'GFMAMGLASOND', mx = Math.max(1, ...months.map(m => m.f + m.o));
   const W = 360, H = 170, L = 6, R = 6, T = 22, B = 22, bw = (W - L - R) / 12;
   let g = '<svg viewBox="0 0 ' + W + ' ' + H + '" class="svgc" role="img" aria-label="Spesa mese per mese"><text x="' + L + '" y="12" class="ax">fino a ' + fmtN(mx, 0) + ' € al mese</text>';
@@ -354,25 +377,29 @@ function renderStat() {
   });
   $('stMonths').innerHTML = g + '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + (H - B) + '" y2="' + (H - B) + '" stroke="var(--line)"/></svg><p class="legend"><i style="background:var(--accent)"></i>Carburante <i style="background:var(--warn)"></i>Altre spese</p>';
   // ripartizione
-  const parts = []; if (P.fuel > 0) parts.push(['carburante', 'Carburante', P.fuel]);
-  CATS.forEach(([k, n]) => { const a = v.expenses.filter(x => x.date >= from && x.cat === k).reduce((s2, x) => s2 + x.amount, 0); if (a > 0) parts.push([k, n, a]); });
+  const parts = []; if (fuel > 0) parts.push(['carburante', 'Carburante', fuel]);
+  CATS.forEach(([k, nm]) => { const a = S.reduce((s2, x) => s2 + (x.cats[k] || 0), 0); if (a > 0) parts.push([k, nm, a]); });
   parts.sort((a, b) => b[2] - a[2]);
-  $('stBreak').innerHTML = parts.length ? parts.map(([k, n, a]) => '<div class="bar"><div class="bl"><span>' + esc(n) + '</span><b class="num">' + fmtN(a, 2) + ' € · ' + fmtN(a / P.total * 100, 0) + '%</b></div><div class="bt"><i style="width:' + Math.max(2, a / P.total * 100).toFixed(1) + '%;background:' + CATCOL[k] + '"></i></div></div>').join('') : '<p class="hint">Nessuna spesa nel periodo scelto.</p>';
-  // consumo nel tempo
-  const pts = fs.sorted.filter(x => fs.res.has(x.id)).map(x => ({ d: x.date, c: fs.res.get(x.id).cons })).filter(p => p.d >= from);
-  if (pts.length < 2) $('stCons').innerHTML = '<p class="hint">Servono almeno due consumi calcolati (tre pieni completi) nel periodo per vedere l\'andamento.</p>';
+  $('stBreak').innerHTML = parts.length ? parts.map(([k, nm, a]) => '<div class="bar"><div class="bl"><span>' + esc(nm) + '</span><b class="num">' + fmtN(a, 2) + ' € · ' + fmtN(a / total * 100, 0) + '%</b></div><div class="bt"><i style="width:' + Math.max(2, a / total * 100).toFixed(1) + '%;background:' + CATCOL[k] + '"></i></div></div>').join('') : '<p class="hint">Nessuna spesa nel periodo scelto.</p>';
+  // consumo nel tempo: una linea per mezzo
+  const ser = S.map(x => ({ name: vName(x.v), col: VCOL[D.vehicles.indexOf(x.v) % VCOL.length], pts: x.pts })).filter(x => x.pts.length);
+  const all = ser.reduce((a, x) => a.concat(x.pts), []);
+  if (all.length < 2 || !ser.some(x => x.pts.length > 1)) $('stCons').innerHTML = '<p class="hint">Servono almeno due consumi calcolati (tre pieni completi) nel periodo per vedere l\'andamento.</p>';
   else {
-    const cs = pts.map(p => p.c), lo = Math.min(...cs), hi = Math.max(...cs), pad2 = (hi - lo) * .2 || 0.5, y0 = lo - pad2, y1 = hi + pad2;
-    const t0 = new Date(pts[0].d + 'T12:00:00').getTime(), t1 = new Date(pts[pts.length - 1].d + 'T12:00:00').getTime() || t0 + 1;
+    const cs = all.map(p => p.c), lo = Math.min(...cs), hi = Math.max(...cs), pad2 = (hi - lo) * .2 || 0.5, y0 = lo - pad2, y1 = hi + pad2;
+    const ts = all.map(p => new Date(p.d + 'T12:00:00').getTime()), t0 = Math.min(...ts), t1 = Math.max(...ts);
     const W2 = 360, H2 = 150, L2 = 8, R2 = 8, T2 = 18, B2 = 22;
     const X = d => L2 + (t1 === t0 ? .5 : (new Date(d + 'T12:00:00').getTime() - t0) / (t1 - t0)) * (W2 - L2 - R2), Y = c => T2 + (1 - (c - y0) / (y1 - y0)) * (H2 - T2 - B2);
     let g2 = '<svg viewBox="0 0 ' + W2 + ' ' + H2 + '" class="svgc" role="img" aria-label="Consumo nel tempo"><text x="' + L2 + '" y="11" class="ax">l/100 km: da ' + fmtN(lo, 1) + ' a ' + fmtN(hi, 1) + '</text>';
-    g2 += '<polyline points="' + pts.map(p => X(p.d).toFixed(1) + ',' + Y(p.c).toFixed(1)).join(' ') + '" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>';
-    pts.forEach(p => { g2 += '<circle cx="' + X(p.d).toFixed(1) + '" cy="' + Y(p.c).toFixed(1) + '" r="3.2" fill="var(--accent)"/>'; });
-    g2 += '<text x="' + L2 + '" y="' + (H2 - 6) + '" class="ax">' + fmtDate(pts[0].d).slice(0, 5) + '</text><text x="' + (W2 - R2) + '" y="' + (H2 - 6) + '" text-anchor="end" class="ax">' + fmtDate(pts[pts.length - 1].d).slice(0, 5) + '</text></svg>';
-    $('stCons').innerHTML = g2;
+    ser.forEach(x => {
+      if (x.pts.length > 1) g2 += '<polyline points="' + x.pts.map(p => X(p.d).toFixed(1) + ',' + Y(p.c).toFixed(1)).join(' ') + '" fill="none" stroke="' + x.col + '" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>';
+      x.pts.forEach(p => { g2 += '<circle cx="' + X(p.d).toFixed(1) + '" cy="' + Y(p.c).toFixed(1) + '" r="3.2" fill="' + x.col + '"/>'; });
+    });
+    const d0 = new Date(t0), d1 = new Date(t1);
+    g2 += '<text x="' + L2 + '" y="' + (H2 - 6) + '" class="ax">' + fmtDate(iso(d0)).slice(0, 5) + '</text><text x="' + (W2 - R2) + '" y="' + (H2 - 6) + '" text-anchor="end" class="ax">' + fmtDate(iso(d1)).slice(0, 5) + '</text></svg>';
+    $('stCons').innerHTML = g2 + (ser.length > 1 ? '<p class="legend">' + ser.map(x => '<i style="background:' + x.col + '"></i>' + esc(x.name)).join(' ') + '</p>' : '');
   }
-  $('stNote').textContent = 'Il costo al km usa i chilometri tra il primo e l\'ultimo rifornimento o spesa con chilometri nel periodo. Le statistiche si aggiornano da sole con quello che registri.';
+  $('stNote').textContent = 'Il costo al km usa i chilometri tra il primo e l\'ultimo rifornimento o spesa con chilometri nel periodo' + (multi ? ', mezzo per mezzo, e poi li somma' : '') + '. Le statistiche si aggiornano da sole con quello che registri.';
 }
 
 /* ---------- eventi ---------- */
@@ -386,7 +413,8 @@ function wire() {
   $('vehList').addEventListener('click', e => { const b = e.target.closest('.vitem'); if (!b) return; D.active = b.dataset.vid; save(); renderMezzi(); });
   document.addEventListener('change', e => {
     if (!e.target.matches || !e.target.matches('select[data-vsel]')) return;
-    D.active = e.target.value; save(); route();
+    if (e.target.value === '*') { STALL = true; renderStat(); return; }
+    STALL = false; D.active = e.target.value; save(); route();
   });
   $('btnAddVeh').addEventListener('click', () => {
     const x = newVehicle('', D.vehicles.some(y => y.type === 'auto') && !D.vehicles.some(y => y.type === 'moto') ? 'moto' : 'auto');
