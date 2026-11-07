@@ -2,14 +2,14 @@
  "date": "2026-11-07",
  "keys": {
   "B0": {
-   "n": 8666,
+   "n": 7348,
    "min": 1.569,
-   "p5": 1.978,
+   "p5": 1.979,
    "med": 2.189,
    "p95": 2.299,
    "max": 2.999,
    "sotto_1.7": 2,
-   "sopra_2.4": 88,
+   "sopra_2.4": 73,
    "piu_bassi": [
     [
      1.569,
@@ -62,11 +62,11 @@
    ],
    "piu_alti": [
     [
-     2.81,
-     "21783",
-     "IP MONDOVI' VIA CUNEO 107",
-     "Mondovì",
-     "CN",
+     2.789,
+     "62304",
+     "DAL ZOTTO S.A.S.",
+     "Pantelleria",
+     "TP",
      false
     ],
     [
@@ -96,14 +96,14 @@
    ]
   },
   "B1": {
-   "n": 12781,
+   "n": 10617,
    "min": 1.569,
    "p5": 1.969,
    "med": 1.99,
-   "p95": 2.089,
+   "p95": 2.097,
    "max": 2.789,
    "sotto_1.7": 7,
-   "sopra_2.4": 20,
+   "sopra_2.4": 19,
    "piu_bassi": [
     [
      1.569,
@@ -190,14 +190,14 @@
    ]
   },
   "D0": {
-   "n": 8646,
+   "n": 7332,
    "min": 1.599,
    "p5": 2.19,
    "med": 2.399,
-   "p95": 2.54,
+   "p95": 2.547,
    "max": 3.175,
    "sotto_1.7": 5,
-   "sopra_2.4": 3961,
+   "sopra_2.4": 3404,
    "piu_bassi": [
     [
      1.599,
@@ -250,19 +250,19 @@
    ],
    "piu_alti": [
     [
-     3.175,
-     "21782",
-     "IP SALUZZO LOC. RUATA EANDI",
-     "Saluzzo",
-     "CN",
+     2.899,
+     "62304",
+     "DAL ZOTTO S.A.S.",
+     "Pantelleria",
+     "TP",
      false
     ],
     [
-     3.175,
-     "21783",
-     "IP MONDOVI' VIA CUNEO 107",
-     "Mondovì",
-     "CN",
+     2.999,
+     "59919",
+     "SANTORO PETROLI -  TORELLA DEI LOMBARDI",
+     "Torella Dei Lombardi",
+     "AV",
      false
     ],
     [
@@ -284,14 +284,14 @@
    ]
   },
   "D1": {
-   "n": 12766,
+   "n": 10601,
    "min": 1.589,
    "p5": 2.189,
    "med": 2.2,
-   "p95": 2.347,
+   "p95": 2.349,
    "max": 2.799,
-   "sotto_1.7": 12,
-   "sopra_2.4": 160,
+   "sotto_1.7": 11,
+   "sopra_2.4": 150,
    "piu_bassi": [
     [
      1.589,
@@ -378,13 +378,13 @@
    ]
   },
   "G0": {
-   "n": 2881,
+   "n": 2318,
    "min": 0.549,
    "p5": 0.739,
-   "med": 0.828,
-   "p95": 0.919,
+   "med": 0.819,
+   "p95": 0.928,
    "max": 1.399,
-   "sotto_1.7": 2881,
+   "sotto_1.7": 2318,
    "sopra_2.4": 0,
    "piu_bassi": [
     [
@@ -393,14 +393,6 @@
      "CASTEL VOLTURNO SS 7/IV DOMITIANA KM 30+800",
      "Castel Volturno",
      "CE",
-     false
-    ],
-    [
-     0.629,
-     "49456",
-     "Interpetrol_Termoli",
-     "Termoli",
-     "CB",
      false
     ],
     [
@@ -429,10 +421,18 @@
     ],
     [
      0.687,
-     "27305",
-     "Eni Casoli",
-     "Casoli",
-     "CH",
+     "57205",
+     "Stazione di Servizio Q8 Succivo",
+     "Succivo",
+     "CE",
+     false
+    ],
+    [
+     0.69,
+     "32716",
+     "SERVICE AREA MONTANARELLA SRL",
+     "Melfi",
+     "PZ",
      false
     ]
    ],
@@ -472,13 +472,13 @@
    ]
   },
   "G1": {
-   "n": 109,
+   "n": 95,
    "min": 0.605,
-   "p5": 0.702,
+   "p5": 0.699,
    "med": 0.799,
    "p95": 0.899,
    "max": 0.999,
-   "sotto_1.7": 109,
+   "sotto_1.7": 95,
    "sopra_2.4": 0,
    "piu_bassi": [
     [
@@ -533,6 +533,14 @@
    "piu_alti": [
     [
      0.9,
+     "47474",
+     "MES",
+     "Custonaci",
+     "TP",
+     false
+    ],
+    [
+     0.9,
      "8654",
      "motel san pietro",
      "Castronovo Di Sicilia",
@@ -540,20 +548,12 @@
      false
     ],
     [
-     0.959,
-     "22116",
-     "area servizi Primante Massimo",
-     "Canosa Sannita",
-     "CH",
+     0.939,
+     "49587",
+     "MEBORAST",
+     "Appiano Sulla Strada Del Vino",
+     "BZ",
      false
-    ],
-    [
-     0.959,
-     "51024",
-     "CONERO EST",
-     "Numana",
-     "AN",
-     true
     ],
     [
      0.999,
@@ -566,14 +566,14 @@
    ]
   },
   "M0": {
-   "n": 952,
+   "n": 754,
    "min": 0.936,
-   "p5": 1.699,
-   "med": 2.149,
+   "p5": 1.69,
+   "med": 2.119,
    "p95": 2.499,
    "max": 4.999,
-   "sotto_1.7": 51,
-   "sopra_2.4": 95,
+   "sotto_1.7": 45,
+   "sopra_2.4": 75,
    "piu_bassi": [
     [
      0.936,
@@ -626,6 +626,14 @@
    ],
    "piu_alti": [
     [
+     2.867,
+     "60378",
+     "JONIA CARBURANTI",
+     "Riposto",
+     "CT",
+     false
+    ],
+    [
      2.899,
      "40698",
      "A2A Energia - Future Fuels srl",
@@ -642,14 +650,6 @@
      false
     ],
     [
-     3.297,
-     "55363",
-     "Azzalini Energie Belluno Metano",
-     "Belluno",
-     "BL",
-     false
-    ],
-    [
      4.999,
      "50753",
      "AREA DI SERVIZIO FORMIGINE",
@@ -660,14 +660,14 @@
    ]
   },
   "M1": {
-   "n": 71,
+   "n": 54,
    "min": 1.49,
-   "p5": 1.652,
-   "med": 2.099,
+   "p5": 1.625,
+   "med": 2.149,
    "p95": 2.499,
-   "max": 3.297,
+   "max": 2.999,
    "sotto_1.7": 4,
-   "sopra_2.4": 5,
+   "sopra_2.4": 4,
    "piu_bassi": [
     [
      1.49,
@@ -720,6 +720,14 @@
    ],
    "piu_alti": [
     [
+     2.479,
+     "54357",
+     "KEROPETROL SPA MIRANDOLA",
+     "Mirandola",
+     "MO",
+     false
+    ],
+    [
      2.499,
      "20257",
      "Q8 Eisenstecken Mebo 20",
@@ -728,11 +736,11 @@
      false
     ],
     [
-     2.599,
-     "47341",
-     "DALOIL 1971",
-     "Vignate",
-     "MI",
+     2.499,
+     "49587",
+     "MEBORAST",
+     "Appiano Sulla Strada Del Vino",
+     "BZ",
      false
     ],
     [
@@ -741,14 +749,6 @@
      "Castelfranco Veneto Azzalini Energie",
      "Castelfranco Veneto",
      "TV",
-     false
-    ],
-    [
-     3.297,
-     "55363",
-     "Azzalini Energie Belluno Metano",
-     "Belluno",
-     "BL",
      false
     ]
    ]
