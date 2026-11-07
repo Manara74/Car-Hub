@@ -18,7 +18,7 @@
 (function(){var m='auto',a='blu';try{var t=JSON.parse(localStorage.getItem('pg.theme')||'{}');if(t.mode)m=t.mode;if(t.accent)a=t.accent}catch(e){}
 var d=m==='auto'?(window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'):m;
 var r=document.documentElement;r.dataset.theme=d;r.dataset.accent=a;
-try{var o=JSON.parse(localStorage.getItem('pg.opts')||'{}');['quick','hero','verdict','charts'].forEach(function(k){if(o[k]===false)r.classList.add('h-'+k)})}catch(e){}})();
+try{var o=JSON.parse(localStorage.getItem('pg.opts')||'{}');['quick','hero','verdict','charts','ticker','news'].forEach(function(k){if(o[k]===false)r.classList.add('h-'+k)})}catch(e){}})();
 </script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin>
 <link rel="stylesheet" href="style.css">
@@ -38,6 +38,8 @@ try{var o=JSON.parse(localStorage.getItem('pg.opts')||'{}');['quick','hero','ver
     <button type="button" data-tab="vicino"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="7.5"/><circle cx="12" cy="12" r="2.2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg><span>Vicino a me</span></button>
     <button type="button" data-tab="percorso"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="6" r="2.5"/><path d="M8.5 18H15a3 3 0 0 0 0-6H9a3 3 0 0 1 0-6h6.5"/></svg><span>Percorso</span></button>
   </nav>
+
+  <div id="ticker" hidden aria-label="Notizie sul carburante"><span class="tlabel">NEWS</span><div class="tview" id="tview"><div class="ttrack" id="ttrack"></div></div></div>
 
   <section class="panel" id="quick" aria-label="Filtri comuni">
     <div class="grid">
@@ -73,6 +75,10 @@ try{var o=JSON.parse(localStorage.getItem('pg.opts')||'{}');['quick','hero','ver
     </section>
     <section class="summary" id="summary" aria-label="Riepilogo"><div class="hero skel"></div></section>
     <p class="verdict" id="verdictText"></p>
+    <details class="panel newsd" id="newsCard" hidden>
+      <summary><span>Novità sul carburante</span><b id="newsCount"></b></summary>
+      <div id="newsBody"></div>
+    </details>
     <div class="layout">
       <main>
         <ul class="list" id="list"><li class="row skel"></li><li class="row skel"></li><li class="row skel"></li></ul>
@@ -184,6 +190,12 @@ try{var o=JSON.parse(localStorage.getItem('pg.opts')||'{}');['quick','hero','ver
       <label class="tg"><span>Scheda grande col prezzo minimo<small>Il prezzo più basso e le medie</small></span><input type="checkbox" data-o="hero"></label>
       <label class="tg"><span>Frase sul risparmio<small>Quanto risparmi sul pieno</small></span><input type="checkbox" data-o="verdict"></label>
       <label class="tg"><span>Grafici<small>Distribuzione dei prezzi e andamento della media</small></span><input type="checkbox" data-o="charts"></label>
+      <label class="tg"><span>Fascia delle news in basso<small>Testo che scorre sopra i pulsanti, con variazioni e titoli</small></span><input type="checkbox" data-o="ticker"></label>
+      <label class="tg"><span>Scheda «Novità»<small>Le stesse notizie in forma di elenco, sopra i distributori</small></span><input type="checkbox" data-o="news"></label>
+      <div class="field"><span>Velocità della fascia</span>
+        <div class="seg" id="o_speed" role="group" aria-label="Velocità della fascia">
+          <button type="button" data-sp="slow">Lenta</button><button type="button" data-sp="normal">Normale</button><button type="button" data-sp="fast">Veloce</button>
+        </div></div>
     </section>
 
     <section class="panel og" aria-label="Guida">

@@ -30,7 +30,9 @@ const S = {
   map: null, layer: null
 };
 const U = { home: '', work: '', notes: {}, geo: {} };
-const O = { quick: true, hero: true, verdict: true, charts: true };
+const O = { quick: true, hero: true, verdict: true, charts: true, ticker: true, news: true };
+let SPEED = 'normal';
+const SPEEDS = { slow: 32, normal: 52, fast: 84 };
 const RADII = [1, 2, 5, 10, 20, 30, 50], DETOURS = [0.5, 1, 2, 3, 5, 10];
 
 /* ---------- memoria sul telefono ---------- */
@@ -58,10 +60,13 @@ function savePrefs() {
   lsSet('pg.prefs', { f: S.f, m: S.m, prov: S.prov, comune: S.comune, brand: S.brand, tipo: S.tipo, svf: S.svf,
     litri: S.litri, consumo: S.consumo, tab: S.tab, radius: S.near.radius, sort: S.near.sort, detour: S.route.detour });
 }
-function loadOpts() { const o = lsGet('pg.opts', {}); Object.keys(O).forEach(k => { if (o[k] === false) O[k] = false; }); }
+function loadOpts() { const o = lsGet('pg.opts', {}); Object.keys(O).forEach(k => { if (o[k] === false) O[k] = false; }); if (SPEEDS[o.speed]) SPEED = o.speed; }
+const saveOpts = () => lsSet('pg.opts', Object.assign({}, O, { speed: SPEED }));
 function applyOpts() {
   Object.keys(O).forEach(k => document.documentElement.classList.toggle('h-' + k, !O[k]));
   document.querySelectorAll('input[data-o]').forEach(c => { c.checked = !!O[c.dataset.o]; });
+  document.querySelectorAll('#o_speed button').forEach(b => b.classList.toggle('on', b.dataset.sp === SPEED));
+  document.documentElement.style.setProperty('--tsp', SPEEDS[SPEED]);
 }
 function saveUser() { lsSet('pg.user', { home: U.home, work: U.work, notes: U.notes }); }
 
@@ -82,6 +87,7 @@ async function loadAll() {
   const meta = await getJSON('data/meta.json', { cache: 'no-store' });
   const d = await getJSON('data/pompe.json?v=' + encodeURIComponent(meta.v));
   S.meta = meta;
+  try { const nw = await getJSON('data/news.json?v=' + encodeURIComponent(meta.v)); S.news = Array.isArray(nw.items) ? nw.items.filter(i => i && i.t && i.u) : []; } catch (e) { S.news = []; }
   setStations(d.s.map(expand), d.date, false);
 }
 function setStations(st, date, manual) {
@@ -534,7 +540,7 @@ function updateChip() {
 function renderActive() {
   if (S.tab === 'zona') renderZona(); else if (S.tab === 'vicino') renderNear(); else renderRoute(false);
 }
-function renderAll() { updateChip(); renderActive(); }
+function renderAll() { updateChip(); renderActive(); renderNews(); }
 function setTab(t) {
   S.tab = t; savePrefs();
   document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('on', b.dataset.tab === t));
@@ -542,7 +548,7 @@ function setTab(t) {
   renderActive();
   if (t === 'percorso' && S.map) setTimeout(() => S.map.invalidateSize(), 60);
 }
-function refresh() { savePrefs(); syncControls(); renderActive(); }
+function refresh() { savePrefs(); syncControls(); renderActive(); renderNews(); }
 
 
 /* ---------- aspetto: modo e colore ---------- */
@@ -570,6 +576,80 @@ function wireTheme() {
   $('swatches').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; THEME.accent = b.dataset.ac; saveTheme(); applyTheme(); });
   if (window.matchMedia) matchMedia('(prefers-color-scheme: light)').addEventListener('change', () => { if (THEME.mode === 'auto') applyTheme(); });
   applyTheme();
+}
+
+
+/* ---------- novità: variazioni calcolate sui prezzi + titoli dei giornali ---------- */
+let lastTicker = '', lastCard = '';
+const fmtDay = d => d.slice(8, 10) + '/' + d.slice(5, 7);
+function calcNews() {
+  const out = [], region = PG.region(S.prov), mode = S.m ? 'self' : 'servito';
+  ['B', 'D'].forEach(f => {
+    const k = f + S.m;
+    const ds = Object.keys(S.hist).sort().filter(d => S.hist[d] && S.hist[d][k] && S.hist[d][k][region] != null);
+    if (ds.length < 2) return;
+    const val = d => S.hist[d][k][region];
+    const last = ds[ds.length - 1], v = val(last), prev = ds[ds.length - 2];
+    const name = FUELS[f] + ' ' + mode + ' · ' + region;
+    const d1 = v - val(prev), ST = 0.0005;
+    if (Math.abs(d1) < ST) out.push({ tone: 'flat', t: name + ': prezzo stabile (' + PG.fmtP(v) + ' €/L) rispetto al ' + fmtDay(prev) });
+    else out.push({ tone: d1 > 0 ? 'up' : 'down', t: name + ': ' + PG.fmtC(d1) + ' rispetto al ' + fmtDay(prev) + ' (ora ' + PG.fmtP(v) + ' €/L)' });
+    const t0 = new Date(last + 'T12:00:00').getTime() - 7 * 864e5;
+    const wk = ds.filter(d => new Date(d + 'T12:00:00').getTime() >= t0 - 864e5 * 0.5);
+    const old = ds.filter(d => new Date(d + 'T12:00:00').getTime() <= t0).pop();
+    if (old) {
+      const d7 = v - val(old);
+      if (Math.abs(d7) >= ST) out.push({ tone: d7 > 0 ? 'up' : 'down', t: name + ': ' + PG.fmtC(d7) + ' in 7 giorni' });
+    }
+    if (wk.length >= 4) {
+      const vs = wk.map(val), mn = Math.min(...vs), mx = Math.max(...vs);
+      if (mx - mn >= ST) {
+        if (v <= mn + 1e-9) out.push({ tone: 'down', t: name + ': ai minimi della settimana' });
+        else if (v >= mx - 1e-9) out.push({ tone: 'up', t: name + ': ai massimi della settimana' });
+      }
+    }
+    if (f === S.f) {
+      const it = S.hist[last][k].ALL;
+      if (it != null && Math.abs(v - it) >= 0.0095) out.push({ tone: v > it ? 'up' : 'down', t: region + ' è ' + PG.fmtC(Math.abs(v - it)).replace(/^[+−]/, '') + (v > it ? ' sopra' : ' sotto') + ' la media italiana (' + FUELS[f].toLowerCase() + ')' });
+    }
+  });
+  return out;
+}
+const safeUrl = u => /^https?:\/\//i.test(u) ? u : '#';
+function renderNews() {
+  const calc = S.stations.length ? calcNews() : [], ext = S.news || [];
+  const ic = { up: '▲', down: '▼', flat: '●' };
+  // fascia scorrevole
+  const parts = calc.map(n => '<span class="ti ' + n.tone + '"><i>' + ic[n.tone] + '</i>' + esc(n.t) + '</span>')
+    .concat(ext.map(n => '<a class="ti ext" href="' + esc(safeUrl(n.u)) + '" target="_blank" rel="noopener noreferrer"><i>●</i>' + esc(n.t) + (n.s ? ' <em>' + esc(n.s) + '</em>' : '') + '</a>'));
+  const reduced = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const html = parts.join('<span class="sep">|</span>');
+  const sig = html + SPEED + reduced;
+  const tk = $('ticker');
+  if (!parts.length) { tk.hidden = true; lastTicker = ''; }
+  else if (sig !== lastTicker) {
+    lastTicker = sig; tk.hidden = false;
+    const tr = $('ttrack');
+    tr.style.animation = 'none';
+    tr.innerHTML = reduced ? html : html + '<span class="sep">|</span>' + html + '<span class="sep">|</span>';
+    tr.classList.toggle('static', !!reduced);
+    if (!reduced) {
+      const half = tr.scrollWidth / 2 || 600;
+      tr.style.setProperty('--td', Math.max(20, half / SPEEDS[SPEED]) + 's');
+      void tr.offsetWidth; tr.style.animation = '';
+    }
+  }
+  // scheda elenco
+  const card = $('newsCard');
+  const cs = JSON.stringify([calc, ext]);
+  if (!calc.length && !ext.length) { card.hidden = true; lastCard = ''; return; }
+  if (cs === lastCard) return;
+  lastCard = cs; card.hidden = false;
+  $('newsCount').textContent = String(calc.length + ext.length);
+  $('newsBody').innerHTML =
+    (calc.length ? '<h4>Dai nostri prezzi</h4><ul class="nl">' + calc.map(n => '<li class="' + n.tone + '"><i>' + ic[n.tone] + '</i>' + esc(n.t) + '</li>').join('') + '</ul>' : '') +
+    (ext.length ? '<h4>Dai giornali</h4><ul class="nl ext">' + ext.map(n => '<li><a href="' + esc(safeUrl(n.u)) + '" target="_blank" rel="noopener noreferrer">' + esc(n.t) + '</a><small>' + esc(n.s || '') + (n.s ? ' · ' : '') + esc(fmtDay(String(n.d).slice(0, 10))) + '</small></li>').join('') + '</ul>' : '') +
+    '<p class="hint">Le variazioni sono calcolate sulle medie dei prezzi qui sotto, ogni giorno. I titoli arrivano da Google News: si aprono sul sito del giornale.</p>';
 }
 
 /* ---------- pagina Opzioni ---------- */
@@ -684,12 +764,16 @@ function wire() {
     if (c) { setNote(c.dataset.id, c.dataset.sv, c.checked); renderActive(); }
   });
 
+  const tv = $('ttrack');
+  ['pointerdown', 'touchstart'].forEach(n => $('ticker').addEventListener(n, () => tv.classList.add('paused'), { passive: true }));
+  ['pointerup', 'pointercancel', 'touchend', 'touchcancel'].forEach(n => $('ticker').addEventListener(n, () => setTimeout(() => tv.classList.remove('paused'), 2500), { passive: true }));
   $('btnOpt').addEventListener('click', openOpt);
   $('btnCloseOpt').addEventListener('click', () => { if (history.state && history.state.opt) history.back(); else closeOpt(); });
   window.addEventListener('popstate', () => { if (!$('optPanel').hidden) closeOpt(); });
   document.querySelectorAll('input[data-o]').forEach(c => c.addEventListener('change', () => {
-    O[c.dataset.o] = c.checked; lsSet('pg.opts', O); applyOpts();
+    O[c.dataset.o] = c.checked; saveOpts(); applyOpts();
   }));
+  $('o_speed').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; SPEED = b.dataset.sp; saveOpts(); applyOpts(); lastTicker = ''; renderNews(); });
   let rs = 0;
   $('btnReset').addEventListener('click', () => {
     const b = $('btnReset');
