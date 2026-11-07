@@ -8,6 +8,8 @@ const KEY = 'gg.data';
 const TYPES = [
   ['bollo', 'Bollo', 12], ['assicurazione', 'Assicurazione', 12], ['revisione', 'Revisione', 24], ['tagliando', 'Tagliando', 12]
 ];
+let renewK = null;
+const RENEWCAT = { bollo: 'bollo', assicurazione: 'assicurazione', revisione: 'revisione', tagliando: 'manutenzione' };
 const EVERY = [[6, '6 mesi'], [12, '1 anno'], [24, '2 anni'], [36, '3 anni'], [48, '4 anni']];
 const uid = () => 'v' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
 function newVehicle(name, type) {
@@ -90,6 +92,7 @@ function alerts() {
 const VIEWS = { menu: 'vMenu', scadenze: 'vScad', diario: 'vDiario', spese: 'vSpese', statistiche: 'vStat', mezzi: 'vMezzi', backup: 'vBackup' };
 const TITLES = { menu: 'Garage', scadenze: 'Scadenze auto', diario: 'Diario rifornimenti', spese: 'Spese dell\'auto', statistiche: 'Statistiche', mezzi: 'I miei mezzi', backup: 'Backup' };
 function route() {
+  renewK = null;
   const h = (location.hash || '#menu').slice(1);
   const v = VIEWS[h] ? h : 'menu';
   Object.keys(VIEWS).forEach(k => { $(VIEWS[k]).hidden = k !== v; });
@@ -126,7 +129,10 @@ function renderScad() {
       '<div class="field"><span>Si ripete ogni</span><select data-f="every">' + EVERY.map(([n, t]) => '<option value="' + n + '"' + (n === dl.every ? ' selected' : '') + '>' + t + '</option>').join('') + '</select></div>' +
       (k === 'tagliando' ? '<div class="field"><span>Km attuali</span><input type="number" inputmode="numeric" min="0" step="1" data-f="vkm" placeholder="Es. 84500" value="' + (v.km == null ? '' : v.km) + '"></div><div class="field"><span>Tagliando ai km</span><input type="number" inputmode="numeric" min="0" step="1" data-f="kmDue" placeholder="Es. 90000" value="' + (dl.kmDue == null ? '' : dl.kmDue) + '"></div>' : '') +
       '<div class="field wide"><span>Nota (facoltativa)</span><input type="text" data-f="note" maxlength="80" placeholder="' + (k === 'assicurazione' ? 'Compagnia, numero polizza' : k === 'bollo' ? 'Regione, importo' : 'Officina, cosa fare') + '" value="' + esc(dl.note) + '" autocomplete="off"></div></div>' +
-      km + '<div class="dl-acts"><button type="button" class="btn small" data-act="renew">Rinnovata</button>' + (dl.date ? '<button type="button" class="btn small ghost" data-act="clear">Togli data</button>' : '') + '</div></div>';
+      km + (renewK === k
+        ? '<div class="renew"><div class="field"><span>Quanto hai pagato? (€)</span><input type="number" inputmode="decimal" min="0" step="0.01" id="rAmt" placeholder="Es. 180,00"></div>' +
+          '<div class="dl-acts"><button type="button" class="btn small" data-act="renew-save">Rinnova e registra la spesa</button><button type="button" class="btn small ghost" data-act="renew-skip">Rinnova senza spesa</button><button type="button" class="btn small ghost" data-act="renew-cancel">Annulla</button></div></div>'
+        : '<div class="dl-acts"><button type="button" class="btn small" data-act="renew">Rinnovata</button>' + (dl.date ? '<button type="button" class="btn small ghost" data-act="clear">Togli data</button>' : '') + '</div>') + '</div>';
   }).join('');
 }
 
@@ -413,13 +419,28 @@ function wire() {
   });
   $('dlList').addEventListener('click', e => {
     const b = e.target.closest('button[data-act]'); if (!b) return;
-    const dl = cur().dl[b.closest('.dl-card').dataset.k];
-    if (b.dataset.act === 'renew') {
+    const k = b.closest('.dl-card').dataset.k, v = cur(), dl = v.dl[k], act = b.dataset.act, msg = $('scadMsg');
+    msg.textContent = '';
+    if (act === 'renew') { renewK = k; renderScad(); const i = $('rAmt'); if (i) i.focus(); return; }
+    if (act === 'renew-cancel') { renewK = null; renderScad(); return; }
+    if (act === 'renew-save' || act === 'renew-skip') {
+      let amt = null;
+      if (act === 'renew-save') {
+        amt = parseFloat($('rAmt').value);
+        if (!(amt > 0 && amt <= 100000)) { msg.className = 'msg err'; msg.textContent = 'Scrivi l\'importo pagato, oppure scegli «Rinnova senza spesa».'; return; }
+      }
       const d = daysLeft(dl.date);
       dl.date = addMonths(dl.date && d != null && d > -400 ? dl.date : '', dl.every);
       // se la data è rimasta nel passato (rinnovo in ritardo di più periodi) riparte da oggi
       if (daysLeft(dl.date) < 0) dl.date = addMonths('', dl.every);
-    } else if (b.dataset.act === 'clear') dl.date = '';
+      const label = TYPES.find(t => t[0] === k)[1];
+      if (amt != null) {
+        v.expenses.push({ id: uid(), date: iso(new Date()), amount: Math.round(amt * 100) / 100, cat: RENEWCAT[k], km: v.km == null ? null : v.km, note: 'Rinnovo ' + label.toLowerCase() });
+        msg.className = 'msg'; msg.textContent = label + ': nuova scadenza il ' + fmtDate(dl.date) + '. Spesa di ' + fmtN(amt, 2) + ' € registrata in «Spese dell\'auto».';
+      } else { msg.className = 'msg'; msg.textContent = label + ': nuova scadenza il ' + fmtDate(dl.date) + '.'; }
+      renewK = null; save(); renderScad(); return;
+    }
+    if (act === 'clear') dl.date = '';
     save(); renderScad();
   });
   // backup
