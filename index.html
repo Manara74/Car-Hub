@@ -10,9 +10,15 @@
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-title" content="Pompa Giusta">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="preload" href="fonts/archivo-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/archivo-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/ibm-plex-mono-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
+<script>
+/* applico subito modo e colore scelti, prima di disegnare la pagina */
+(function(){var m='auto',a='blu';try{var t=JSON.parse(localStorage.getItem('pg.theme')||'{}');if(t.mode)m=t.mode;if(t.accent)a=t.accent}catch(e){}
+var d=m==='auto'?(window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'):m;
+var r=document.documentElement;r.dataset.theme=d;r.dataset.accent=a})();
+</script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin>
 <link rel="stylesheet" href="style.css">
 </head>
@@ -20,7 +26,10 @@
 <div class="wrap">
   <header class="top">
     <h1><img class="logo" src="icon.svg" alt="" width="36" height="36">Pompa Giusta</h1>
-    <button class="icon-btn" id="btnInfo" type="button" aria-label="Informazioni">i</button>
+    <div class="hbtns">
+      <button class="icon-btn" id="btnTheme" type="button" aria-label="Aspetto e colori"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18c1.4 0 2-1 1.6-2.1-.4-1.1.2-2.4 1.6-2.4H17a4 4 0 0 0 4-4C21 6.9 17 3 12 3z"/><circle cx="7.8" cy="11" r="1"/><circle cx="10.5" cy="7.2" r="1"/><circle cx="15" cy="7.8" r="1"/></svg></button>
+      <button class="icon-btn" id="btnInfo" type="button" aria-label="Informazioni">i</button>
+    </div>
   </header>
   <div class="status"><span class="chip" id="chipData">Carico i prezzi…</span></div>
 
@@ -70,11 +79,11 @@
         <div class="chips"><button type="button" id="btnFav">Solo preferiti</button></div>
       </details>
     </section>
-    <section class="summary" id="summary" aria-label="Riepilogo"></section>
+    <section class="summary" id="summary" aria-label="Riepilogo"><div class="hero skel"></div></section>
     <p class="verdict" id="verdictText"></p>
     <div class="layout">
       <main>
-        <ul class="list" id="list"></ul>
+        <ul class="list" id="list"><li class="row skel"></li><li class="row skel"></li><li class="row skel"></li></ul>
         <div class="center"><button class="btn ghost more" id="btnMore" type="button" hidden>Mostra altri distributori</button></div>
       </main>
       <aside class="side">
@@ -131,6 +140,19 @@
   <footer>
     Fonte dei prezzi: dati aperti del Ministero delle Imprese e del Made in Italy (licenza IODL 2.0), in vigore alle 8 del giorno precedente alla pubblicazione. Servizi, mappe e percorsi: OpenStreetMap e contributori. Le medie escludono gli impianti autostradali e i carburanti speciali, e scartano i prezzi comunicati più di 8 giorni prima.
   </footer>
+</div>
+
+<div id="themePanel" hidden>
+  <div class="box" role="dialog" aria-modal="true" aria-labelledby="themeTitle">
+    <h2 id="themeTitle">Aspetto</h2>
+    <div class="field"><span>Modo</span>
+      <div class="seg" id="segThemeMode" role="group" aria-label="Modo">
+        <button type="button" data-tm="auto">Come il telefono</button><button type="button" data-tm="light">Chiaro</button><button type="button" data-tm="dark">Scuro</button>
+      </div></div>
+    <div class="field"><span>Colore</span><div class="swatches" id="swatches"></div></div>
+    <p class="hint">Le scelte restano solo su questo telefono. I camouflage sono sempre scuri, per leggere bene i prezzi.</p>
+    <button class="btn" id="btnCloseTheme" type="button">Chiudi</button>
+  </div>
 </div>
 
 <div id="infoPanel" hidden>

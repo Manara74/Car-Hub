@@ -519,6 +519,37 @@ function setTab(t) {
 }
 function refresh() { savePrefs(); syncControls(); renderActive(); }
 
+
+/* ---------- aspetto: modo e colore ---------- */
+const ACCENTS = [['blu', 'Blu notte'], ['arancio', 'Arancio'], ['militare', 'Verde militare'], ['bosco', 'Camo bosco'],
+  ['deserto', 'Camo deserto'], ['rosso', 'Rosso'], ['viola', 'Viola'], ['menta', 'Menta']];
+const SWATCH = { blu: '#4c8df6', arancio: '#ff8a3d', militare: '#9bb35a', rosso: '#ff5a64', viola: '#a78bfa', menta: '#4fc3b5' };
+let THEME = { mode: 'auto', accent: 'blu' };
+function loadTheme() {
+  try { const t = JSON.parse(localStorage.getItem('pg.theme') || '{}'); if (['auto', 'light', 'dark'].includes(t.mode)) THEME.mode = t.mode;
+    if (ACCENTS.some(x => x[0] === t.accent)) THEME.accent = t.accent; } catch (e) { /* senza memoria locale resta il predefinito */ }
+}
+function applyTheme() {
+  const dark = THEME.mode === 'auto' ? !(window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches) : THEME.mode === 'dark';
+  const r = document.documentElement; r.dataset.theme = dark ? 'dark' : 'light'; r.dataset.accent = THEME.accent;
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.content = getComputedStyle(document.body).getPropertyValue('--bg').trim() || meta.content;
+  document.querySelectorAll('#segThemeMode button').forEach(b => b.classList.toggle('on', b.dataset.tm === THEME.mode));
+  document.querySelectorAll('#swatches button').forEach(b => b.classList.toggle('on', b.dataset.ac === THEME.accent));
+}
+function saveTheme() { try { localStorage.setItem('pg.theme', JSON.stringify(THEME)); } catch (e) { /* non fa niente */ } }
+function wireTheme() {
+  $('swatches').innerHTML = ACCENTS.map(([k, n]) => '<button type="button" data-ac="' + k + '"><i class="' + (SWATCH[k] ? '' : 'c-' + k) +
+    '"' + (SWATCH[k] ? ' style="background:' + SWATCH[k] + '"' : '') + '></i>' + esc(n) + '</button>').join('');
+  $('btnTheme').addEventListener('click', () => { $('themePanel').hidden = false; applyTheme(); });
+  $('btnCloseTheme').addEventListener('click', () => { $('themePanel').hidden = true; });
+  $('themePanel').addEventListener('click', e => { if (e.target === $('themePanel')) $('themePanel').hidden = true; });
+  $('segThemeMode').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; THEME.mode = b.dataset.tm; saveTheme(); applyTheme(); });
+  $('swatches').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; THEME.accent = b.dataset.ac; saveTheme(); applyTheme(); });
+  if (window.matchMedia) matchMedia('(prefers-color-scheme: light)').addEventListener('change', () => { if (THEME.mode === 'auto') applyTheme(); });
+  applyTheme();
+}
+
 /* ---------- caricamento manuale di riserva ---------- */
 async function readText(f) {
   const buf = await f.arrayBuffer();
@@ -614,7 +645,7 @@ function wire() {
 
 /* ---------- avvio ---------- */
 (async function start() {
-  loadPrefs(); wire(); syncControls(); setTab(S.tab);
+  loadTheme(); loadPrefs(); wire(); wireTheme(); syncControls(); setTab(S.tab);
   try { await loadAll(); }
   catch (e) {
     const c = $('chipData'); c.className = 'chip warn'; c.textContent = 'Prezzi non disponibili';
