@@ -30,6 +30,8 @@ const S = {
   map: null, layer: null
 };
 const U = { home: '', work: '', notes: {}, geo: {} };
+const O = { quick: true, hero: true, verdict: true, charts: true };
+const RADII = [1, 2, 5, 10, 20, 30, 50], DETOURS = [0.5, 1, 2, 3, 5, 10];
 
 /* ---------- memoria sul telefono ---------- */
 function lsGet(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } }
@@ -55,6 +57,11 @@ function loadPrefs() {
 function savePrefs() {
   lsSet('pg.prefs', { f: S.f, m: S.m, prov: S.prov, comune: S.comune, brand: S.brand, tipo: S.tipo, svf: S.svf,
     litri: S.litri, consumo: S.consumo, tab: S.tab, radius: S.near.radius, sort: S.near.sort, detour: S.route.detour });
+}
+function loadOpts() { const o = lsGet('pg.opts', {}); Object.keys(O).forEach(k => { if (o[k] === false) O[k] = false; }); }
+function applyOpts() {
+  Object.keys(O).forEach(k => document.documentElement.classList.toggle('h-' + k, !O[k]));
+  document.querySelectorAll('input[data-o]').forEach(c => { c.checked = !!O[c.dataset.o]; });
 }
 function saveUser() { lsSet('pg.user', { home: U.home, work: U.work, notes: U.notes }); }
 
@@ -460,6 +467,18 @@ function buildProvSelect(pc) {
   if (!Object.keys(pc).length) S.stations.forEach(s => { pc[s.prov] = (pc[s.prov] || 0) + 1; });
   const opts = Object.keys(pc).map(c => ({ c, n: PG.provName(c) })).sort((a, b) => a.n.localeCompare(b.n, 'it'));
   $('selProv').innerHTML = opts.map(o => '<option value="' + esc(o.c) + '">' + esc(o.n) + ' (' + esc(o.c) + ')</option>').join('');
+  S.provList = opts;
+}
+function buildOptGeo() {
+  const list = S.provList || [];
+  if (!list.length) return;
+  const regs = Array.from(new Set(list.map(o => PG.region(o.c)))).sort((a, b) => a.localeCompare(b, 'it'));
+  const reg = PG.region(S.prov);
+  $('o_reg').innerHTML = regs.map(r => '<option value="' + esc(r) + '">' + esc(r) + '</option>').join('');
+  $('o_reg').value = reg;
+  $('o_prov').innerHTML = list.filter(o => PG.region(o.c) === reg).map(o => '<option value="' + esc(o.c) + '">' + esc(o.n) + ' (' + esc(o.c) + ')</option>').join('');
+  $('o_prov').value = S.prov;
+  $('o_comune').innerHTML = $('selComune').innerHTML; $('o_comune').value = S.comune;
 }
 function buildComuneBrand() {
   const inProv = S.stations.filter(s => s.prov === S.prov);
@@ -475,7 +494,8 @@ function buildComuneBrand() {
   $('selBrand').value = S.brand;
 }
 function drawChipsSv() {
-  $('chipsSv').innerHTML = FILTERS.map(f => '<button type="button" data-svf="' + f[0] + '" class="' + (S.svf.includes(f[0]) ? 'on' : '') + '" aria-pressed="' + S.svf.includes(f[0]) + '">' + esc(f[1]) + '</button>').join('');
+  const h = FILTERS.map(f => '<button type="button" data-svf="' + f[0] + '" class="' + (S.svf.includes(f[0]) ? 'on' : '') + '" aria-pressed="' + S.svf.includes(f[0]) + '">' + esc(f[1]) + '</button>').join('');
+  $('chipsSv').innerHTML = h; $('chipsSv2').innerHTML = h;
 }
 function syncControls() {
   const has = k => S.stations.some(s => s.p[k] != null);
@@ -483,11 +503,11 @@ function syncControls() {
     if (has(S.f + (1 - S.m))) S.m = 1 - S.m;
     else { const f = Object.keys(FUELS).find(c => has(c + '1') || has(c + '0')); if (f) { S.f = f; S.m = has(f + '1') ? 1 : 0; } }
   }
-  document.querySelectorAll('#segFuel button').forEach(b => {
+  document.querySelectorAll('#segFuel button, #o_fuel button').forEach(b => {
     b.classList.toggle('on', b.dataset.f === S.f);
     b.disabled = S.stations.length > 0 && !(has(b.dataset.f + '1') || has(b.dataset.f + '0'));
   });
-  document.querySelectorAll('#segMode button').forEach(b => {
+  document.querySelectorAll('#segMode button, #o_mode button').forEach(b => {
     b.classList.toggle('on', +b.dataset.m === S.m);
     b.disabled = S.stations.length > 0 && !has(S.f + b.dataset.m);
   });
@@ -495,7 +515,10 @@ function syncControls() {
   if (S.stations.length) buildComuneBrand();
   $('selTipo').value = S.tipo;
   $('litri').value = S.litri; $('consumo').value = S.consumo;
-  $('selRadius').value = String(S.near.radius); $('selSort').value = S.near.sort; $('selDetour').value = String(S.route.detour);
+  ['selRadius', 'o_radius'].forEach(i => { $(i).value = String(S.near.radius); });
+  ['selDetour', 'o_detour'].forEach(i => { $(i).value = String(S.route.detour); });
+  $('selSort').value = S.near.sort;
+  buildOptGeo();
   $('btnFav').classList.toggle('on', S.fav);
   drawChipsSv(); updateRouteButtons();
 }
@@ -505,6 +528,8 @@ function updateChip() {
   const days = Math.round((Date.now() - new Date(S.date + 'T12:00:00').getTime()) / 864e5);
   c.className = 'chip' + (days > 2 ? ' warn' : '');
   c.textContent = (S.manual ? 'File caricati a mano · ' : '') + 'Prezzi del ' + PG.fmtD(S.date) + ' · ' + S.stations.length.toLocaleString('it-IT') + ' impianti' + (days > 2 ? ' · non aggiornati' : '');
+  const fonte = S.meta && S.meta.fonte === 'osservaprezzi' ? 'Osservaprezzi carburanti del Ministero' : 'dati aperti del Ministero (Prezzi alle 8)';
+  $('optData').textContent = c.textContent + '. Fonte: ' + (S.manual ? 'file caricati da te' : fonte) + '. Servizi, mappe e percorsi: OpenStreetMap e contributori.';
 }
 function renderActive() {
   if (S.tab === 'zona') renderZona(); else if (S.tab === 'vicino') renderNear(); else renderRoute(false);
@@ -541,13 +566,28 @@ function saveTheme() { try { localStorage.setItem('pg.theme', JSON.stringify(THE
 function wireTheme() {
   $('swatches').innerHTML = ACCENTS.map(([k, n]) => '<button type="button" data-ac="' + k + '"><i class="' + (SWATCH[k] ? '' : 'c-' + k) +
     '"' + (SWATCH[k] ? ' style="background:' + SWATCH[k] + '"' : '') + '></i>' + esc(n) + '</button>').join('');
-  $('btnTheme').addEventListener('click', () => { $('themePanel').hidden = false; applyTheme(); });
-  $('btnCloseTheme').addEventListener('click', () => { $('themePanel').hidden = true; });
-  $('themePanel').addEventListener('click', e => { if (e.target === $('themePanel')) $('themePanel').hidden = true; });
   $('segThemeMode').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; THEME.mode = b.dataset.tm; saveTheme(); applyTheme(); });
   $('swatches').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; THEME.accent = b.dataset.ac; saveTheme(); applyTheme(); });
   if (window.matchMedia) matchMedia('(prefers-color-scheme: light)').addEventListener('change', () => { if (THEME.mode === 'auto') applyTheme(); });
   applyTheme();
+}
+
+/* ---------- pagina Opzioni ---------- */
+let optScroll = 0;
+function openOpt() {
+  if (!$('optPanel').hidden) return;
+  optScroll = window.scrollY;
+  syncControls(); applyTheme(); applyOpts();
+  $('optPanel').hidden = false; document.documentElement.classList.add('optmode');
+  try { history.pushState({ opt: 1 }, ''); } catch (e) { /* senza cronologia si chiude col pulsante */ }
+  window.scrollTo(0, 0);
+}
+function closeOpt() {
+  if ($('optPanel').hidden) return;
+  $('optPanel').hidden = true; document.documentElement.classList.remove('optmode');
+  renderActive();
+  if (S.tab === 'percorso' && S.map) setTimeout(() => S.map.invalidateSize(), 60);
+  window.scrollTo(0, optScroll);
 }
 
 /* ---------- caricamento manuale di riserva ---------- */
@@ -579,25 +619,34 @@ async function ingest(files) {
 /* ---------- eventi ---------- */
 function wire() {
   $('tabs').addEventListener('click', e => { const b = e.target.closest('button'); if (b) setTab(b.dataset.tab); });
-  $('segFuel').addEventListener('click', e => {
+  const onFuel = e => {
     const b = e.target.closest('button'); if (!b || b.disabled) return;
     S.f = b.dataset.f;
     const has = m => S.stations.some(s => s.p[S.f + m] != null);
     S.m = (S.f === 'B' || S.f === 'D') ? (has(1) ? 1 : 0) : (has(0) ? 0 : 1);
     S.limit = 40; S.near.limit = 30; S.route.limit = 30; refresh();
+  };
+  const onMode = e => { const b = e.target.closest('button'); if (!b || b.disabled) return; S.m = +b.dataset.m; S.limit = 40; refresh(); };
+  const onProv = e => { S.prov = e.target.value; S.comune = ''; S.brand = ''; S.limit = 40; S.open = null; refresh(); };
+  const onComune = e => { S.comune = e.target.value; S.limit = 40; refresh(); };
+  $('segFuel').addEventListener('click', onFuel); $('o_fuel').addEventListener('click', onFuel);
+  $('segMode').addEventListener('click', onMode); $('o_mode').addEventListener('click', onMode);
+  $('selProv').addEventListener('change', onProv); $('o_prov').addEventListener('change', onProv);
+  $('selComune').addEventListener('change', onComune); $('o_comune').addEventListener('change', onComune);
+  $('o_reg').addEventListener('change', e => {
+    const first = (S.provList || []).find(o => PG.region(o.c) === e.target.value);
+    if (first) onProv({ target: { value: first.c } });
   });
-  $('segMode').addEventListener('click', e => { const b = e.target.closest('button'); if (!b || b.disabled) return; S.m = +b.dataset.m; S.limit = 40; refresh(); });
-  $('selProv').addEventListener('change', e => { S.prov = e.target.value; S.comune = ''; S.brand = ''; S.limit = 40; S.open = null; refresh(); });
-  $('selComune').addEventListener('change', e => { S.comune = e.target.value; S.limit = 40; refresh(); });
   $('selBrand').addEventListener('change', e => { S.brand = e.target.value; S.limit = 40; refresh(); });
   $('selTipo').addEventListener('change', e => { S.tipo = e.target.value; S.limit = 40; refresh(); });
   $('btnFav').addEventListener('click', () => { S.fav = !S.fav; refresh(); });
-  $('chipsSv').addEventListener('click', e => {
+  const onSv = e => {
     const b = e.target.closest('button'); if (!b) return;
     const c = b.dataset.svf;
     S.svf = S.svf.includes(c) ? S.svf.filter(x => x !== c) : S.svf.concat(c);
     refresh();
-  });
+  };
+  $('chipsSv').addEventListener('click', onSv); $('chipsSv2').addEventListener('click', onSv);
   $('litri').addEventListener('input', e => { const v = parseFloat(e.target.value); S.litri = v > 0 ? Math.min(v, 200) : 40; savePrefs(); renderActive(); });
   $('consumo').addEventListener('input', e => { const v = parseFloat(String(e.target.value).replace(',', '.')); S.consumo = v > 0 ? Math.min(v, 40) : 6.5; savePrefs(); renderActive(); });
   $('btnMore').addEventListener('click', () => { S.limit += 40; renderActive(); });
@@ -605,11 +654,13 @@ function wire() {
   $('btnMoreRoute').addEventListener('click', () => { S.route.limit += 30; renderActive(); });
 
   $('btnGeo').addEventListener('click', askPosition);
-  $('selRadius').addEventListener('change', e => { S.near.radius = +e.target.value; S.near.limit = 30; savePrefs(); renderNear(); });
+  const onRadius = e => { S.near.radius = +e.target.value; S.near.limit = 30; refresh(); };
+  $('selRadius').addEventListener('change', onRadius); $('o_radius').addEventListener('change', onRadius);
   $('selSort').addEventListener('change', e => { S.near.sort = e.target.value; savePrefs(); renderNear(); });
 
   $('btnRoute').addEventListener('click', runRoute);
-  $('selDetour').addEventListener('change', e => { S.route.detour = +e.target.value; S.route.limit = 30; savePrefs(); renderRoute(false); });
+  const onDetour = e => { S.route.detour = +e.target.value; S.route.limit = 30; savePrefs(); syncControls(); renderRoute(false); };
+  $('selDetour').addEventListener('change', onDetour); $('o_detour').addEventListener('change', onDetour);
   $('btnSaveHome').addEventListener('click', () => { const v = $('inFrom').value.trim(); if (!v) return; U.home = v; saveUser(); updateRouteButtons(); });
   $('btnSaveWork').addEventListener('click', () => { const v = $('inTo').value.trim(); if (!v) return; U.work = v; saveUser(); updateRouteButtons(); });
   $('btnHomeWork').addEventListener('click', () => { $('inFrom').value = U.home; $('inTo').value = U.work; runRoute(); });
@@ -622,7 +673,7 @@ function wire() {
     if (m) { const id = m.closest('.row').dataset.id; S.open = S.open === id ? null : id; renderActive(); }
   });
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') $('infoPanel').hidden = true;
+    if (e.key === 'Escape') closeOpt();
     if ((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('main')) {
       e.preventDefault(); const id = e.target.closest('.row').dataset.id; S.open = S.open === id ? null : id; renderActive();
       const r = document.querySelector('.row[data-id="' + (window.CSS && CSS.escape ? CSS.escape(id) : id) + '"] .main'); if (r) r.focus();
@@ -633,9 +684,20 @@ function wire() {
     if (c) { setNote(c.dataset.id, c.dataset.sv, c.checked); renderActive(); }
   });
 
-  $('btnInfo').addEventListener('click', () => { $('infoPanel').hidden = false; });
-  $('btnCloseInfo').addEventListener('click', () => { $('infoPanel').hidden = true; });
-  $('infoPanel').addEventListener('click', e => { if (e.target === $('infoPanel')) $('infoPanel').hidden = true; });
+  $('btnOpt').addEventListener('click', openOpt);
+  $('btnCloseOpt').addEventListener('click', () => { if (history.state && history.state.opt) history.back(); else closeOpt(); });
+  window.addEventListener('popstate', () => { if (!$('optPanel').hidden) closeOpt(); });
+  document.querySelectorAll('input[data-o]').forEach(c => c.addEventListener('change', () => {
+    O[c.dataset.o] = c.checked; lsSet('pg.opts', O); applyOpts();
+  }));
+  let rs = 0;
+  $('btnReset').addEventListener('click', () => {
+    const b = $('btnReset');
+    if (!rs) { rs = setTimeout(() => { rs = 0; b.textContent = 'Ripristina le impostazioni iniziali'; }, 4000); b.textContent = 'Tocca ancora per confermare'; return; }
+    clearTimeout(rs); rs = 0;
+    ['pg.prefs', 'pg.theme', 'pg.opts'].forEach(k => { try { localStorage.removeItem(k); } catch (er) { /* niente */ } });
+    location.reload();
+  });
   $('files').addEventListener('change', e => { if (e.target.files.length) ingest(Array.from(e.target.files)); e.target.value = ''; });
   const dz = $('drop');
   ['dragenter', 'dragover'].forEach(n => dz.addEventListener(n, e => { e.preventDefault(); dz.classList.add('over'); }));
@@ -645,11 +707,15 @@ function wire() {
 
 /* ---------- avvio ---------- */
 (async function start() {
-  loadTheme(); loadPrefs(); wire(); wireTheme(); syncControls(); setTab(S.tab);
+  loadTheme(); loadPrefs(); loadOpts();
+  $('selRadius').innerHTML = $('o_radius').innerHTML = RADII.map(r => '<option value="' + r + '">' + r + ' km</option>').join('');
+  $('selDetour').innerHTML = $('o_detour').innerHTML = DETOURS.map(d => '<option value="' + d + '">' + (d < 1 ? (d * 1000) + ' m' : d + ' km') + ' dal percorso</option>').join('');
+  $('o_detour').innerHTML = DETOURS.map(d => '<option value="' + d + '">' + (d < 1 ? (d * 1000) + ' m' : d + ' km') + '</option>').join('');
+  wire(); wireTheme(); applyOpts(); syncControls(); setTab(S.tab);
   try { await loadAll(); }
   catch (e) {
     const c = $('chipData'); c.className = 'chip warn'; c.textContent = 'Prezzi non disponibili';
-    $('list').innerHTML = '<li class="empty">I prezzi del giorno non sono ancora disponibili. Riprova fra poco, oppure caricali a mano da «Info».</li>';
+    $('list').innerHTML = '<li class="empty">I prezzi del giorno non sono ancora disponibili. Riprova fra poco, oppure caricali a mano da Opzioni.</li>';
   }
 })();
 })();
