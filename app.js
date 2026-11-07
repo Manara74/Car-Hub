@@ -30,7 +30,7 @@ const S = {
   map: null, layer: null
 };
 const U = { home: '', work: '', notes: {}, geo: {} };
-const O = { quick: true, hero: true, verdict: true, charts: true, ticker: true, news: true };
+const O = { quick: true, hero: true, verdict: true, charts: true, ticker: true, news: true, favs: true };
 let SPEED = 'normal';
 const SPEEDS = { slow: 32, normal: 52, fast: 84 };
 const RADII = [1, 2, 5, 10, 20, 30, 50], DETOURS = [0.5, 1, 2, 3, 5, 10];
@@ -93,6 +93,7 @@ async function loadAll() {
 function setStations(st, date, manual) {
   S.stations = st; S.byId = new Map(st.map(s => [s.id, s]));
   S.date = date; S.manual = !!manual; S.avg = PG.computeAvg(st);
+  if (!manual) snapAllFavs(); else FH = lsGet('pg.favhist', {});
   const pc = {};
   st.forEach(s => { pc[s.prov] = (pc[s.prov] || 0) + 1; });
   if (!S.prov || !pc[S.prov]) {
@@ -137,6 +138,66 @@ function toggleFav(id) {
   const n = U.notes[id] || (U.notes[id] = {});
   if (n.fav) delete n.fav; else n.fav = true;
   cleanNote(id); saveUser();
+  if (n.fav) snapFav(id);
+}
+
+/* ---------- preferiti: andamento salvato sul telefono ---------- */
+const FAVKEEP = 90;
+let FH = {};
+function snapFav(id) {
+  const s = S.byId.get(id); if (!s || S.manual || !S.date) return;
+  const h = FH[id] || (FH[id] = {});
+  Object.keys(s.p).forEach(k => {
+    const a = h[k] || (h[k] = []);
+    if (a.length && a[a.length - 1][0] === S.date) a[a.length - 1][1] = s.p[k];
+    else a.push([S.date, s.p[k]]);
+    if (a.length > FAVKEEP) a.splice(0, a.length - FAVKEEP);
+  });
+  lsSet('pg.favhist', FH);
+}
+function snapAllFavs() {
+  FH = lsGet('pg.favhist', {});
+  Object.keys(U.notes).forEach(id => { if (U.notes[id].fav) snapFav(id); });
+  Object.keys(FH).forEach(id => { if (!(U.notes[id] && U.notes[id].fav)) delete FH[id]; });
+  lsSet('pg.favhist', FH);
+}
+function favInfo(id) {
+  const s = S.byId.get(id); if (!s) return null;
+  const k = key(), a = (FH[id] && FH[id][k]) || [];
+  const cur = s.p[k];
+  const prev = a.length ? a.filter(x => x[0] < S.date).pop() : null;
+  return { s, k, cur, a, delta: cur != null && prev ? cur - prev[1] : null, since: prev ? prev[0] : null };
+}
+function spark(a) {
+  if (a.length < 3) return '';
+  const v = a.map(x => x[1]), mn = Math.min(...v), mx = Math.max(...v), W = 84, H = 26, r = (mx - mn) || 0.001;
+  const pts = v.map((y, i) => (i * (W - 4) / (v.length - 1) + 2).toFixed(1) + ',' + (H - 3 - (y - mn) / r * (H - 6)).toFixed(1)).join(' ');
+  return '<svg class="spark" viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '" aria-hidden="true"><polyline points="' + pts + '" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/></svg>';
+}
+function renderFavs() {
+  const card = $('favCard');
+  const ids = Object.keys(U.notes).filter(id => U.notes[id].fav && S.byId.has(id));
+  if (!ids.length || !S.stations.length) { card.hidden = true; return; }
+  const items = ids.map(favInfo).sort((a, b) => (a.cur == null) - (b.cur == null) || a.cur - b.cur);
+  card.hidden = false; $('favCount').textContent = String(items.length);
+  $('favBody').innerHTML = items.map(f => {
+    const d = f.delta, tone = d == null || Math.abs(d) < 0.0005 ? 'flat' : d > 0 ? 'up' : 'down';
+    const dl = f.cur == null ? 'non disponibile per questo carburante'
+      : d == null ? 'segnato oggi: seguo il prezzo da ora'
+      : tone === 'flat' ? 'invariato dal ' + fmtDay(f.since)
+      : PG.fmtC(d) + ' dal ' + fmtDay(f.since);
+    return '<li data-fid="' + esc(f.s.id) + '" tabindex="0" role="button">' + brandBadge(f.s.brand) +
+      '<div class="fi"><b>' + esc(f.s.name) + '</b><small>' + esc(f.s.comune) + ' (' + esc(f.s.prov) + ')</small>' +
+      '<span class="fd ' + tone + '">' + esc(dl) + '</span></div>' +
+      '<div class="fp ' + tone + '">' + (f.cur != null ? '<b class="num">' + PG.fmtP(f.cur) + '</b>' : '<b>—</b>') + spark(f.a) + '</div></li>';
+  }).join('');
+}
+function openFav(id) {
+  const s = S.byId.get(id); if (!s) return;
+  S.prov = s.prov; S.comune = ''; S.brand = ''; S.tipo = 'all'; S.svf = []; S.fav = true; S.open = id; S.limit = 40;
+  refresh();
+  const r = document.querySelector('.row[data-id="' + (window.CSS && CSS.escape ? CSS.escape(id) : id) + '"]');
+  if (r) r.scrollIntoView({ block: 'center' });
 }
 
 /* ---------- calcoli comuni ---------- */
@@ -540,7 +601,7 @@ function updateChip() {
 function renderActive() {
   if (S.tab === 'zona') renderZona(); else if (S.tab === 'vicino') renderNear(); else renderRoute(false);
 }
-function renderAll() { updateChip(); renderActive(); renderNews(); }
+function renderAll() { updateChip(); renderActive(); renderNews(); renderFavs(); }
 function setTab(t) {
   S.tab = t; savePrefs();
   document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('on', b.dataset.tab === t));
@@ -548,7 +609,7 @@ function setTab(t) {
   renderActive();
   if (t === 'percorso' && S.map) setTimeout(() => S.map.invalidateSize(), 60);
 }
-function refresh() { savePrefs(); syncControls(); renderActive(); renderNews(); }
+function refresh() { savePrefs(); syncControls(); renderActive(); renderNews(); renderFavs(); }
 
 
 /* ---------- aspetto: modo e colore ---------- */
@@ -584,6 +645,11 @@ let lastTicker = '', lastCard = '';
 const fmtDay = d => d.slice(8, 10) + '/' + d.slice(5, 7);
 function calcNews() {
   const out = [], region = PG.region(S.prov), mode = S.m ? 'self' : 'servito';
+  if (O.favs) Object.keys(U.notes).filter(id => U.notes[id].fav).forEach(id => {
+    const f = favInfo(id);
+    if (f && f.delta != null && Math.abs(f.delta) >= 0.0045)
+      out.push({ tone: f.delta > 0 ? 'up' : 'down', t: 'Il tuo preferito ' + f.s.name + ' (' + f.s.comune + '): ' + PG.fmtC(f.delta) + ' dal ' + fmtDay(f.since) + ' · ' + FUELS[S.f].toLowerCase() + ' ' + mode });
+  });
   ['B', 'D'].forEach(f => {
     const k = f + S.m;
     const ds = Object.keys(S.hist).sort().filter(d => S.hist[d] && S.hist[d][k] && S.hist[d][k][region] != null);
@@ -748,12 +814,14 @@ function wire() {
 
   document.addEventListener('click', e => {
     const a = e.target.closest('[data-act]');
-    if (a && a.dataset.act === 'fav') { toggleFav(a.dataset.id); renderActive(); return; }
+    if (a && a.dataset.act === 'fav') { toggleFav(a.dataset.id); renderActive(); renderNews(); renderFavs(); return; }
+    const fv = e.target.closest('#favBody li'); if (fv) { openFav(fv.dataset.fid); return; }
     const m = e.target.closest('.main');
     if (m) { const id = m.closest('.row').dataset.id; S.open = S.open === id ? null : id; renderActive(); }
   });
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') closeOpt();
+    if ((e.key === 'Enter' || e.key === ' ') && e.target.closest && e.target.closest('#favBody li')) { e.preventDefault(); openFav(e.target.closest('#favBody li').dataset.fid); }
     if ((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('main')) {
       e.preventDefault(); const id = e.target.closest('.row').dataset.id; S.open = S.open === id ? null : id; renderActive();
       const r = document.querySelector('.row[data-id="' + (window.CSS && CSS.escape ? CSS.escape(id) : id) + '"] .main'); if (r) r.focus();

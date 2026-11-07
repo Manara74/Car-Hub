@@ -279,7 +279,7 @@ html.optmode .wrap>:not(#optPanel){display:none}
 .tg input:checked{background:var(--accent)}
 .tg input:checked::after{transform:translateX(18px)}
 /* parti nascoste dalle opzioni */
-html.h-quick #quick,html.h-hero #summary,html.h-verdict #verdictText,html.h-charts .side,html.h-ticker #ticker,html.h-news #newsCard{display:none}
+html.h-favs #favCard,html.h-quick #quick,html.h-hero #summary,html.h-verdict #verdictText,html.h-charts .side,html.h-ticker #ticker,html.h-news #newsCard{display:none}
 html.h-charts .layout{display:block}
 
 /* ---- Fascia delle news ---- */
@@ -302,7 +302,7 @@ html.h-charts .layout{display:block}
 .tview:has(.static){overflow-x:auto;-webkit-mask-image:none;mask-image:none}
 html:not(.h-ticker) body{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 144px)}
 /* scheda Novità */
-.newsd{padding:0}
+.panel.newsd{padding:0;gap:0}
 .newsd>summary{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px;cursor:pointer;list-style:none;font-weight:600}
 .newsd>summary::-webkit-details-marker{display:none}
 .newsd>summary::after{content:"+";color:var(--accent);font-weight:700;margin-left:6px}
@@ -318,3 +318,15 @@ html:not(.h-ticker) body{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 1
 .nl.ext a{color:var(--ink);text-decoration:none;font-weight:500}
 .nl.ext a:hover{text-decoration:underline}
 .nl small{color:var(--muted);font-size:.74rem}
+
+/* ---- Preferiti ---- */
+.favl{list-style:none;margin:0;padding:0 16px 14px;display:grid;gap:2px}
+.favl li{display:flex;align-items:center;gap:12px;padding:10px 4px;border-top:1px solid var(--line);cursor:pointer}
+.favl li:first-child{border-top:0}
+.favl .fi{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.favl .fi b{font-size:.92rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.favl .fi small{color:var(--muted);font-size:.76rem}
+.fd{font-size:.76rem;font-weight:600}
+.fd.up,.fp.up .spark{color:var(--bad)}.fd.down,.fp.down .spark{color:var(--good)}.fd.flat{color:var(--muted)}.fp.flat .spark{color:var(--muted)}
+.favl .fp{display:flex;flex-direction:column;align-items:flex-end;gap:2px;flex:none}
+.favl .fp b{font-size:1.05rem;color:var(--ink)}

@@ -18,7 +18,7 @@
 (function(){var m='auto',a='blu';try{var t=JSON.parse(localStorage.getItem('pg.theme')||'{}');if(t.mode)m=t.mode;if(t.accent)a=t.accent}catch(e){}
 var d=m==='auto'?(window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'):m;
 var r=document.documentElement;r.dataset.theme=d;r.dataset.accent=a;
-try{var o=JSON.parse(localStorage.getItem('pg.opts')||'{}');['quick','hero','verdict','charts','ticker','news'].forEach(function(k){if(o[k]===false)r.classList.add('h-'+k)})}catch(e){}})();
+try{var o=JSON.parse(localStorage.getItem('pg.opts')||'{}');['quick','hero','verdict','charts','ticker','news','favs'].forEach(function(k){if(o[k]===false)r.classList.add('h-'+k)})}catch(e){}})();
 </script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin>
 <link rel="stylesheet" href="style.css">
@@ -75,6 +75,10 @@ try{var o=JSON.parse(localStorage.getItem('pg.opts')||'{}');['quick','hero','ver
     </section>
     <section class="summary" id="summary" aria-label="Riepilogo"><div class="hero skel"></div></section>
     <p class="verdict" id="verdictText"></p>
+    <details class="panel newsd" id="favCard" open hidden>
+      <summary><span>I tuoi preferiti</span><b id="favCount"></b></summary>
+      <ul id="favBody" class="favl"></ul>
+    </details>
     <details class="panel newsd" id="newsCard" hidden>
       <summary><span>Novità sul carburante</span><b id="newsCount"></b></summary>
       <div id="newsBody"></div>
@@ -191,6 +195,7 @@ try{var o=JSON.parse(localStorage.getItem('pg.opts')||'{}');['quick','hero','ver
       <label class="tg"><span>Frase sul risparmio<small>Quanto risparmi sul pieno</small></span><input type="checkbox" data-o="verdict"></label>
       <label class="tg"><span>Grafici<small>Distribuzione dei prezzi e andamento della media</small></span><input type="checkbox" data-o="charts"></label>
       <label class="tg"><span>Fascia delle news in basso<small>Testo che scorre sopra i pulsanti, con variazioni e titoli</small></span><input type="checkbox" data-o="ticker"></label>
+      <label class="tg"><span>Scheda «I tuoi preferiti»<small>I distributori con la stella, di ogni provincia, con l'andamento del prezzo</small></span><input type="checkbox" data-o="favs"></label>
       <label class="tg"><span>Scheda «Novità»<small>Le stesse notizie in forma di elenco, sopra i distributori</small></span><input type="checkbox" data-o="news"></label>
       <div class="field"><span>Velocità della fascia</span>
         <div class="seg" id="o_speed" role="group" aria-label="Velocità della fascia">
