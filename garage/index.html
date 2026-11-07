@@ -36,15 +36,22 @@ var r=document.documentElement;r.dataset.theme=d;r.dataset.accent=a})();
         <span class="gi"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V6a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v15"/><path d="M3 21h14"/><path d="M7 8h6"/><path d="M15 10h2.5a1.5 1.5 0 0 1 1.5 1.5V17a1.5 1.5 0 0 0 3 0V9l-2.5-2.5"/></svg></span>
         <b>Pompa Giusta</b><small>Prezzi dei carburanti, vicino a te e sul percorso</small>
       </a>
+      <a class="gtile" href="#diario" id="tileDiario">
+        <span class="gi"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3.5h9a1.5 1.5 0 0 1 1.5 1.5v15.5H4.5V5A1.5 1.5 0 0 1 6 3.5z"/><path d="M8 8h5M8 11.5h5M8 15h3"/><path d="M16.5 8H19v8.5"/></svg></span>
+        <b>Diario rifornimenti</b><small id="diaSub">Litri, spesa e consumi reali</small>
+      </a>
       <a class="gtile" href="#scadenze" id="tileScad">
         <span class="gi"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M8 3v4M16 3v4M3.5 10h17"/><path d="M9 15l2 2 4-4"/></svg></span>
         <b>Scadenze auto</b><small id="scadSub">Bollo, assicurazione, revisione, tagliando</small><em class="badge" id="scadBadge" hidden></em>
+      </a>
+      <a class="gtile" href="#mezzi" id="tileMezzi">
+        <span class="gi"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 16v-5l2-5h10l2 5v5"/><path d="M3 16h18"/><circle cx="7.5" cy="17.8" r="1.8"/><circle cx="16.5" cy="17.8" r="1.8"/></svg></span>
+        <b>I miei mezzi</b><small id="mezziSub">Auto e moto</small>
       </a>
       <a class="gtile" href="#backup">
         <span class="gi"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7.5 10.5L12 15l4.5-4.5"/><path d="M4 17v2.5A1.5 1.5 0 0 0 5.5 21h13a1.5 1.5 0 0 0 1.5-1.5V17"/></svg></span>
         <b>Backup</b><small>Salva e ripristina i tuoi dati</small>
       </a>
-      <div class="gtile soon"><span class="gi"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3.5h9a1.5 1.5 0 0 1 1.5 1.5v15.5H4.5V5A1.5 1.5 0 0 1 6 3.5z"/><path d="M8 8h5M8 11.5h5M8 15h3"/><path d="M16.5 8H19v8.5"/><path d="M12.5 17.5l2 2.3" opacity="0"/></svg></span><b>Diario rifornimenti</b><small>In arrivo</small></div>
       <div class="gtile soon"><span class="gi"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3.5h12v17l-2.4-1.6-1.8 1.6-1.8-1.6-1.8 1.6-2.4-1.6z"/><path d="M9 8.5h6M9 12h6"/><path d="M9 15.5h3"/></svg></span><b>Spese dell'auto</b><small>In arrivo</small></div>
       <div class="gtile soon"><span class="gi"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V4"/><path d="M4 20h16"/><path d="M8 16v-4M12.5 16V8M17 16v-6"/></svg></span><b>Statistiche</b><small>In arrivo</small></div>
     </div>
@@ -53,9 +60,47 @@ var r=document.documentElement;r.dataset.theme=d;r.dataset.accent=a})();
 
   <!-- SCADENZE -->
   <section id="vScad" class="gview" hidden>
-    <div class="panel og" id="vehBox">
-      <h3>Il tuo mezzo</h3>
-      <div class="field" id="vehSwitch" hidden><span>Mezzo</span><select id="selVeh"></select></div>
+    <div class="panel vbar" data-vbar></div>
+    <p class="verdict" id="scadSum"></p>
+    <div id="dlList" class="gdl"></div>
+    <p class="hint">Imposta la prossima data di ogni scadenza: l'app ti dice quanto manca. Con «Rinnovata» sposti la data avanti del periodo scelto. Gli avvisi compaiono quando apri l'app.</p>
+  </section>
+
+  <!-- DIARIO -->
+  <section id="vDiario" class="gview" hidden>
+    <div class="panel vbar" data-vbar></div>
+    <form class="panel og" id="fillForm" autocomplete="off">
+      <h3 id="fillTitle">Nuovo rifornimento</h3>
+      <div class="grid">
+        <div class="field"><span>Data</span><input id="fDate" type="date" required></div>
+        <div class="field"><span>Chilometri</span><input id="fKm" type="number" inputmode="numeric" min="0" step="1" placeholder="Contachilometri" required></div>
+        <div class="field"><span>Litri</span><input id="fL" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Es. 38,52" required></div>
+        <div class="field"><span>Totale pagato (€)</span><input id="fTot" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Es. 72,40" required></div>
+        <div class="field"><span>Carburante</span><select id="fFuel"><option value="B">Benzina</option><option value="D">Gasolio</option><option value="G">GPL</option><option value="M">Metano</option></select></div>
+        <div class="field"><span>Prezzo calcolato</span><div class="calc" id="fPrice">—</div></div>
+        <div class="field wide"><span>Distributore o nota (facoltativo)</span><input id="fNote" type="text" maxlength="60" placeholder="Es. Tamoil Via Aurelia" autocomplete="off"></div>
+      </div>
+      <label class="tg"><span>Pieno completo<small>Spegni se hai messo solo una parte: i consumi restano giusti</small></span><input type="checkbox" id="fFull" checked></label>
+      <div class="inline"><button class="btn" type="submit" id="btnFill">Salva il rifornimento</button><button class="btn ghost" type="button" id="btnFillCancel" hidden>Annulla modifica</button></div>
+      <p class="msg" id="fillMsg" role="status" aria-live="polite"></p>
+    </form>
+    <div class="panel og" id="diaStats" hidden>
+      <h3>Riepilogo</h3>
+      <div class="gstats" id="statsGrid"></div>
+      <p class="hint" id="statsNote"></p>
+    </div>
+    <div id="fillList" class="fl"></div>
+  </section>
+
+  <!-- MEZZI -->
+  <section id="vMezzi" class="gview" hidden>
+    <div class="panel og">
+      <h3>I tuoi mezzi</h3>
+      <div class="vlist" id="vehList"></div>
+      <button class="btn" id="btnAddVeh" type="button">Aggiungi un mezzo</button>
+    </div>
+    <div class="panel og">
+      <h3>Dati del mezzo selezionato</h3>
       <div class="grid">
         <div class="field wide"><span>Nome</span><input id="vName" type="text" placeholder="Es. Panda, Vespa" maxlength="40" autocomplete="off"></div>
         <div class="field"><span>Tipo</span>
@@ -64,9 +109,11 @@ var r=document.documentElement;r.dataset.theme=d;r.dataset.accent=a})();
         <div class="field wide"><span>Chilometri attuali (facoltativi)</span><input id="vKm" type="number" inputmode="numeric" min="0" step="1" placeholder="Es. 84500"></div>
       </div>
     </div>
-    <p class="verdict" id="scadSum"></p>
-    <div id="dlList" class="gdl"></div>
-    <p class="hint">Imposta la prossima data di ogni scadenza: l'app ti dice quanto manca. Con «Rinnovata» sposti la data avanti del periodo scelto. Gli avvisi compaiono quando apri l'app.</p>
+    <div class="panel og">
+      <h3>Elimina</h3>
+      <p class="hint" id="delHint">Elimina questo mezzo con le sue scadenze e il suo diario dei rifornimenti. Non si può annullare: fai prima un backup se vuoi tenerne una copia.</p>
+      <button class="btn ghost danger" id="btnDelVeh" type="button">Elimina questo mezzo</button>
+    </div>
   </section>
 
   <!-- BACKUP -->
