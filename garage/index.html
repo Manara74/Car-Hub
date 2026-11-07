@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Garage</title>
+<meta name="description" content="Il tuo ambiente per auto e moto: scadenze, carburante e altro.">
+<meta name="theme-color" content="#070c16">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-title" content="Garage">
+<link rel="preload" href="../fonts/archivo-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../fonts/archivo-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
+<script>
+/* stessi colori scelti in Pompa Giusta (stesso telefono, stessa memoria) */
+(function(){var m='auto',a='blu';try{var t=JSON.parse(localStorage.getItem('pg.theme')||'{}');if(t.mode)m=t.mode;if(t.accent)a=t.accent}catch(e){}
+var d=m==='auto'?(window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'):m;
+var r=document.documentElement;r.dataset.theme=d;r.dataset.accent=a})();
+</script>
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="garage.css">
+</head>
+<body class="gg">
+<div class="wrap">
+  <header class="top">
+    <h1><img class="logo" src="icon.svg" alt="" width="36" height="36"><span id="ggTitle">Garage</span></h1>
+    <button class="icon-btn" id="btnBack" type="button" aria-label="Torna al menu" hidden><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+  </header>
+
+  <!-- MENU -->
+  <section id="vMenu" class="gview">
+    <p class="hint" id="menuAlert" hidden></p>
+    <div class="gtiles">
+      <a class="gtile" href="../">
+        <span class="gi"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V6a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v15"/><path d="M3 21h14"/><path d="M7 8h6"/><path d="M15 10h2.5a1.5 1.5 0 0 1 1.5 1.5V17a1.5 1.5 0 0 0 3 0V9l-2.5-2.5"/></svg></span>
+        <b>Pompa Giusta</b><small>Prezzi dei carburanti, vicino a te e sul percorso</small>
+      </a>
+      <a class="gtile" href="#scadenze" id="tileScad">
+        <span class="gi"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M8 3v4M16 3v4M3.5 10h17"/><path d="M9 15l2 2 4-4"/></svg></span>
+        <b>Scadenze auto</b><small id="scadSub">Bollo, assicurazione, revisione, tagliando</small><em class="badge" id="scadBadge" hidden></em>
+      </a>
+      <a class="gtile" href="#backup">
+        <span class="gi"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7.5 10.5L12 15l4.5-4.5"/><path d="M4 17v2.5A1.5 1.5 0 0 0 5.5 21h13a1.5 1.5 0 0 0 1.5-1.5V17"/></svg></span>
+        <b>Backup</b><small>Salva e ripristina i tuoi dati</small>
+      </a>
+      <div class="gtile soon"><span class="gi">⛽</span><b>Diario rifornimenti</b><small>In arrivo</small></div>
+      <div class="gtile soon"><span class="gi">🧾</span><b>Spese dell'auto</b><small>In arrivo</small></div>
+      <div class="gtile soon"><span class="gi">📈</span><b>Statistiche</b><small>In arrivo</small></div>
+    </div>
+    <p class="hint">Nome e grafica del menu sono provvisori: li decidiamo insieme. I tuoi dati restano solo su questo telefono.</p>
+  </section>
+
+  <!-- SCADENZE -->
+  <section id="vScad" class="gview" hidden>
+    <div class="panel og" id="vehBox">
+      <h3>Il tuo mezzo</h3>
+      <div class="field" id="vehSwitch" hidden><span>Mezzo</span><select id="selVeh"></select></div>
+      <div class="grid">
+        <div class="field wide"><span>Nome</span><input id="vName" type="text" placeholder="Es. Panda, Vespa" maxlength="40" autocomplete="off"></div>
+        <div class="field"><span>Tipo</span>
+          <div class="seg" id="vType" role="group" aria-label="Tipo"><button type="button" data-t="auto">Auto</button><button type="button" data-t="moto">Moto</button></div></div>
+        <div class="field"><span>Targa (facoltativa)</span><input id="vPlate" type="text" placeholder="AB123CD" maxlength="10" autocomplete="off" autocapitalize="characters"></div>
+        <div class="field wide"><span>Chilometri attuali (facoltativi)</span><input id="vKm" type="number" inputmode="numeric" min="0" step="1" placeholder="Es. 84500"></div>
+      </div>
+    </div>
+    <p class="verdict" id="scadSum"></p>
+    <div id="dlList" class="gdl"></div>
+    <p class="hint">Imposta la prossima data di ogni scadenza: l'app ti dice quanto manca. Con «Rinnovata» sposti la data avanti del periodo scelto. Gli avvisi compaiono quando apri l'app.</p>
+  </section>
+
+  <!-- BACKUP -->
+  <section id="vBackup" class="gview" hidden>
+    <div class="panel og">
+      <h3>Salva i tuoi dati</h3>
+      <p class="hint">Crea un file con le scadenze del tuo mezzo e tutte le impostazioni di Pompa Giusta (zona, preferiti, colori). Conservalo in un posto sicuro, per esempio nel Drive o inviandolo a te stesso.</p>
+      <button class="btn" id="btnExport" type="button">Scarica il file di backup</button>
+      <p class="msg" id="expMsg" role="status" aria-live="polite"></p>
+    </div>
+    <div class="panel og">
+      <h3>Ripristina da un file</h3>
+      <p class="hint">Scegli un file di backup salvato in precedenza. I dati di questo telefono verranno sostituiti da quelli del file.</p>
+      <div class="drop"><span id="impName">Nessun file scelto</span><label class="btn small" for="impFile">Scegli il file</label><input id="impFile" type="file" accept=".json,application/json"></div>
+      <button class="btn ghost" id="btnImport" type="button" hidden>Sostituisci i dati con quelli del file</button>
+      <p class="msg" id="impMsg" role="status" aria-live="polite"></p>
+    </div>
+  </section>
+</div>
+<script src="garage.js"></script>
+</body>
+</html>
