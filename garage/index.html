@@ -52,8 +52,14 @@ var r=document.documentElement;r.dataset.theme=d;r.dataset.accent=a})();
         <span class="gi"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7.5 10.5L12 15l4.5-4.5"/><path d="M4 17v2.5A1.5 1.5 0 0 0 5.5 21h13a1.5 1.5 0 0 0 1.5-1.5V17"/></svg></span>
         <b>Backup</b><small>Salva e ripristina i tuoi dati</small>
       </a>
-      <div class="gtile soon"><span class="gi"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3.5h12v17l-2.4-1.6-1.8 1.6-1.8-1.6-1.8 1.6-2.4-1.6z"/><path d="M9 8.5h6M9 12h6"/><path d="M9 15.5h3"/></svg></span><b>Spese dell'auto</b><small>In arrivo</small></div>
-      <div class="gtile soon"><span class="gi"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V4"/><path d="M4 20h16"/><path d="M8 16v-4M12.5 16V8M17 16v-6"/></svg></span><b>Statistiche</b><small>In arrivo</small></div>
+      <a class="gtile" href="#spese" id="tileSpese">
+        <span class="gi"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3.5h12v17l-2.4-1.6-1.8 1.6-1.8-1.6-1.8 1.6-2.4-1.6z"/><path d="M9 8.5h6M9 12h6"/><path d="M9 15.5h3"/></svg></span>
+        <b>Spese dell'auto</b><small id="spesaSub">Manutenzione, gomme, pedaggi, multe</small>
+      </a>
+      <a class="gtile" href="#statistiche" id="tileStat">
+        <span class="gi"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V4"/><path d="M4 20h16"/><path d="M8 16v-4M12.5 16V8M17 16v-6"/></svg></span>
+        <b>Statistiche</b><small id="statSub">Quanto spendi, consumi, costo al km</small>
+      </a>
     </div>
     <p class="hint">Nome e grafica del menu sono provvisori: li decidiamo insieme. I tuoi dati restano solo su questo telefono.</p>
   </section>
@@ -113,6 +119,44 @@ var r=document.documentElement;r.dataset.theme=d;r.dataset.accent=a})();
       <h3>Elimina</h3>
       <p class="hint" id="delHint">Elimina questo mezzo con le sue scadenze e il suo diario dei rifornimenti. Non si può annullare: fai prima un backup se vuoi tenerne una copia.</p>
       <button class="btn ghost danger" id="btnDelVeh" type="button">Elimina questo mezzo</button>
+    </div>
+  </section>
+
+  <!-- SPESE -->
+  <section id="vSpese" class="gview" hidden>
+    <div class="panel vbar" data-vbar></div>
+    <form class="panel og" id="expForm" autocomplete="off">
+      <h3 id="expTitle">Nuova spesa</h3>
+      <div class="grid">
+        <div class="field"><span>Data</span><input id="eDate" type="date" required></div>
+        <div class="field"><span>Importo (€)</span><input id="eAmt" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Es. 120,00" required></div>
+        <div class="field wide"><span>Categoria</span><select id="eCat"></select></div>
+        <div class="field"><span>Chilometri (facoltativi)</span><input id="eKm" type="number" inputmode="numeric" min="0" step="1" placeholder="Contachilometri"></div>
+        <div class="field"><span>Nota (facoltativa)</span><input id="eNote" type="text" maxlength="60" placeholder="Es. Pneumatici invernali" autocomplete="off"></div>
+      </div>
+      <div class="inline"><button class="btn" type="submit" id="btnExp">Salva la spesa</button><button class="btn ghost" type="button" id="btnExpCancel" hidden>Annulla modifica</button></div>
+      <p class="msg" id="expMsg" role="status" aria-live="polite"></p>
+    </form>
+    <div class="panel og" id="expStats" hidden>
+      <h3>Riepilogo</h3>
+      <div class="gstats" id="expGrid"></div>
+      <p class="hint">Qui ci sono le spese diverse dal carburante. Il carburante lo trovi nel Diario rifornimenti e nelle Statistiche.</p>
+    </div>
+    <div id="expList" class="fl"></div>
+  </section>
+
+  <!-- STATISTICHE -->
+  <section id="vStat" class="gview" hidden>
+    <div class="panel vbar" data-vbar></div>
+    <div class="field"><span>Periodo</span>
+      <div class="seg" id="stPeriod" role="group" aria-label="Periodo"><button type="button" data-p="30">30 giorni</button><button type="button" data-p="365">12 mesi</button><button type="button" data-p="all">Sempre</button></div></div>
+    <p class="empty" id="stEmpty" hidden>Registra qualche rifornimento o spesa per vedere le statistiche di questo mezzo.</p>
+    <div id="stBody" class="gview">
+      <div class="gstats" id="stCards"></div>
+      <div class="panel og"><h3>Spesa mese per mese</h3><div id="stMonths" class="chart"></div></div>
+      <div class="panel og"><h3>Come si divide la spesa</h3><div id="stBreak" class="bars"></div></div>
+      <div class="panel og"><h3>Consumo nel tempo</h3><div id="stCons" class="chart"></div></div>
+      <p class="hint" id="stNote"></p>
     </div>
   </section>
 

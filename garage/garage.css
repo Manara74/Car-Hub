@@ -48,3 +48,17 @@ input[type=date]{font:inherit;color:var(--ink);background:var(--bg);border:1px s
 .fill .fv{display:flex;justify-content:space-between;gap:8px;font-size:.95rem}
 .fill .fk{color:var(--muted);font-size:.8rem}
 .fl .empty{margin:0}
+
+/* ---- statistiche ---- */
+.chart{width:100%}
+.svgc{width:100%;height:auto;display:block}
+.svgc .ax{fill:var(--muted);font:500 10px var(--font-ui)}
+.legend{margin:6px 0 0;font-size:.78rem;color:var(--muted);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.legend i{width:10px;height:10px;border-radius:3px;display:inline-block;margin-left:8px}
+.legend i:first-child{margin-left:0}
+.bars{display:grid;gap:12px}
+.bar .bl{display:flex;justify-content:space-between;gap:10px;font-size:.86rem;margin-bottom:5px}
+.bar .bl b{font-size:.82rem;font-weight:600}
+.bar .bt{height:8px;border-radius:999px;background:var(--chip);overflow:hidden}
+.bar .bt i{display:block;height:100%;border-radius:999px}
+#stBody[hidden]{display:none}

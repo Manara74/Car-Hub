@@ -13,14 +13,14 @@ const uid = () => 'v' + Date.now().toString(36) + Math.random().toString(36).sli
 function newVehicle(name, type) {
   const dl = {}; TYPES.forEach(([k, , ev]) => { dl[k] = { date: '', every: ev, note: '' }; });
   dl.tagliando.kmDue = null;
-  return { id: uid(), name: name || '', type: type || 'auto', plate: '', km: null, dl, fills: [] };
+  return { id: uid(), name: name || '', type: type || 'auto', plate: '', km: null, dl, fills: [], expenses: [] };
 }
 function load() {
   try {
     const v = JSON.parse(localStorage.getItem(KEY));
     if (v && Array.isArray(v.vehicles) && v.vehicles.length) {
       v.vehicles.forEach(x => { // completa i campi mancanti senza perdere nulla
-        x.dl = x.dl || {}; if (!Array.isArray(x.fills)) x.fills = [];
+        x.dl = x.dl || {}; if (!Array.isArray(x.fills)) x.fills = []; if (!Array.isArray(x.expenses)) x.expenses = [];
         TYPES.forEach(([k, , ev]) => { x.dl[k] = Object.assign({ date: '', every: ev, note: '' }, x.dl[k]); });
       });
       if (!v.vehicles.some(x => x.id === v.active)) v.active = v.vehicles[0].id;
@@ -87,14 +87,14 @@ function alerts() {
 }
 
 /* ---------- schermate ---------- */
-const VIEWS = { menu: 'vMenu', scadenze: 'vScad', diario: 'vDiario', mezzi: 'vMezzi', backup: 'vBackup' };
-const TITLES = { menu: 'Garage', scadenze: 'Scadenze auto', diario: 'Diario rifornimenti', mezzi: 'I miei mezzi', backup: 'Backup' };
+const VIEWS = { menu: 'vMenu', scadenze: 'vScad', diario: 'vDiario', spese: 'vSpese', statistiche: 'vStat', mezzi: 'vMezzi', backup: 'vBackup' };
+const TITLES = { menu: 'Garage', scadenze: 'Scadenze auto', diario: 'Diario rifornimenti', spese: 'Spese dell\'auto', statistiche: 'Statistiche', mezzi: 'I miei mezzi', backup: 'Backup' };
 function route() {
   const h = (location.hash || '#menu').slice(1);
   const v = VIEWS[h] ? h : 'menu';
   Object.keys(VIEWS).forEach(k => { $(VIEWS[k]).hidden = k !== v; });
   $('ggTitle').textContent = TITLES[v]; $('btnBack').hidden = v === 'menu';
-  if (v === 'menu') renderMenu(); if (v === 'scadenze') renderScad(); if (v === 'diario') renderDiario(true); if (v === 'mezzi') renderMezzi();
+  if (v === 'menu') renderMenu(); if (v === 'scadenze') renderScad(); if (v === 'diario') renderDiario(true); if (v === 'mezzi') renderMezzi(); if (v === 'spese') renderSpese(true); if (v === 'statistiche') renderStat();
   window.scrollTo(0, 0);
 }
 function renderMenu() {
@@ -106,6 +106,11 @@ function renderMenu() {
   const vs = D.vehicles; $('mezziSub').textContent = vs.length === 1 ? vName(vs[0]) : vs.length + ' mezzi: ' + vs.map(vName).join(', ');
   const lf = cur().fills.slice().sort((a, b) => a.date.localeCompare(b.date) || a.km - b.km), st = fillStats(cur());
   $('diaSub').textContent = !lf.length ? 'Litri, spesa e consumi reali' : st.avg != null ? 'Consumo medio ' + fmtN(st.avg, 1) + ' l/100 km' : lf.length + (lf.length === 1 ? ' rifornimento registrato' : ' rifornimenti registrati');
+  const cv = cur(), mk = iso(new Date()).slice(0, 7);
+  const mm = cv.expenses.filter(x => x.date.slice(0, 7) === mk).reduce((a, x) => a + x.amount, 0);
+  $('spesaSub').textContent = cv.expenses.length ? 'Questo mese ' + fmtN(mm, 2) + ' € (carburante escluso)' : 'Manutenzione, gomme, pedaggi, multe';
+  const tot12 = periodTotals(cv, 365);
+  $('statSub').textContent = tot12.total > 0 ? 'Ultimi 12 mesi: ' + fmtN(tot12.total, 0) + ' € in tutto' : 'Quanto spendi, consumi, costo al km';
   $('scadSub').textContent = al.length ? cap(al[0].t) : 'Bollo, assicurazione, revisione, tagliando';
 }
 function renderScad() {
@@ -240,6 +245,130 @@ function fillAction(e) {
   }
 }
 
+
+/* ---------- spese dell'auto ---------- */
+const CATS = [['manutenzione', 'Manutenzione e tagliando'], ['riparazione', 'Riparazioni'], ['gomme', 'Gomme'], ['assicurazione', 'Assicurazione'],
+  ['bollo', 'Bollo'], ['revisione', 'Revisione'], ['pedaggio', 'Pedaggi'], ['parcheggio', 'Parcheggi'], ['lavaggio', 'Lavaggio'],
+  ['multa', 'Multe'], ['accessori', 'Accessori'], ['altro', 'Altro']];
+const CATN = {}; CATS.forEach(([k, n]) => { CATN[k] = n; });
+let expEdit = null;
+function resetExp(keepMsg) {
+  expEdit = null; $('expTitle').textContent = 'Nuova spesa'; $('btnExp').textContent = 'Salva la spesa'; $('btnExpCancel').hidden = true;
+  $('eDate').value = iso(new Date()); $('eAmt').value = ''; $('eKm').value = ''; $('eNote').value = '';
+  if (!$('eCat').options.length) $('eCat').innerHTML = CATS.map(([k, n]) => '<option value="' + k + '">' + n + '</option>').join('');
+  if (!keepMsg) $('expMsg').textContent = '';
+}
+function renderSpese(reset) {
+  renderVbars(); if (reset) resetExp();
+  const v = cur(), e = v.expenses.slice().sort((a, b) => b.date.localeCompare(a.date));
+  const box = $('expStats'); box.hidden = !e.length;
+  if (e.length) {
+    const lim = new Date(); lim.setDate(lim.getDate() - 365); const l12 = iso(lim), mk = iso(new Date()).slice(0, 7);
+    const sum = f => e.filter(f).reduce((a, x) => a + x.amount, 0);
+    const cell = (k, val, sub) => '<div><small>' + k + '</small><b class="num">' + val + '</b>' + (sub ? '<em>' + sub + '</em>' : '') + '</div>';
+    $('expGrid').innerHTML = cell('Questo mese', fmtN(sum(x => x.date.slice(0, 7) === mk), 2) + ' €', '') + cell('Ultimi 12 mesi', fmtN(sum(x => x.date >= l12), 2) + ' €', '') +
+      cell('Da sempre', fmtN(sum(() => true), 2) + ' €', plural(e.length, 'spesa', 'spese'));
+  }
+  $('expList').innerHTML = e.length ? e.map(x => '<div class="fill" data-id="' + esc(x.id) + '"><div class="ft"><b>' + fmtDate(x.date) + '</b><span>' + esc(CATN[x.cat] || x.cat) + '</span></div>' +
+    '<div class="fv"><span class="num">' + fmtN(x.amount, 2) + ' €</span>' + (x.km != null ? '<span class="num">' + fmtN(x.km, 0) + ' km</span>' : '') + '</div>' +
+    (x.note ? '<div class="fk">' + esc(x.note) + '</div>' : '') +
+    '<div class="dl-acts"><button type="button" class="btn small ghost" data-act="edit">Modifica</button><button type="button" class="btn small ghost danger" data-act="del">Elimina</button></div></div>').join('')
+    : '<p class="empty">Nessuna spesa registrata per questo mezzo. Inserisci la prima qui sopra: manutenzione, gomme, pedaggi, multe e tutto quello che non è carburante.</p>';
+}
+function saveExp(e) {
+  e.preventDefault();
+  const v = cur(), m = $('expMsg'); m.className = 'msg err';
+  const date = $('eDate').value, amt = parseFloat($('eAmt').value), km = $('eKm').value === '' ? null : parseInt($('eKm').value, 10);
+  if (!date) { m.textContent = 'Scegli la data.'; return; }
+  if (date > iso(new Date())) { m.textContent = 'La data è nel futuro.'; return; }
+  if (!(amt > 0 && amt <= 100000)) { m.textContent = 'L\'importo non è valido.'; return; }
+  if (km != null && !(km >= 0)) { m.textContent = 'I chilometri non sono validi.'; return; }
+  const rec = { id: expEdit || uid(), date, amount: Math.round(amt * 100) / 100, cat: $('eCat').value, km, note: $('eNote').value.trim() };
+  if (expEdit) v.expenses = v.expenses.map(x => x.id === expEdit ? rec : x); else v.expenses.push(rec);
+  if (km != null && (v.km == null || km > v.km)) v.km = km;
+  save(); resetExp(true); m.className = 'msg'; m.textContent = 'Spesa salvata.'; renderSpese(false);
+}
+let expArm = null;
+function expAction(e) {
+  const b = e.target.closest('button[data-act]'); if (!b) return;
+  const id = b.closest('.fill').dataset.id, v = cur();
+  if (b.dataset.act === 'edit') {
+    const x = v.expenses.find(y => y.id === id); if (!x) return;
+    expEdit = id; $('expTitle').textContent = 'Modifica spesa'; $('btnExp').textContent = 'Salva le modifiche'; $('btnExpCancel').hidden = false;
+    $('eDate').value = x.date; $('eAmt').value = x.amount; $('eCat').value = x.cat; $('eKm').value = x.km == null ? '' : x.km; $('eNote').value = x.note || '';
+    $('expMsg').textContent = ''; $('expForm').scrollIntoView({ block: 'start' });
+  } else if (b.dataset.act === 'del') {
+    if (expArm !== id) { expArm = id; b.textContent = 'Tocca ancora per eliminare'; setTimeout(() => { if (expArm === id) { expArm = null; b.textContent = 'Elimina'; } }, 3500); return; }
+    expArm = null; v.expenses = v.expenses.filter(x => x.id !== id); save(); resetExp(); renderSpese(false);
+  }
+}
+
+/* ---------- statistiche ---------- */
+let STP = '365';
+const CATCOL = { carburante: 'var(--accent)', manutenzione: '#f0a24a', riparazione: '#e6765f', gomme: '#8d7cf0', assicurazione: '#4fc3b5', bollo: '#d6c24a', revisione: '#6fb8f0', pedaggio: '#c987d6', parcheggio: '#7aa66a', lavaggio: '#58b3c9', multa: '#e05a7a', accessori: '#a08f78', altro: '#8a98b4' };
+function fromDate(p) { if (p === 'all') return '0000-00-00'; const d = new Date(); d.setDate(d.getDate() - parseInt(p, 10)); return iso(d); }
+function periodTotals(v, p) {
+  const from = fromDate(String(p));
+  const fuel = v.fills.filter(x => x.date >= from).reduce((a, x) => a + x.total, 0);
+  const other = v.expenses.filter(x => x.date >= from).reduce((a, x) => a + x.amount, 0);
+  return { fuel, other, total: fuel + other, from };
+}
+function renderStat() {
+  renderVbars();
+  document.querySelectorAll('#stPeriod button').forEach(b => b.classList.toggle('on', b.dataset.p === STP));
+  const v = cur(), has = v.fills.length || v.expenses.length;
+  $('stEmpty').hidden = !!has; $('stBody').hidden = !has; if (!has) return;
+  const P = periodTotals(v, STP), from = P.from, fs = fillStats(v);
+  const inP = v.fills.filter(x => x.date >= from), lt = inP.reduce((a, x) => a + x.liters, 0);
+  const iv = fs.sorted.filter(x => x.date >= from && fs.res.has(x.id)).map(x => fs.res.get(x.id));
+  const il = iv.reduce((a, r) => a + r.L, 0), id = iv.reduce((a, r) => a + r.dist, 0), ic = iv.reduce((a, r) => a + r.C, 0);
+  const kms = v.fills.filter(x => x.date >= from).map(x => x.km).concat(v.expenses.filter(x => x.date >= from && x.km != null).map(x => x.km));
+  const span = kms.length > 1 ? Math.max(...kms) - Math.min(...kms) : 0;
+  const cell = (k, val, sub) => '<div><small>' + k + '</small><b class="num">' + val + '</b>' + (sub ? '<em>' + sub + '</em>' : '') + '</div>';
+  $('stCards').innerHTML =
+    cell('Spesa totale', fmtN(P.total, 2) + ' €', 'carburante ' + fmtN(P.fuel, 0) + ' · altre ' + fmtN(P.other, 0)) +
+    cell('Costo al km', span > 0 ? fmtN(P.total / span, 3) + ' €' : '—', span > 0 ? 'su ' + fmtN(span, 0) + ' km' : 'servono più chilometri') +
+    cell('Consumo medio', id > 0 ? fmtN(il / id * 100, 1) + ' l/100 km' : '—', id > 0 ? fmtN(id / il, 1) + ' km/l' : 'servono due pieni') +
+    cell('Prezzo medio', lt > 0 ? fmtN(P.fuel / lt, 3) + ' €/L' : '—', lt > 0 ? fmtN(lt, 1) + ' litri' : '') +
+    cell('Carburante al km', id > 0 ? fmtN(ic / id, 3) + ' €' : '—', 'solo carburante') +
+    cell('Rifornimenti', String(inP.length), inP.length ? 'in media ' + fmtN(P.fuel / inP.length, 0) + ' €' : '');
+  // mesi
+  const now = new Date(), months = [];
+  for (let i = 11; i >= 0; i--) { const d = new Date(now.getFullYear(), now.getMonth() - i, 1); months.push({ k: d.getFullYear() + '-' + pad(d.getMonth() + 1), m: d.getMonth(), f: 0, o: 0 }); }
+  v.fills.forEach(x => { const m = months.find(y => y.k === x.date.slice(0, 7)); if (m) m.f += x.total; });
+  v.expenses.forEach(x => { const m = months.find(y => y.k === x.date.slice(0, 7)); if (m) m.o += x.amount; });
+  const MI = 'GFMAMGLASOND', mx = Math.max(1, ...months.map(m => m.f + m.o));
+  const W = 360, H = 170, L = 6, R = 6, T = 22, B = 22, bw = (W - L - R) / 12;
+  let g = '<svg viewBox="0 0 ' + W + ' ' + H + '" class="svgc" role="img" aria-label="Spesa mese per mese"><text x="' + L + '" y="12" class="ax">fino a ' + fmtN(mx, 0) + ' € al mese</text>';
+  months.forEach((m, i) => {
+    const x = L + i * bw + 3, w = bw - 6, hf = m.f / mx * (H - T - B), ho = m.o / mx * (H - T - B), y0 = H - B;
+    if (m.f > 0) g += '<rect x="' + x.toFixed(1) + '" y="' + (y0 - hf).toFixed(1) + '" width="' + w.toFixed(1) + '" height="' + hf.toFixed(1) + '" rx="2" fill="var(--accent)"/>';
+    if (m.o > 0) g += '<rect x="' + x.toFixed(1) + '" y="' + (y0 - hf - ho).toFixed(1) + '" width="' + w.toFixed(1) + '" height="' + ho.toFixed(1) + '" rx="2" fill="var(--warn)"/>';
+    g += '<text x="' + (x + w / 2).toFixed(1) + '" y="' + (H - 7) + '" text-anchor="middle" class="ax">' + MI[m.m] + '</text>';
+  });
+  $('stMonths').innerHTML = g + '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + (H - B) + '" y2="' + (H - B) + '" stroke="var(--line)"/></svg><p class="legend"><i style="background:var(--accent)"></i>Carburante <i style="background:var(--warn)"></i>Altre spese</p>';
+  // ripartizione
+  const parts = []; if (P.fuel > 0) parts.push(['carburante', 'Carburante', P.fuel]);
+  CATS.forEach(([k, n]) => { const a = v.expenses.filter(x => x.date >= from && x.cat === k).reduce((s2, x) => s2 + x.amount, 0); if (a > 0) parts.push([k, n, a]); });
+  parts.sort((a, b) => b[2] - a[2]);
+  $('stBreak').innerHTML = parts.length ? parts.map(([k, n, a]) => '<div class="bar"><div class="bl"><span>' + esc(n) + '</span><b class="num">' + fmtN(a, 2) + ' € · ' + fmtN(a / P.total * 100, 0) + '%</b></div><div class="bt"><i style="width:' + Math.max(2, a / P.total * 100).toFixed(1) + '%;background:' + CATCOL[k] + '"></i></div></div>').join('') : '<p class="hint">Nessuna spesa nel periodo scelto.</p>';
+  // consumo nel tempo
+  const pts = fs.sorted.filter(x => fs.res.has(x.id)).map(x => ({ d: x.date, c: fs.res.get(x.id).cons })).filter(p => p.d >= from);
+  if (pts.length < 2) $('stCons').innerHTML = '<p class="hint">Servono almeno due consumi calcolati (tre pieni completi) nel periodo per vedere l\'andamento.</p>';
+  else {
+    const cs = pts.map(p => p.c), lo = Math.min(...cs), hi = Math.max(...cs), pad2 = (hi - lo) * .2 || 0.5, y0 = lo - pad2, y1 = hi + pad2;
+    const t0 = new Date(pts[0].d + 'T12:00:00').getTime(), t1 = new Date(pts[pts.length - 1].d + 'T12:00:00').getTime() || t0 + 1;
+    const W2 = 360, H2 = 150, L2 = 8, R2 = 8, T2 = 18, B2 = 22;
+    const X = d => L2 + (t1 === t0 ? .5 : (new Date(d + 'T12:00:00').getTime() - t0) / (t1 - t0)) * (W2 - L2 - R2), Y = c => T2 + (1 - (c - y0) / (y1 - y0)) * (H2 - T2 - B2);
+    let g2 = '<svg viewBox="0 0 ' + W2 + ' ' + H2 + '" class="svgc" role="img" aria-label="Consumo nel tempo"><text x="' + L2 + '" y="11" class="ax">l/100 km: da ' + fmtN(lo, 1) + ' a ' + fmtN(hi, 1) + '</text>';
+    g2 += '<polyline points="' + pts.map(p => X(p.d).toFixed(1) + ',' + Y(p.c).toFixed(1)).join(' ') + '" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>';
+    pts.forEach(p => { g2 += '<circle cx="' + X(p.d).toFixed(1) + '" cy="' + Y(p.c).toFixed(1) + '" r="3.2" fill="var(--accent)"/>'; });
+    g2 += '<text x="' + L2 + '" y="' + (H2 - 6) + '" class="ax">' + fmtDate(pts[0].d).slice(0, 5) + '</text><text x="' + (W2 - R2) + '" y="' + (H2 - 6) + '" text-anchor="end" class="ax">' + fmtDate(pts[pts.length - 1].d).slice(0, 5) + '</text></svg>';
+    $('stCons').innerHTML = g2;
+  }
+  $('stNote').textContent = 'Il costo al km usa i chilometri tra il primo e l\'ultimo rifornimento o spesa con chilometri nel periodo. Le statistiche si aggiornano da sole con quello che registri.';
+}
+
 /* ---------- eventi ---------- */
 function wire() {
   window.addEventListener('hashchange', route);
@@ -269,6 +398,10 @@ function wire() {
   $('btnFillCancel').addEventListener('click', () => { resetForm(); });
   ['fL', 'fTot'].forEach(i => $(i).addEventListener('input', fillPrice));
   $('fillList').addEventListener('click', fillAction);
+  $('expForm').addEventListener('submit', saveExp);
+  $('btnExpCancel').addEventListener('click', () => { resetExp(); });
+  $('expList').addEventListener('click', expAction);
+  $('stPeriod').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; STP = b.dataset.p; renderStat(); });
   $('dlList').addEventListener('change', e => {
     const card = e.target.closest('.dl-card'), f = e.target.dataset.f; if (!card || !f) return;
     const dl = cur().dl[card.dataset.k];
