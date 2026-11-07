@@ -19,20 +19,15 @@
 <body>
 <div class="wrap">
   <header class="top">
-    <div>
-      <h1><img class="logo" src="icon.svg" alt="" width="36" height="36">Pompa Giusta</h1>
-      <p>Il prezzo di ogni distributore, confrontato con la media della sua regione.</p>
-    </div>
-    <div class="status">
-      <span class="chip" id="chipData">Carico i prezzi…</span>
-      <button class="btn ghost small" id="btnInfo" type="button">Info</button>
-    </div>
+    <h1><img class="logo" src="icon.svg" alt="" width="36" height="36">Pompa Giusta</h1>
+    <button class="icon-btn" id="btnInfo" type="button" aria-label="Informazioni">i</button>
   </header>
+  <div class="status"><span class="chip" id="chipData">Carico i prezzi…</span></div>
 
   <nav class="tabs" id="tabs" aria-label="Sezioni">
-    <button type="button" data-tab="zona" class="on">Zona</button>
-    <button type="button" data-tab="vicino">Vicino a me</button>
-    <button type="button" data-tab="percorso">Percorso</button>
+    <button type="button" data-tab="zona" class="on"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-6.5-5.6-6.5-11A6.5 6.5 0 0 1 12 3.5 6.5 6.5 0 0 1 18.5 10c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/></svg><span>Zona</span></button>
+    <button type="button" data-tab="vicino"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="7.5"/><circle cx="12" cy="12" r="2.2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg><span>Vicino a me</span></button>
+    <button type="button" data-tab="percorso"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="6" r="2.5"/><path d="M8.5 18H15a3 3 0 0 0 0-6H9a3 3 0 0 1 0-6h6.5"/></svg><span>Percorso</span></button>
   </nav>
 
   <section class="panel" aria-label="Filtri comuni">
@@ -45,12 +40,17 @@
         <div class="seg" id="segMode" role="group" aria-label="Modalità">
           <button type="button" data-m="1">Self</button><button type="button" data-m="0">Servito</button>
         </div></div>
-      <div class="field"><span>Litri del pieno</span><input id="litri" type="number" inputmode="decimal" min="1" max="200" step="1" value="40"></div>
-      <div class="field"><span>Consumo (l/100 km)</span><input id="consumo" type="number" inputmode="decimal" min="1" max="40" step="0.1" value="6.5"></div>
     </div>
+    <details class="opt">
+      <summary>Litri del pieno, consumo e note sui servizi</summary>
+      <div class="grid">
+        <div class="field"><span>Litri del pieno</span><input id="litri" type="number" inputmode="decimal" min="1" max="200" step="1" value="40"></div>
+        <div class="field"><span>Consumo (l/100 km)</span><input id="consumo" type="number" inputmode="decimal" min="1" max="40" step="0.1" value="6.5"></div>
+      </div>
+      <p class="hint">I servizi arrivano da OpenStreetMap, scritta dai volontari: se uno manca, il distributore potrebbe averlo comunque. Puoi segnarlo tu aprendo la scheda del distributore.</p>
+    </details>
     <div class="field"><span>Servizi richiesti</span>
-      <div class="chips" id="chipsSv" role="group" aria-label="Servizi richiesti"></div></div>
-    <p class="hint">I servizi arrivano da OpenStreetMap, scritta dai volontari: se uno manca, il distributore potrebbe averlo comunque. Puoi segnarlo tu aprendo la scheda del distributore.</p>
+      <div class="chips scroll" id="chipsSv" role="group" aria-label="Servizi richiesti"></div></div>
   </section>
 
   <!-- ZONA -->
@@ -59,11 +59,16 @@
       <div class="grid">
         <div class="field"><span>Provincia</span><select id="selProv"></select></div>
         <div class="field"><span>Comune</span><select id="selComune"></select></div>
-        <div class="field"><span>Bandiera</span><select id="selBrand"></select></div>
-        <div class="field"><span>Strada</span>
-          <select id="selTipo"><option value="all">Tutti gli impianti</option><option value="road">Solo fuori autostrada</option><option value="hw">Solo autostrada</option></select></div>
       </div>
-      <div class="chips"><button type="button" id="btnFav">Solo preferiti</button></div>
+      <details class="opt">
+        <summary>Bandiera, strada e preferiti</summary>
+        <div class="grid">
+          <div class="field"><span>Bandiera</span><select id="selBrand"></select></div>
+          <div class="field"><span>Strada</span>
+            <select id="selTipo"><option value="all">Tutti gli impianti</option><option value="road">Solo fuori autostrada</option><option value="hw">Solo autostrada</option></select></div>
+        </div>
+        <div class="chips"><button type="button" id="btnFav">Solo preferiti</button></div>
+      </details>
     </section>
     <section class="summary" id="summary" aria-label="Riepilogo"></section>
     <p class="verdict" id="verdictText"></p>

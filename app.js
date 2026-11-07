@@ -225,7 +225,7 @@ function histo(prices, avg, selP) {
   bins.forEach((c, i) => {
     const h = ch * c / mx;
     s += '<rect class="bar' + (i === selBin ? ' hi' : '') + '" x="' + (L + i * bw + 1).toFixed(1) + '" y="' + (T + ch - h).toFixed(1) +
-      '" width="' + (bw - 2).toFixed(1) + '" height="' + h.toFixed(1) + '" rx="2"/>';
+      '" width="' + Math.max(2, bw - 5).toFixed(1) + '" height="' + h.toFixed(1) + '" rx="2"/>';
   });
   s += '<line class="axis" x1="' + L + '" x2="' + (W - R) + '" y1="' + (T + ch) + '" y2="' + (T + ch) + '"/>';
   if (avg != null) {
@@ -277,10 +277,12 @@ function renderZona() {
   list.sort((a, b) => a.p[k] - b.p[k]);
 
   const mn = list.length ? list[0].p[k] : null, mx = list.length ? list[list.length - 1].p[k] : null;
-  const tile = (l, v, e) => '<div class="tile"><small>' + l + '</small><b>' + (v != null ? PG.fmtP(v) : '—') + '</b><em>' + e + '</em></div>';
-  $('summary').innerHTML = tile('Media ' + esc(region), avgR, '€/L, fuori autostrada') + tile('Media ' + esc(pvName), avgP, '€/L, fuori autostrada') +
-    tile('Il più economico in elenco', mn, mn != null && avgR != null ? PG.fmtC(mn - avgR) + ' sulla media regionale' : '') +
-    tile('Il più caro in elenco', mx, mx != null && avgR != null ? PG.fmtC(mx - avgR) + ' sulla media regionale' : '');
+  const dlt = mn != null && avgR != null ? mn - avgR : null;
+  const sub = (l, v) => '<div><small>' + l + '</small><b class="num">' + (v != null ? PG.fmtP(v) : '—') + '</b></div>';
+  $('summary').innerHTML = '<div class="hero"><small class="kick">Il più economico in elenco</small>' +
+    '<div class="big num">' + (mn != null ? PG.fmtP(mn) : '—') + '<span>€/L</span></div>' +
+    (dlt != null ? '<div class="dl ' + (dlt <= -0.0095 ? 'good' : dlt >= 0.0095 ? 'bad' : 'warn') + '">' + PG.fmtC(dlt) + ' sulla media regionale</div>' : '') +
+    '<div class="two">' + sub('Media ' + esc(region), avgR) + sub('Media ' + esc(pvName), avgP) + '</div></div>';
 
   const L = S.litri;
   if (list.length && avgR != null) {
