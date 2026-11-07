@@ -64,6 +64,12 @@ def unisci(liste):
     return out[:MAX_TITOLI]
 
 
+def scrivi(dati):
+    os.makedirs(os.path.dirname(OUT), exist_ok=True)
+    with open(OUT, 'w', encoding='utf-8') as f:
+        json.dump(dati, f, ensure_ascii=False, separators=(',', ':'))
+
+
 def main():
     adesso = datetime.now(timezone.utc)
     liste, errori = [], 0
@@ -77,11 +83,16 @@ def main():
     if not items:
         print('Nessun titolo nuovo (%d ricerche su %d in errore): lascio il file com\'e\'.' % (errori, len(QUERIES)))
         if not os.path.exists(OUT):
-            json.dump({'updated': adesso.strftime('%Y-%m-%dT%H:%MZ'), 'items': []}, open(OUT, 'w'))
+            scrivi({'updated': adesso.strftime('%Y-%m-%dT%H:%MZ'), 'items': []})
         return
-    json.dump({'updated': adesso.strftime('%Y-%m-%dT%H:%MZ'), 'items': items}, open(OUT, 'w'), ensure_ascii=False, separators=(',', ':'))
+    scrivi({'updated': adesso.strftime('%Y-%m-%dT%H:%MZ'), 'items': items})
     print('Titoli salvati: %d' % len(items))
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except Exception as e:  # mai bloccare l'aggiornamento dei prezzi per le notizie
+        import traceback
+        traceback.print_exc()
+        print('Errore imprevisto: %s' % e)
