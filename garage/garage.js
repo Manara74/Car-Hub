@@ -97,24 +97,71 @@ function route() {
   const v = VIEWS[h] ? h : 'menu';
   Object.keys(VIEWS).forEach(k => { $(VIEWS[k]).hidden = k !== v; });
   $('ggTitle').textContent = TITLES[v]; $('btnBack').hidden = v === 'menu';
+  document.querySelectorAll('#gnav [data-nav]').forEach(a => a.classList.toggle('on', a.dataset.nav === (v === 'mezzi' || v === 'backup' ? v : 'menu')));
   if (v === 'menu') renderMenu(); if (v === 'scadenze') renderScad(); if (v === 'diario') renderDiario(true); if (v === 'mezzi') renderMezzi(); if (v === 'spese') renderSpese(true); if (v === 'statistiche') renderStat();
   window.scrollTo(0, 0);
 }
+/* disegni del mezzo (linea sottile, colore dell'accento scelto) */
+const ART = {
+  auto: '<svg viewBox="0 0 240 100" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 72V62C16 56 21 52 28 50L56 43L76 22C79 19 83 17 88 17H140C145 17 149 19 152 22L172 43L204 50C212 52 224 56 224 64V72"/><path d="M16 72H44M80 72H160M196 72H224"/><path d="M82 43L94 25H138L156 43Z"/><circle cx="62" cy="72" r="18"/><circle cx="178" cy="72" r="18"/><circle cx="62" cy="72" r="6"/><circle cx="178" cy="72" r="6"/><path d="M8 94H232" stroke-opacity=".3"/></svg>',
+  moto: '<svg viewBox="0 0 240 100" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="48" cy="68" r="22"/><circle cx="196" cy="68" r="22"/><circle cx="48" cy="68" r="6"/><circle cx="196" cy="68" r="6"/><path d="M48 68L78 48H92" /><path d="M92 48C98 36 120 34 132 40L150 44L172 40" /><path d="M100 48L112 68H146L138 48" fill="currentColor" fill-opacity=".18"/><path d="M92 48H124" /><path d="M172 40L196 68"/><path d="M168 38L162 24L176 20"/><path d="M150 44L158 34H172L168 46" fill="currentColor" fill-opacity=".18"/><path d="M112 68H48" /><path d="M8 94H232" stroke-opacity=".3"/></svg>'
+};
+const artOf = v => ART[v.type === 'moto' ? 'moto' : 'auto'];
+function nextDeadline(v) {
+  let best = null;
+  TYPES.forEach(([k, label, ev]) => {
+    const d = daysLeft(v.dl[k].date);
+    if (d != null && (best == null || d < best.d)) best = { k, label, d, date: v.dl[k].date, every: v.dl[k].every || ev };
+  });
+  return best;
+}
+function vehAlerts(v) {
+  const out = [];
+  TYPES.forEach(([k]) => { const d = daysLeft(v.dl[k].date); if (d != null && d <= 30) out.push(d <= 7 ? 'late' : 'soon'); });
+  const ks = kmStatus(v); if (ks && ks.c !== 'none') out.push(ks.c);
+  return out;
+}
+function sparkPath(vals) {
+  if (vals.length < 2) return '';
+  const lo = Math.min(...vals), hi = Math.max(...vals), r = hi - lo || 1;
+  const pts = vals.map((x, i) => (i * 80 / (vals.length - 1)).toFixed(1) + ',' + (22 - (x - lo) / r * 18).toFixed(1));
+  return '<polyline points="' + pts.join(' ') + '" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>';
+}
 function renderMenu() {
-  const al = alerts(), b = $('scadBadge');
+  const al = alerts(), v = cur(), b = $('scadBadge');
   b.hidden = !al.length; b.textContent = String(al.length); b.classList.toggle('warn', !al.some(x => x.c === 'late'));
-  const m = $('menuAlert');
-  m.hidden = !al.length;
-  m.innerHTML = al.length ? '<b>' + (al.length === 1 ? '1 scadenza da controllare' : al.length + ' scadenze da controllare') + ':</b> ' + esc(al.slice(0, 2).map(x => cap(x.t)).join(' · ')) + (al.length > 2 ? '…' : '') : '';
-  const vs = D.vehicles; $('mezziSub').textContent = vs.length === 1 ? vName(vs[0]) : vs.length + ' mezzi: ' + vs.map(vName).join(', ');
-  const lf = cur().fills.slice().sort((a, b) => a.date.localeCompare(b.date) || a.km - b.km), st = fillStats(cur());
-  $('diaSub').textContent = !lf.length ? 'Litri, spesa e consumi reali' : st.avg != null ? 'Consumo medio ' + fmtN(st.avg, 1) + ' l/100 km' : lf.length + (lf.length === 1 ? ' rifornimento registrato' : ' rifornimenti registrati');
-  const cv = cur(), mk = iso(new Date()).slice(0, 7);
-  const mm = cv.expenses.filter(x => x.date.slice(0, 7) === mk).reduce((a, x) => a + x.amount, 0);
-  $('spesaSub').textContent = cv.expenses.length ? 'Questo mese ' + fmtN(mm, 2) + ' € (carburante escluso)' : 'Manutenzione, gomme, pedaggi, multe';
-  const tot12 = periodTotals(cv, 365);
-  $('statSub').textContent = tot12.total > 0 ? 'Ultimi 12 mesi: ' + fmtN(tot12.total, 0) + ' € in tutto' : 'Quanto spendi, consumi, costo al km';
-  $('scadSub').textContent = al.length ? cap(al[0].t) : 'Bollo, assicurazione, revisione, tagliando';
+  /* veicolo */
+  $('hgArt').innerHTML = artOf(v); $('hgThumb').innerHTML = artOf(v);
+  $('hgName').textContent = vName(v);
+  const n = D.vehicles.length, idx = D.vehicles.indexOf(v) + 1;
+  $('hgLbl').textContent = n > 1 ? 'Il mio mezzo · ' + idx + ' di ' + n : 'Il mio mezzo';
+  $('hgKm').innerHTML = [v.km != null ? fmtN(v.km, 0) + ' km' : '', v.plate ? esc(v.plate) : ''].filter(Boolean).join('<br>');
+  const va = vehAlerts(v), anySet = TYPES.some(([k]) => v.dl[k].date) || (v.dl.tagliando.kmDue && v.km);
+  const st = $('hgSt');
+  if (va.length) { const late = va.includes('late'); st.className = 'dl-st ' + (late ? 'late' : 'soon'); st.textContent = va.length === 1 ? '1 scadenza vicina' : va.length + ' scadenze vicine'; }
+  else if (anySet) { st.className = 'dl-st ok'; st.textContent = 'Tutto in regola'; }
+  else { st.className = 'dl-st none'; st.textContent = 'Imposta le scadenze'; }
+  /* prossima scadenza */
+  const nx = nextDeadline(v), box = $('hgNext');
+  if (nx) {
+    const s = status(nx.d), ks = nx.k === 'tagliando' ? kmStatus(v) : null;
+    box.className = 'nx ' + s.c; $('nxTitle').textContent = nx.label;
+    $('nxSub').textContent = s.t + ' · ' + fmtDate(nx.date) + (ks ? ' · ' + ks.t.replace('Tagliando ', '').replace(/^fra/, 'tra') : '');
+    const frac = nx.d < 0 ? 1 : Math.max(0.04, Math.min(1, 1 - nx.d / (nx.every * 30.44)));
+    $('nxBar').style.width = Math.round(frac * 100) + '%'; $('nxBtn').textContent = 'Apri';
+  } else {
+    box.className = 'nx none'; $('nxTitle').textContent = 'Nessuna scadenza impostata';
+    $('nxSub').textContent = 'Aggiungi bollo, assicurazione, revisione e tagliando'; $('nxBar').style.width = '0'; $('nxBtn').textContent = 'Imposta';
+  }
+  /* numeri */
+  const fs = fillStats(v);
+  $('scCons').textContent = fs.avg != null ? fmtN(fs.avg, 1) : '—';
+  const cons = fs.sorted.filter(x => fs.res.has(x.id)).slice(-8).map(x => fs.res.get(x.id).cons);
+  $('scSpark').innerHTML = sparkPath(cons);
+  const mk = iso(new Date()).slice(0, 7);
+  const mTot = v.fills.filter(x => x.date.slice(0, 7) === mk).reduce((a, x) => a + x.total, 0) + v.expenses.filter(x => x.date.slice(0, 7) === mk).reduce((a, x) => a + x.amount, 0);
+  $('scMonth').textContent = v.fills.length || v.expenses.length ? fmtN(mTot, 0) + ' €' : '—';
+  $('scCpk').textContent = fs.cpk != null ? fmtN(fs.cpk, 2) : '—';
 }
 function renderScad() {
   const v = cur(); renderVbars();

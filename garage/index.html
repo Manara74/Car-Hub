@@ -28,40 +28,42 @@ var r=document.documentElement;r.dataset.theme=d;r.dataset.accent=a})();
     <button class="icon-btn" id="btnBack" type="button" aria-label="Torna al menu" hidden><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
   </header>
 
-  <!-- MENU -->
+  <!-- HOME -->
   <section id="vMenu" class="gview">
-    <p class="hint" id="menuAlert" hidden></p>
-    <div class="gtiles">
-      <a class="gtile" href="../">
-        <span class="gi"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V6a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v15"/><path d="M3 21h14"/><path d="M7 8h6"/><path d="M15 10h2.5a1.5 1.5 0 0 1 1.5 1.5V17a1.5 1.5 0 0 0 3 0V9l-2.5-2.5"/></svg></span>
-        <b>Pompa Giusta</b><small>Prezzi dei carburanti, vicino a te e sul percorso</small>
-      </a>
-      <a class="gtile" href="#diario" id="tileDiario">
-        <span class="gi"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3.5h9a1.5 1.5 0 0 1 1.5 1.5v15.5H4.5V5A1.5 1.5 0 0 1 6 3.5z"/><path d="M8 8h5M8 11.5h5M8 15h3"/><path d="M16.5 8H19v8.5"/></svg></span>
-        <b>Diario rifornimenti</b><small id="diaSub">Litri, spesa e consumi reali</small>
-      </a>
-      <a class="gtile" href="#scadenze" id="tileScad">
-        <span class="gi"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M8 3v4M16 3v4M3.5 10h17"/><path d="M9 15l2 2 4-4"/></svg></span>
-        <b>Scadenze auto</b><small id="scadSub">Bollo, assicurazione, revisione, tagliando</small><em class="badge" id="scadBadge" hidden></em>
-      </a>
-      <a class="gtile" href="#mezzi" id="tileMezzi">
-        <span class="gi"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 16v-5l2-5h10l2 5v5"/><path d="M3 16h18"/><circle cx="7.5" cy="17.8" r="1.8"/><circle cx="16.5" cy="17.8" r="1.8"/></svg></span>
-        <b>I miei mezzi</b><small id="mezziSub">Auto e moto</small>
-      </a>
-      <a class="gtile" href="#backup">
-        <span class="gi"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7.5 10.5L12 15l4.5-4.5"/><path d="M4 17v2.5A1.5 1.5 0 0 0 5.5 21h13a1.5 1.5 0 0 0 1.5-1.5V17"/></svg></span>
-        <b>Backup</b><small>Salva e ripristina i tuoi dati</small>
-      </a>
-      <a class="gtile" href="#spese" id="tileSpese">
-        <span class="gi"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3.5h12v17l-2.4-1.6-1.8 1.6-1.8-1.6-1.8 1.6-2.4-1.6z"/><path d="M9 8.5h6M9 12h6"/><path d="M9 15.5h3"/></svg></span>
-        <b>Spese dell'auto</b><small id="spesaSub">Manutenzione, gomme, pedaggi, multe</small>
-      </a>
-      <a class="gtile" href="#statistiche" id="tileStat">
-        <span class="gi"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V4"/><path d="M4 20h16"/><path d="M8 16v-4M12.5 16V8M17 16v-6"/></svg></span>
-        <b>Statistiche</b><small id="statSub">Quanto spendi, consumi, costo al km</small>
-      </a>
+    <div class="hg" aria-label="Il tuo mezzo">
+      <h2>Il tuo mezzo,<br><em>sempre sotto controllo.</em></h2>
+      <p>Scadenze, rifornimenti e spese in un solo posto.</p>
+      <div class="hg-art" id="hgArt" aria-hidden="true"></div>
     </div>
-    <p class="hint">Nome e grafica del menu sono provvisori: li decidiamo insieme. I tuoi dati restano solo su questo telefono.</p>
+    <a class="vc" href="#mezzi" id="hgVeh" aria-label="Il mio mezzo">
+      <span class="vthumb" id="hgThumb" aria-hidden="true"></span>
+      <span class="vi"><small id="hgLbl">Il mio mezzo</small><b id="hgName">La mia auto</b><span class="dl-st none" id="hgSt">Imposta le scadenze</span></span>
+      <span class="vk" id="hgKm"></span>
+      <svg class="chev" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+    </a>
+    <div class="qrow">
+      <a class="qt" href="#diario"><span class="gi"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V6a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v15"/><path d="M3 21h14"/><path d="M7 8h6"/><path d="M15 10h2.5a1.5 1.5 0 0 1 1.5 1.5V17a1.5 1.5 0 0 0 3 0V9l-2.5-2.5"/></svg></span>Rifornimenti</a>
+      <a class="qt" href="#scadenze"><span class="gi"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M8 3v4M16 3v4M3.5 10h17"/><path d="M9 15l2 2 4-4"/></svg></span>Scadenze<em class="badge" id="scadBadge" hidden></em></a>
+      <a class="qt" href="#spese"><span class="gi"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3.5h12v17l-2.4-1.6-1.8 1.6-1.8-1.6-1.8 1.6-2.4-1.6z"/><path d="M9 8.5h6M9 12h6"/><path d="M9 15.5h3"/></svg></span>Spese</a>
+      <a class="qt" href="#statistiche"><span class="gi"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V4"/><path d="M4 20h16"/><path d="M8 16v-4M12.5 16V8M17 16v-6"/></svg></span>Statistiche</a>
+    </div>
+    <a class="nx none" href="#scadenze" id="hgNext">
+      <div class="nx-top"><small>Prossima scadenza</small><span class="btn small ghost" id="nxBtn">Apri</span></div>
+      <b id="nxTitle">Nessuna scadenza impostata</b>
+      <span class="sub" id="nxSub">Aggiungi bollo, assicurazione, revisione e tagliando</span>
+      <div class="pbar"><i id="nxBar" style="width:0"></i></div>
+    </a>
+    <div class="srow">
+      <a class="sc" href="#statistiche"><b id="scCons">—</b><small>l/100 km<br>consumo medio</small><svg class="sp" id="scSpark" viewBox="0 0 80 26" preserveAspectRatio="none" aria-hidden="true"></svg></a>
+      <a class="sc" href="#statistiche"><b id="scMonth">—</b><small>spesi<br>questo mese</small></a>
+      <a class="sc" href="#statistiche"><b id="scCpk">—</b><small>€ al km<br>di carburante</small></a>
+    </div>
+    <a class="pgc" href="../">
+      <span class="gi"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V6a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v15"/><path d="M3 21h14"/><path d="M7 8h6"/><path d="M15 10h2.5a1.5 1.5 0 0 1 1.5 1.5V17a1.5 1.5 0 0 0 3 0V9l-2.5-2.5"/></svg></span>
+      <span class="vi"><b>Pompa Giusta</b><small>Il carburante più conveniente, vicino a te e sul percorso</small></span>
+      <svg class="chev" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+    </a>
+    <p class="hint">I tuoi dati restano solo su questo telefono.</p>
   </section>
 
   <!-- SCADENZE -->
@@ -179,6 +181,12 @@ var r=document.documentElement;r.dataset.theme=d;r.dataset.accent=a})();
     </div>
   </section>
 </div>
+<nav id="gnav" aria-label="Menu principale">
+  <a class="gn on" href="#menu" data-nav="menu"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-7 8 7"/><path d="M6 10v10h12V10"/><path d="M10 20v-5h4v5"/></svg><span>Home</span></a>
+  <a class="gn" href="#mezzi" data-nav="mezzi"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 16v-5l2-5h10l2 5v5"/><path d="M3 16h18"/><circle cx="7.5" cy="17.8" r="1.8"/><circle cx="16.5" cy="17.8" r="1.8"/></svg><span>Mezzi</span></a>
+  <a class="gn" href="../" data-nav="pompa"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V6a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v15"/><path d="M3 21h14"/><path d="M7 8h6"/><path d="M15 10h2.5a1.5 1.5 0 0 1 1.5 1.5V17a1.5 1.5 0 0 0 3 0V9l-2.5-2.5"/></svg><span>Pompa Giusta</span></a>
+  <a class="gn" href="#backup" data-nav="backup"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7.5 10.5L12 15l4.5-4.5"/><path d="M4 17v2.5A1.5 1.5 0 0 0 5.5 21h13a1.5 1.5 0 0 0 1.5-1.5V17"/></svg><span>Backup</span></a>
+</nav>
 <script src="garage.js"></script>
 </body>
 </html>
