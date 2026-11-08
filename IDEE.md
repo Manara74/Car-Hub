@@ -30,5 +30,5 @@ Fatto: Pompa Giusta con Opzioni, temi colore, fascia news, scheda Novità e pref
 - ~~Statistiche «Tutti i mezzi» insieme~~ — fatto l'8 novembre 2026: oltre alla vista per singolo mezzo, la vista che somma carburante e spese di tutti i mezzi, con confronto tra mezzi.
 - ~~Collegare «Rinnovata» (Scadenze) alle Spese~~ — fatto l'8 novembre 2026: toccando «Rinnovata» l'app chiede quanto hai pagato e registra la spesa.
 - **Nome definitivo di Garage**: oggi «Garage» è provvisorio. Da scegliere insieme (nome unico e riconoscibile). Roberto porterà immagini di esempio per grafica e menu.
-- ~~Logo di Garage~~ (8 novembre): fatto, ridisegnato dal logo di Roberto (chiavi incrociate + fulmine) nello stile dell'icona di Pompa Giusta. Sorgente: `garage/icon.svg`.
+- ~~Logo di Garage~~ (8 novembre): fatto, ridisegnato in vettoriale dal secondo logo di Roberto (ingranaggio blu con chiave inglese), scelto al posto della prima versione (chiavi incrociate + fulmine, ancora nella cronologia git). Sorgente: `garage/icon.svg`.
 - Collegare il rifornimento a un distributore scelto in Pompa Giusta (proposta).
