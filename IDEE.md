@@ -31,4 +31,5 @@ Fatto: Pompa Giusta con Opzioni, temi colore, fascia news, scheda Novità e pref
 - ~~Collegare «Rinnovata» (Scadenze) alle Spese~~ — fatto l'8 novembre 2026: toccando «Rinnovata» l'app chiede quanto hai pagato e registra la spesa.
 - **Nome definitivo di Garage**: oggi «Garage» è provvisorio. Da scegliere insieme (nome unico e riconoscibile). Roberto porterà immagini di esempio per grafica e menu.
 - ~~Logo di Garage~~ (8 novembre): fatto. Usato esattamente il logo di Roberto (ingranaggio blu con chiave inglese su fondo nero), ritagliato dall'immagine originale, senza modifiche di stile. Le versioni provate prima (chiavi incrociate+fulmine, ingranaggio ridisegnato, quadrante come Pompa Giusta) non sono piaciute; restano nella cronologia git.
+- Home di Garage (8 novembre): provata una home «cruscotto» ispirata a un design di riferimento (scheda del mezzo, scorciatoie, prossima scadenza, numeri, barra in basso). Roberto ha scelto di tenere il **menu a riquadri** come schermata di partenza. La versione cruscotto è nella cronologia git (commit d988628) e si può riprendere.
 - Collegare il rifornimento a un distributore scelto in Pompa Giusta (proposta).
