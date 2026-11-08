@@ -2,14 +2,14 @@
  "date": "2026-11-08",
  "keys": {
   "B0": {
-   "n": 7324,
+   "n": 7311,
    "min": 1.569,
-   "p5": 1.977,
+   "p5": 1.978,
    "med": 2.189,
    "p95": 2.299,
    "max": 2.999,
    "sotto_1.7": 2,
-   "sopra_2.4": 68,
+   "sopra_2.4": 69,
    "piu_bassi": [
     [
      1.569,
@@ -96,14 +96,14 @@
    ]
   },
   "B1": {
-   "n": 10533,
+   "n": 10546,
    "min": 1.569,
    "p5": 1.969,
    "med": 1.99,
-   "p95": 2.097,
+   "p95": 2.095,
    "max": 2.789,
-   "sotto_1.7": 7,
-   "sopra_2.4": 16,
+   "sotto_1.7": 6,
+   "sopra_2.4": 17,
    "piu_bassi": [
     [
      1.569,
@@ -130,14 +130,6 @@
      false
     ],
     [
-     1.659,
-     "17918",
-     "di vincenzo gennaro",
-     "Calvizzano",
-     "NA",
-     false
-    ],
-    [
      1.668,
      "50492",
      "STAZIONE DI SERVIZIO ENI di Valsecchi Andrea",
@@ -151,6 +143,14 @@
      "IP San Romano",
      "Montopoli In Val D'Arno",
      "PI",
+     false
+    ],
+    [
+     1.699,
+     "53725",
+     "56140 ENI",
+     "Napoli",
+     "NA",
      false
     ]
    ],
@@ -190,14 +190,14 @@
    ]
   },
   "D0": {
-   "n": 7307,
+   "n": 7295,
    "min": 1.599,
    "p5": 2.19,
    "med": 2.399,
-   "p95": 2.547,
+   "p95": 2.546,
    "max": 3.175,
    "sotto_1.7": 5,
-   "sopra_2.4": 3401,
+   "sopra_2.4": 3399,
    "piu_bassi": [
     [
      1.599,
@@ -284,14 +284,14 @@
    ]
   },
   "D1": {
-   "n": 10521,
+   "n": 10534,
    "min": 1.589,
    "p5": 2.189,
-   "med": 2.204,
+   "med": 2.205,
    "p95": 2.349,
    "max": 2.799,
-   "sotto_1.7": 11,
-   "sopra_2.4": 149,
+   "sotto_1.7": 10,
+   "sopra_2.4": 153,
    "piu_bassi": [
     [
      1.589,
@@ -326,19 +326,19 @@
      false
     ],
     [
-     1.639,
-     "17918",
-     "di vincenzo gennaro",
-     "Calvizzano",
-     "NA",
-     false
-    ],
-    [
      1.649,
      "50492",
      "STAZIONE DI SERVIZIO ENI di Valsecchi Andrea",
      "Bergamo",
      "BG",
+     false
+    ],
+    [
+     1.659,
+     "33454",
+     "ZENO CIRO",
+     "Torre Del Greco",
+     "NA",
      false
     ]
    ],
@@ -378,13 +378,13 @@
    ]
   },
   "G0": {
-   "n": 2322,
+   "n": 2315,
    "min": 0.549,
    "p5": 0.739,
-   "med": 0.819,
+   "med": 0.828,
    "p95": 0.929,
    "max": 1.399,
-   "sotto_1.7": 2322,
+   "sotto_1.7": 2315,
    "sopra_2.4": 0,
    "piu_bassi": [
     [
@@ -401,6 +401,14 @@
      "2597  SANNAZZARO DE' BURGONDI",
      "Sannazzaro De' Burgondi",
      "PV",
+     false
+    ],
+    [
+     0.669,
+     "55084",
+     "GREEN GAS  STAZIONE DI SERVIZIO ",
+     "San Cipriano D'Aversa",
+     "CE",
      false
     ],
     [
@@ -425,14 +433,6 @@
      "Stazione di Servizio Q8 Succivo",
      "Succivo",
      "CE",
-     false
-    ],
-    [
-     0.69,
-     "32716",
-     "SERVICE AREA MONTANARELLA SRL",
-     "Melfi",
-     "PZ",
      false
     ]
    ],
@@ -472,13 +472,13 @@
    ]
   },
   "G1": {
-   "n": 93,
+   "n": 92,
    "min": 0.605,
    "p5": 0.699,
    "med": 0.799,
    "p95": 0.9,
    "max": 0.999,
-   "sotto_1.7": 93,
+   "sotto_1.7": 92,
    "sopra_2.4": 0,
    "piu_bassi": [
     [
@@ -566,14 +566,14 @@
    ]
   },
   "M0": {
-   "n": 759,
+   "n": 760,
    "min": 0.936,
-   "p5": 1.69,
-   "med": 2.12,
+   "p5": 1.696,
+   "med": 2.147,
    "p95": 2.499,
    "max": 4.999,
-   "sotto_1.7": 46,
-   "sopra_2.4": 76,
+   "sotto_1.7": 45,
+   "sopra_2.4": 77,
    "piu_bassi": [
     [
      0.936,
@@ -601,6 +601,14 @@
     ],
     [
      1.359,
+     "40678",
+     "Stazione di servizio F.ll.i Buono",
+     "Terzigno",
+     "NA",
+     false
+    ],
+    [
+     1.359,
      "59073",
      "Ip Argenta",
      "Argenta",
@@ -613,14 +621,6 @@
      "miro impianto agip",
      "Castelbelforte",
      "MN",
-     false
-    ],
-    [
-     1.399,
-     "56924",
-     "SETTIMO TORINESE VIA NICOLO' PAGANINI",
-     "Settimo Torinese",
-     "TO",
      false
     ]
    ],
