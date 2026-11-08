@@ -90,13 +90,13 @@ function alerts() {
 
 /* ---------- schermate ---------- */
 const VIEWS = { menu: 'vMenu', scadenze: 'vScad', diario: 'vDiario', spese: 'vSpese', statistiche: 'vStat', mezzi: 'vMezzi', backup: 'vBackup' };
-const TITLES = { menu: 'Garage', scadenze: 'Scadenze auto', diario: 'Diario rifornimenti', spese: 'Spese dell\'auto', statistiche: 'Statistiche', mezzi: 'I miei mezzi', backup: 'Backup' };
+const TITLES = { menu: 'Car Hub', scadenze: 'Scadenze auto', diario: 'Diario rifornimenti', spese: 'Spese dell\'auto', statistiche: 'Statistiche', mezzi: 'I miei mezzi', backup: 'Backup' };
 function route() {
   renewK = null;
   const h = (location.hash || '#menu').slice(1);
   const v = VIEWS[h] ? h : 'menu';
   Object.keys(VIEWS).forEach(k => { $(VIEWS[k]).hidden = k !== v; });
-  $('ggTitle').textContent = TITLES[v]; $('btnBack').hidden = v === 'menu';
+  $('ggTitle').textContent = TITLES[v]; $('btnBack').hidden = v === 'menu'; $('btnOpz').hidden = v !== 'menu';
   if (v === 'menu') renderMenu(); if (v === 'scadenze') renderScad(); if (v === 'diario') renderDiario(true); if (v === 'mezzi') renderMezzi(); if (v === 'spese') renderSpese(true); if (v === 'statistiche') renderStat();
   window.scrollTo(0, 0);
 }
@@ -501,7 +501,7 @@ function pickFile(e) {
   r.onload = () => {
     try {
       const j = JSON.parse(r.result);
-      if (!j || j.app !== 'garage-backup' || typeof j.data !== 'object') throw new Error('Questo non è un file di backup di Garage.');
+      if (!j || j.app !== 'garage-backup' || typeof j.data !== 'object') throw new Error('Questo non è un file di backup di Car Hub.');
       const d = {}; Object.keys(j.data).forEach(k => { if (OWN(k) && typeof j.data[k] === 'string') d[k] = j.data[k]; });
       if (!Object.keys(d).length) throw new Error('Il file non contiene dati.');
       pending = d; m.className = 'msg';

@@ -8,8 +8,8 @@
 <meta name="theme-color" content="#070c16">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<meta name="apple-mobile-web-app-title" content="Pompa Giusta">
+<link rel="apple-touch-icon" href="garage/icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-title" content="Car Hub">
 <link rel="preload" href="fonts/archivo-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/archivo-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/ibm-plex-mono-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
@@ -28,6 +28,7 @@ try{var o=JSON.parse(localStorage.getItem('pg.opts')||'{}');['quick','hero','ver
   <header class="top">
     <h1><img class="logo" src="icon.svg" alt="" width="36" height="36">Pompa Giusta</h1>
     <div class="hbtns">
+      <a class="icon-btn" id="btnHub" href="garage/" aria-label="Torna a Car Hub" title="Torna a Car Hub"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-7 8 7"/><path d="M6 10v10h12V10"/><path d="M10 20v-5h4v5"/></svg></a>
       <button class="icon-btn" id="btnOpt" type="button" aria-label="Opzioni"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
     </div>
   </header>
@@ -203,10 +204,10 @@ try{var o=JSON.parse(localStorage.getItem('pg.opts')||'{}');['quick','hero','ver
         </div></div>
     </section>
 
-    <section class="panel og" aria-label="Garage">
-      <h3>Garage</h3>
-      <p class="hint">Scadenze di bollo, assicurazione, revisione e tagliando, e il backup dei tuoi dati. È un'app a parte, con il suo menu: si installa dal suo indirizzo.</p>
-      <a class="btn ghost" href="garage/">Apri Garage</a>
+    <section class="panel og" aria-label="Car Hub">
+      <h3>Car Hub</h3>
+      <p class="hint">Pompa Giusta è uno dei moduli di Car Hub, insieme a scadenze, diario dei rifornimenti, spese e statistiche. Le impostazioni di questa pagina valgono per tutta l'app.</p>
+      <a class="btn ghost" href="garage/">Vai al menu di Car Hub</a>
     </section>
 
     <section class="panel og" aria-label="Guida">
