@@ -719,6 +719,7 @@ function renderNews() {
 }
 
 /* ---------- pagina Opzioni ---------- */
+let fromHub = false; /* Opzioni aperte dalla rotella di Car Hub: alla chiusura si torna al menu */
 let optScroll = 0;
 function openOpt() {
   if (!$('optPanel').hidden) return;
@@ -734,6 +735,7 @@ function closeOpt() {
   renderActive();
   if (S.tab === 'percorso' && S.map) setTimeout(() => S.map.invalidateSize(), 60);
   window.scrollTo(0, optScroll);
+  if (fromHub) location.replace('garage/');
 }
 
 /* ---------- caricamento manuale di riserva ---------- */
@@ -864,6 +866,7 @@ function wire() {
   $('selDetour').innerHTML = $('o_detour').innerHTML = DETOURS.map(d => '<option value="' + d + '">' + (d < 1 ? (d * 1000) + ' m' : d + ' km') + ' dal percorso</option>').join('');
   $('o_detour').innerHTML = DETOURS.map(d => '<option value="' + d + '">' + (d < 1 ? (d * 1000) + ' m' : d + ' km') + '</option>').join('');
   wire(); wireTheme(); applyOpts(); syncControls(); setTab(S.tab);
+  if (location.hash === '#opzioni') { fromHub = true; try { history.replaceState(null, '', location.pathname + location.search); } catch (e) { /* ok */ } openOpt(); }
   try { await loadAll(); }
   catch (e) {
     const c = $('chipData'); c.className = 'chip warn'; c.textContent = 'Prezzi non disponibili';

@@ -1,37 +1,32 @@
 {
-  "name": "Pompa Giusta",
-  "short_name": "Pompa Giusta",
-  "description": "Prezzi dei carburanti in Italia a confronto con la media della regione.",
+  "id": "./",
+  "name": "Car Hub",
+  "short_name": "Car Hub",
+  "description": "Il tuo ambiente per auto e moto: prezzi dei carburanti, scadenze, rifornimenti, spese e statistiche.",
   "lang": "it",
-  "start_url": "./",
+  "start_url": "./garage/",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#040a1b",
+  "background_color": "#000000",
   "theme_color": "#070c16",
   "icons": [
     {
-      "src": "icons/icon-192.png",
+      "src": "garage/icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icons/icon-512.png",
+      "src": "garage/icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icons/icon-maskable-512.png",
+      "src": "garage/icons/icon-maskable-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
-    },
-    {
-      "src": "icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any"
     }
   ]
 }
