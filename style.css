@@ -228,7 +228,8 @@ li.row.skel{height:210px;list-style:none}
 
 /* ---- Aspetto: pulsanti in alto e finestra di scelta ---- */
 .hbtns{display:flex;gap:8px}
-.icon-btn svg{display:block;margin:auto}
+.icon-btn{display:inline-grid;place-items:center;padding:0;text-decoration:none;line-height:0}
+.icon-btn svg{display:block;margin:auto;width:23px;height:23px}
 .swatches{display:grid;grid-template-columns:repeat(4,1fr);gap:12px 8px}
 .swatches button{display:flex;flex-direction:column;align-items:center;gap:6px;border:0;background:transparent;cursor:pointer;font-size:.72rem;color:var(--muted);padding:0;min-width:0}
 .swatches i{width:52px;height:52px;border-radius:50%;border:2px solid var(--line);display:block;background-size:cover}
