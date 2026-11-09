@@ -1,15 +1,15 @@
 {
- "date": "2026-11-08",
+ "date": "2026-11-09",
  "keys": {
   "B0": {
-   "n": 7330,
+   "n": 7322,
    "min": 1.569,
-   "p5": 1.977,
+   "p5": 1.975,
    "med": 2.189,
    "p95": 2.299,
    "max": 2.999,
    "sotto_1.7": 2,
-   "sopra_2.4": 68,
+   "sopra_2.4": 67,
    "piu_bassi": [
     [
      1.569,
@@ -96,14 +96,14 @@
    ]
   },
   "B1": {
-   "n": 10542,
+   "n": 10546,
    "min": 1.569,
-   "p5": 1.969,
+   "p5": 1.967,
    "med": 1.99,
-   "p95": 2.097,
+   "p95": 2.079,
    "max": 2.789,
    "sotto_1.7": 6,
-   "sopra_2.4": 16,
+   "sopra_2.4": 18,
    "piu_bassi": [
     [
      1.569,
@@ -190,15 +190,23 @@
    ]
   },
   "D0": {
-   "n": 7312,
-   "min": 1.599,
-   "p5": 2.19,
+   "n": 7306,
+   "min": 1.0,
+   "p5": 2.199,
    "med": 2.399,
-   "p95": 2.547,
-   "max": 3.175,
-   "sotto_1.7": 5,
-   "sopra_2.4": 3406,
+   "p95": 2.549,
+   "max": 3.225,
+   "sotto_1.7": 6,
+   "sopra_2.4": 3599,
    "piu_bassi": [
+    [
+     1.0,
+     "56106",
+     "PA069",
+     "Cefalà Diana",
+     "PA",
+     false
+    ],
     [
      1.599,
      "54868",
@@ -238,14 +246,6 @@
      "Candela",
      "FG",
      false
-    ],
-    [
-     1.739,
-     "45516",
-     "EASY SERVICE S.R.L. / PIOSSASCO",
-     "Piossasco",
-     "TO",
-     false
     ]
    ],
    "piu_alti": [
@@ -266,7 +266,7 @@
      false
     ],
     [
-     3.175,
+     3.225,
      "24518",
      "IP VILLANOVA MONDOVI'",
      "Villanova Mondovì",
@@ -274,7 +274,7 @@
      false
     ],
     [
-     3.175,
+     3.225,
      "37545",
      "IP FOSSANO - SAN LORENZO",
      "Fossano",
@@ -284,15 +284,23 @@
    ]
   },
   "D1": {
-   "n": 10529,
-   "min": 1.589,
+   "n": 10536,
+   "min": 1.0,
    "p5": 2.189,
-   "med": 2.205,
-   "p95": 2.349,
+   "med": 2.23,
+   "p95": 2.339,
    "max": 2.799,
-   "sotto_1.7": 10,
-   "sopra_2.4": 149,
+   "sotto_1.7": 11,
+   "sopra_2.4": 142,
    "piu_bassi": [
+    [
+     1.0,
+     "56106",
+     "PA069",
+     "Cefalà Diana",
+     "PA",
+     false
+    ],
     [
      1.589,
      "45516",
@@ -332,14 +340,6 @@
      "Bergamo",
      "BG",
      false
-    ],
-    [
-     1.659,
-     "33454",
-     "ZENO CIRO",
-     "Torre Del Greco",
-     "NA",
-     false
     ]
    ],
    "piu_alti": [
@@ -378,13 +378,13 @@
    ]
   },
   "G0": {
-   "n": 2325,
+   "n": 2313,
    "min": 0.549,
-   "p5": 0.739,
-   "med": 0.82,
+   "p5": 0.749,
+   "med": 0.839,
    "p95": 0.929,
    "max": 1.399,
-   "sotto_1.7": 2325,
+   "sotto_1.7": 2313,
    "sopra_2.4": 0,
    "piu_bassi": [
     [
@@ -396,11 +396,11 @@
      false
     ],
     [
-     0.634,
-     "58163",
-     "2597  SANNAZZARO DE' BURGONDI",
-     "Sannazzaro De' Burgondi",
-     "PV",
+     0.669,
+     "55084",
+     "GREEN GAS  STAZIONE DI SERVIZIO ",
+     "San Cipriano D'Aversa",
+     "CE",
      false
     ],
     [
@@ -420,19 +420,19 @@
      false
     ],
     [
-     0.687,
-     "57205",
-     "Stazione di Servizio Q8 Succivo",
-     "Succivo",
-     "CE",
-     false
-    ],
-    [
      0.69,
      "32716",
      "SERVICE AREA MONTANARELLA SRL",
      "Melfi",
      "PZ",
+     false
+    ],
+    [
+     0.695,
+     "51284",
+     "GIULIANO CARBURANTI SRL",
+     "Balestrate",
+     "PA",
      false
     ]
    ],
@@ -476,7 +476,7 @@
    "min": 0.605,
    "p5": 0.699,
    "med": 0.799,
-   "p95": 0.9,
+   "p95": 0.939,
    "max": 0.999,
    "sotto_1.7": 93,
    "sopra_2.4": 0,
@@ -532,19 +532,19 @@
    ],
    "piu_alti": [
     [
-     0.939,
-     "49587",
-     "MEBORAST",
-     "Appiano Sulla Strada Del Vino",
-     "BZ",
-     false
-    ],
-    [
      0.959,
      "49508",
      "MAURIZIO SEBASTIANO MARCHETTA",
      "Barcellona Pozzo Di Gotto",
      "ME",
+     false
+    ],
+    [
+     0.969,
+     "58439",
+     "COGEKAT",
+     "Motta Sant'Anastasia",
+     "CT",
      false
     ],
     [
@@ -568,12 +568,12 @@
   "M0": {
    "n": 760,
    "min": 0.936,
-   "p5": 1.69,
-   "med": 2.129,
+   "p5": 1.699,
+   "med": 2.149,
    "p95": 2.499,
    "max": 4.999,
-   "sotto_1.7": 46,
-   "sopra_2.4": 76,
+   "sotto_1.7": 41,
+   "sopra_2.4": 78,
    "piu_bassi": [
     [
      0.936,
@@ -601,6 +601,14 @@
     ],
     [
      1.359,
+     "40678",
+     "Stazione di servizio F.ll.i Buono",
+     "Terzigno",
+     "NA",
+     false
+    ],
+    [
+     1.359,
      "59073",
      "Ip Argenta",
      "Argenta",
@@ -613,14 +621,6 @@
      "miro impianto agip",
      "Castelbelforte",
      "MN",
-     false
-    ],
-    [
-     1.399,
-     "56924",
-     "SETTIMO TORINESE VIA NICOLO' PAGANINI",
-     "Settimo Torinese",
-     "TO",
      false
     ]
    ],
