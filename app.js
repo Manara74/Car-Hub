@@ -874,3 +874,11 @@ function wire() {
   }
 })();
 })();
+
+
+// Versione e controllo aggiornamenti (Opzioni > Car Hub)
+(function () {
+  var l = document.getElementById('verLine'), b = document.getElementById('btnUpd'), m = document.getElementById('updMsg');
+  if (l && window.appVersionLabel) l.textContent = window.appVersionLabel();
+  if (b) b.addEventListener('click', function () { window.appCheckUpdate('', m, b); });
+})();

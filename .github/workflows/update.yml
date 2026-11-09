@@ -66,7 +66,7 @@ jobs:
       - name: Prepara il sito
         run: |
           mkdir -p _site/data
-          cp index.html app.js lib.js style.css province.json manifest.webmanifest icon.svg _site/
+          cp index.html app.js lib.js version.js style.css province.json manifest.webmanifest icon.svg _site/
           cp -r icons _site/icons
           cp -r fonts _site/fonts
           cp -r garage _site/garage

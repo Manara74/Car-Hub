@@ -208,6 +208,9 @@ try{var o=JSON.parse(localStorage.getItem('pg.opts')||'{}');['quick','hero','ver
       <h3>Car Hub</h3>
       <p class="hint">Pompa Giusta è uno dei moduli di Car Hub, insieme a scadenze, diario dei rifornimenti, spese e statistiche. Le impostazioni di questa pagina valgono per tutta l'app.</p>
       <a class="btn ghost" href="garage/">Vai al menu di Car Hub</a>
+      <p class="hint" id="verLine" style="margin-top:12px"></p>
+      <button type="button" class="btn ghost" id="btnUpd">Controlla aggiornamenti</button>
+      <p class="hint" id="updMsg" role="status"></p>
     </section>
 
     <section class="panel og" aria-label="Guida">
@@ -240,6 +243,7 @@ try{var o=JSON.parse(localStorage.getItem('pg.opts')||'{}');['quick','hero','ver
   </footer>
 </div>
 
+<script src="version.js"></script>
 <script src="lib.js"></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin></script>
 <script src="app.js"></script>

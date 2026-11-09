@@ -527,3 +527,7 @@ function doImport() {
 
 wire(); route();
 })();
+
+
+// Numero di versione in fondo al menu
+(function () { var e = document.getElementById('appVer'); if (e && window.appVersionLabel) e.textContent = window.appVersionLabel(); })();
