@@ -7,7 +7,7 @@
   "start_url": "./garage/",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#000000",
+  "background_color": "#040a1b",
   "theme_color": "#070c16",
   "icons": [
     {
