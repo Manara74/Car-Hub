@@ -2,14 +2,14 @@
  "date": "2026-11-10",
  "keys": {
   "B0": {
-   "n": 7272,
+   "n": 7252,
    "min": 1.569,
-   "p5": 1.975,
+   "p5": 1.969,
    "med": 2.189,
    "p95": 2.299,
    "max": 2.999,
    "sotto_1.7": 2,
-   "sopra_2.4": 65,
+   "sopra_2.4": 63,
    "piu_bassi": [
     [
      1.569,
@@ -96,13 +96,13 @@
    ]
   },
   "B1": {
-   "n": 10475,
+   "n": 10457,
    "min": 1.569,
-   "p5": 1.967,
+   "p5": 1.959,
    "med": 1.99,
-   "p95": 2.079,
+   "p95": 2.069,
    "max": 2.789,
-   "sotto_1.7": 7,
+   "sotto_1.7": 6,
    "sopra_2.4": 17,
    "piu_bassi": [
     [
@@ -130,14 +130,6 @@
      false
     ],
     [
-     1.659,
-     "17918",
-     "di vincenzo gennaro",
-     "Calvizzano",
-     "NA",
-     false
-    ],
-    [
      1.668,
      "50492",
      "STAZIONE DI SERVIZIO ENI di Valsecchi Andrea",
@@ -151,6 +143,14 @@
      "IP San Romano",
      "Montopoli In Val D'Arno",
      "PI",
+     false
+    ],
+    [
+     1.699,
+     "53725",
+     "56140 ENI",
+     "Napoli",
+     "NA",
      false
     ]
    ],
@@ -190,23 +190,15 @@
    ]
   },
   "D0": {
-   "n": 7255,
-   "min": 1.0,
+   "n": 7236,
+   "min": 1.599,
    "p5": 2.199,
    "med": 2.399,
    "p95": 2.549,
    "max": 3.225,
-   "sotto_1.7": 6,
-   "sopra_2.4": 3585,
+   "sotto_1.7": 5,
+   "sopra_2.4": 3505,
    "piu_bassi": [
-    [
-     1.0,
-     "56106",
-     "PA069",
-     "Cefalà Diana",
-     "PA",
-     false
-    ],
     [
      1.599,
      "54868",
@@ -246,6 +238,14 @@
      "Candela",
      "FG",
      false
+    ],
+    [
+     1.739,
+     "45516",
+     "EASY SERVICE S.R.L. / PIOSSASCO",
+     "Piossasco",
+     "TO",
+     false
     ]
    ],
    "piu_alti": [
@@ -284,23 +284,15 @@
    ]
   },
   "D1": {
-   "n": 10462,
-   "min": 1.0,
+   "n": 10448,
+   "min": 1.589,
    "p5": 2.189,
-   "med": 2.23,
-   "p95": 2.339,
+   "med": 2.21,
+   "p95": 2.329,
    "max": 2.799,
-   "sotto_1.7": 12,
-   "sopra_2.4": 137,
+   "sotto_1.7": 10,
+   "sopra_2.4": 121,
    "piu_bassi": [
-    [
-     1.0,
-     "56106",
-     "PA069",
-     "Cefalà Diana",
-     "PA",
-     false
-    ],
     [
      1.589,
      "45516",
@@ -334,10 +326,18 @@
      false
     ],
     [
-     1.639,
-     "17918",
-     "di vincenzo gennaro",
-     "Calvizzano",
+     1.649,
+     "50492",
+     "STAZIONE DI SERVIZIO ENI di Valsecchi Andrea",
+     "Bergamo",
+     "BG",
+     false
+    ],
+    [
+     1.659,
+     "33454",
+     "ZENO CIRO",
+     "Torre Del Greco",
      "NA",
      false
     ]
@@ -378,13 +378,13 @@
    ]
   },
   "G0": {
-   "n": 2295,
+   "n": 2288,
    "min": 0.549,
-   "p5": 0.749,
+   "p5": 0.754,
    "med": 0.839,
-   "p95": 0.935,
+   "p95": 0.93,
    "max": 1.399,
-   "sotto_1.7": 2295,
+   "sotto_1.7": 2288,
    "sopra_2.4": 0,
    "piu_bassi": [
     [
@@ -392,6 +392,14 @@
      "32490",
      "CASTEL VOLTURNO SS 7/IV DOMITIANA KM 30+800",
      "Castel Volturno",
+     "CE",
+     false
+    ],
+    [
+     0.669,
+     "55084",
+     "GREEN GAS  STAZIONE DI SERVIZIO ",
+     "San Cipriano D'Aversa",
      "CE",
      false
     ],
@@ -417,14 +425,6 @@
      "SERVICE AREA MONTANARELLA SRL",
      "Melfi",
      "PZ",
-     false
-    ],
-    [
-     0.695,
-     "51284",
-     "GIULIANO CARBURANTI SRL",
-     "Balestrate",
-     "PA",
      false
     ],
     [
@@ -472,13 +472,13 @@
    ]
   },
   "G1": {
-   "n": 93,
+   "n": 91,
    "min": 0.605,
    "p5": 0.699,
-   "med": 0.799,
-   "p95": 0.939,
+   "med": 0.815,
+   "p95": 0.919,
    "max": 0.999,
-   "sotto_1.7": 93,
+   "sotto_1.7": 91,
    "sopra_2.4": 0,
    "piu_bassi": [
     [
@@ -487,14 +487,6 @@
      "SOCOGAS Orbassano",
      "Orbassano",
      "TO",
-     false
-    ],
-    [
-     0.688,
-     "33899",
-     "totalerg",
-     "Marene",
-     "CN",
      false
     ],
     [
@@ -519,6 +511,14 @@
      "ENI STATION",
      "Mortegliano",
      "UD",
+     false
+    ],
+    [
+     0.699,
+     "63765",
+     "RIETI",
+     "Rieti",
+     "RI",
      false
     ],
     [
@@ -566,14 +566,14 @@
    ]
   },
   "M0": {
-   "n": 746,
+   "n": 748,
    "min": 0.936,
    "p5": 1.699,
-   "med": 2.147,
+   "med": 2.149,
    "p95": 2.499,
    "max": 4.999,
    "sotto_1.7": 41,
-   "sopra_2.4": 75,
+   "sopra_2.4": 71,
    "piu_bassi": [
     [
      0.936,
@@ -660,7 +660,7 @@
    ]
   },
   "M1": {
-   "n": 53,
+   "n": 51,
    "min": 1.49,
    "p5": 1.625,
    "med": 2.099,
