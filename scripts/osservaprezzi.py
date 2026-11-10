@@ -16,7 +16,7 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta, timezone
 
 API = 'https://carburanti.mise.gov.it/ospzApi'
-PAGES_DATA = 'https://manara74.github.io/Pompa-Giusta/data/pompe.json'
+PAGES_DATA = 'https://manara74.github.io/Car-Hub/data/pompe.json'
 UA = 'Mozilla/5.0 (compatible; PompaGiusta/1.0; app gratuita, uso personale)'
 RAGGIO = 20          # km di ogni cerchio (il massimo del sito)
 TETTO = 900          # se un cerchio restituisce tanti impianti puo' essere troncato: lo divido

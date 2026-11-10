@@ -26,7 +26,7 @@ ENDPOINTS = [
     'https://overpass.private.coffee/api/interpreter',
 ]
 DEADLINE = time.time() + 150 * 60  # dopo 2 ore e mezza salvo quello che ho, senza farmi interrompere
-UA = 'PompaGiusta/1.0 (+https://github.com/Manara74/pompa-giusta)'
+UA = 'PompaGiusta/1.0 (+https://github.com/Manara74/Car-Hub)'
 
 REGIONS = {
     'IT-65': 'Abruzzo', 'IT-77': 'Basilicata', 'IT-78': 'Calabria', 'IT-72': 'Campania',

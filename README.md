@@ -9,7 +9,7 @@ App web per confrontare i prezzi dei carburanti in Italia con la media della pro
 
 ## Come usarla sul telefono
 
-Apri **https://manara74.github.io/Pompa-Giusta/** (le maiuscole contano). Non serve nessun account e non c'è niente da scaricare. Per averla come una app con la sua icona:
+Apri **https://manara74.github.io/Car-Hub/** (le maiuscole contano). Non serve nessun account e non c'è niente da scaricare. Per averla come una app con la sua icona:
 
 **iPhone (iOS)**
 1. Apri il link con **Safari** (con Chrome non funziona).
