@@ -834,6 +834,9 @@ function wire() {
     if (c) { setNote(c.dataset.id, c.dataset.sv, c.checked); renderActive(); }
   });
 
+  const MES = ['gen', 'feb', 'mar', 'apr', 'mag', 'giu', 'lug', 'ago', 'set', 'ott', 'nov', 'dic'];
+  const clock = () => { const d = new Date(), z = n => String(n).padStart(2, '0'); const c = $('tclock'); if (c) c.textContent = d.getDate() + ' ' + MES[d.getMonth()] + ' · ' + z(d.getHours()) + ':' + z(d.getMinutes()); };
+  clock(); setInterval(clock, 20000);
   const tv = $('ttrack');
   ['pointerdown', 'touchstart'].forEach(n => $('ticker').addEventListener(n, () => tv.classList.add('paused'), { passive: true }));
   ['pointerup', 'pointercancel', 'touchend', 'touchcancel'].forEach(n => $('ticker').addEventListener(n, () => setTimeout(() => tv.classList.remove('paused'), 2500), { passive: true }));
