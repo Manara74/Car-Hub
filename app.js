@@ -615,7 +615,7 @@ function refresh() { savePrefs(); syncControls(); renderActive(); renderNews(); 
 /* ---------- aspetto: modo e colore ---------- */
 const ACCENTS = [['blu', 'Blu notte'], ['arancio', 'Arancio'], ['militare', 'Verde militare'], ['bosco', 'Camo bosco'],
   ['deserto', 'Camo deserto'], ['neve', 'Camo neve'], ['rosso', 'Rosso'], ['menta', 'Menta']];
-const SWATCH = { blu: '#4c8df6', arancio: '#ff8a3d', militare: '#9bb35a', rosso: '#ff5a64', menta: '#4fc3b5' };
+const SWATCH = { blu: '#4c8df6', arancio: '#fb7a1e', militare: '#9bb35a', rosso: '#ff5a64', menta: '#4fc3b5' };
 let THEME = { mode: 'auto', accent: 'blu' };
 function loadTheme() {
   try { const t = JSON.parse(localStorage.getItem('pg.theme') || '{}'); if (['auto', 'light', 'dark'].includes(t.mode)) THEME.mode = t.mode;
@@ -835,8 +835,7 @@ function wire() {
     if (c) { setNote(c.dataset.id, c.dataset.sv, c.checked); renderActive(); }
   });
 
-  const MES = ['gen', 'feb', 'mar', 'apr', 'mag', 'giu', 'lug', 'ago', 'set', 'ott', 'nov', 'dic'];
-  const clock = () => { const d = new Date(), z = n => String(n).padStart(2, '0'); const c = $('tclock'); if (c) c.textContent = d.getDate() + ' ' + MES[d.getMonth()] + ' · ' + z(d.getHours()) + ':' + z(d.getMinutes()); };
+  const clock = () => { const d = new Date(), z = n => String(n).padStart(2, '0'); const c = $('tclock'); if (c) c.textContent = 'Notizie · ' + z(d.getHours()) + ':' + z(d.getMinutes()); };
   clock(); setInterval(clock, 20000);
   const tv = $('ttrack');
   ['pointerdown', 'touchstart'].forEach(n => $('ticker').addEventListener(n, () => tv.classList.add('paused'), { passive: true }));
