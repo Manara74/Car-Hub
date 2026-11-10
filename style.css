@@ -286,17 +286,17 @@ html.h-favs #favCard,html.h-quick #quick,html.h-hero #summary,html.h-verdict #ve
 html.h-charts .layout{display:block}
 
 /* ---- Fascia delle news ---- */
-#ticker{--lt1:#e5453d;--lt2:#a3151b;position:relative;z-index:1;width:100%;max-width:640px;height:72px;flex:none;filter:drop-shadow(0 6px 10px rgba(0,0,0,.38))}
+#ticker{--lt1:color-mix(in srgb,var(--accent) 86%,#fff);--lt2:color-mix(in srgb,var(--accent) 70%,#000);position:relative;z-index:1;width:100%;max-width:640px;height:72px;flex:none;filter:drop-shadow(0 6px 10px rgba(0,0,0,.38))}
 #ticker[hidden]{display:none}
 .tlabel{position:absolute;left:8px;top:0;z-index:2;height:23px;padding:0 16px 0 13px;display:grid;place-items:center;white-space:nowrap;
-  background:linear-gradient(180deg,var(--lt1),var(--lt2));color:#fff;font:700 .64rem/1 var(--font-ui);letter-spacing:.1em;text-transform:uppercase;
+  background:linear-gradient(180deg,var(--lt1),var(--lt2));color:var(--accent-ink);font:700 .64rem/1 var(--font-ui);letter-spacing:.1em;text-transform:uppercase;
   clip-path:polygon(0 0,calc(100% - 9px) 0,100% 100%,7px 100%)}
 .tview{position:absolute;left:0;right:0;top:13px;height:40px;overflow:hidden;
-  background:linear-gradient(180deg,#2c313e,#171a22);border-top:2px solid #aeb4c2;box-sizing:border-box;
+  background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 20%,#2b303b),color-mix(in srgb,var(--accent) 9%,#14171e));border-top:2px solid color-mix(in srgb,var(--accent) 45%,#cdd4e0);box-sizing:border-box;
   clip-path:polygon(0 0,100% 0,calc(100% - 12px) 100%,10px 100%);
   -webkit-mask-image:linear-gradient(90deg,transparent 12px,#000 30px,#000 calc(100% - 30px),transparent calc(100% - 12px));mask-image:linear-gradient(90deg,transparent 12px,#000 30px,#000 calc(100% - 30px),transparent calc(100% - 12px))}
 .tfoot{position:absolute;right:6px;bottom:0;z-index:2;left:30%;height:21px;display:flex;align-items:center;justify-content:flex-end;padding:0 22px 0 18px;
-  background:linear-gradient(180deg,var(--lt1),var(--lt2));color:#fff;font:700 .64rem/1 var(--font-ui);letter-spacing:.16em;
+  background:linear-gradient(180deg,var(--lt1),var(--lt2));color:var(--accent-ink);font:700 .64rem/1 var(--font-ui);letter-spacing:.16em;
   clip-path:polygon(9px 0,100% 0,calc(100% - 9px) 100%,0 100%)}
 .ttrack{display:flex;align-items:center;height:calc(100% - 2px);padding-left:26px;width:max-content;white-space:nowrap;animation:tick var(--td,60s) linear infinite;will-change:transform}
 .ttrack.paused,#ticker:hover .ttrack{animation-play-state:paused}
