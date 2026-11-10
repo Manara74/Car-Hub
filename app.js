@@ -614,11 +614,12 @@ function refresh() { savePrefs(); syncControls(); renderActive(); renderNews(); 
 
 /* ---------- aspetto: modo e colore ---------- */
 const ACCENTS = [['blu', 'Blu notte'], ['arancio', 'Arancio'], ['militare', 'Verde militare'], ['bosco', 'Camo bosco'],
-  ['deserto', 'Camo deserto'], ['rosso', 'Rosso'], ['viola', 'Viola'], ['menta', 'Menta']];
-const SWATCH = { blu: '#4c8df6', arancio: '#ff8a3d', militare: '#9bb35a', rosso: '#ff5a64', viola: '#a78bfa', menta: '#4fc3b5' };
+  ['deserto', 'Camo deserto'], ['neve', 'Camo neve'], ['rosso', 'Rosso'], ['menta', 'Menta']];
+const SWATCH = { blu: '#4c8df6', arancio: '#ff8a3d', militare: '#9bb35a', rosso: '#ff5a64', menta: '#4fc3b5' };
 let THEME = { mode: 'auto', accent: 'blu' };
 function loadTheme() {
   try { const t = JSON.parse(localStorage.getItem('pg.theme') || '{}'); if (['auto', 'light', 'dark'].includes(t.mode)) THEME.mode = t.mode;
+    if (t.accent === 'viola') t.accent = 'neve'; /* il viola è stato sostituito dal camo neve */
     if (ACCENTS.some(x => x[0] === t.accent)) THEME.accent = t.accent; } catch (e) { /* senza memoria locale resta il predefinito */ }
 }
 function applyTheme() {

@@ -14,7 +14,7 @@
 <link rel="preload" href="fonts/archivo-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
 <script>
 /* stessi colori scelti in Pompa Giusta (stesso telefono, stessa memoria) */
-(function(){var m='auto',a='blu';try{var t=JSON.parse(localStorage.getItem('pg.theme')||'{}');if(t.mode)m=t.mode;if(t.accent)a=t.accent}catch(e){}
+(function(){var m='auto',a='blu';try{var t=JSON.parse(localStorage.getItem('pg.theme')||'{}');if(t.mode)m=t.mode;if(t.accent)a=t.accent==='viola'?'neve':t.accent}catch(e){}
 var d=m==='auto'?(window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'):m;
 var r=document.documentElement;r.dataset.theme=d;r.dataset.accent=a})();
 </script>

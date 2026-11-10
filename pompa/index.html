@@ -15,7 +15,7 @@
 <link rel="preload" href="../fonts/ibm-plex-mono-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
 <script>
 /* applico subito modo e colore scelti, prima di disegnare la pagina */
-(function(){var m='auto',a='blu';try{var t=JSON.parse(localStorage.getItem('pg.theme')||'{}');if(t.mode)m=t.mode;if(t.accent)a=t.accent}catch(e){}
+(function(){var m='auto',a='blu';try{var t=JSON.parse(localStorage.getItem('pg.theme')||'{}');if(t.mode)m=t.mode;if(t.accent)a=t.accent==='viola'?'neve':t.accent}catch(e){}
 var d=m==='auto'?(window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'):m;
 var r=document.documentElement;r.dataset.theme=d;r.dataset.accent=a;
 try{var o=JSON.parse(localStorage.getItem('pg.opts')||'{}');['quick','hero','verdict','charts','ticker','news','favs'].forEach(function(k){if(o[k]===false)r.classList.add('h-'+k)})}catch(e){}})();
@@ -33,6 +33,7 @@ try{var o=JSON.parse(localStorage.getItem('pg.opts')||'{}');['quick','hero','ver
     </div>
   </header>
   <div class="status"><span class="chip" id="chipData">Carico i prezzi…</span></div>
+  <div id="ticker" hidden aria-label="Notizie sul carburante"><span class="tlabel" id="tclock"></span><div class="tview" id="tview"><div class="ttrack" id="ttrack"></div></div><span class="tfoot">NOTIZIE</span></div>
 
   <nav class="tabs" id="tabs" aria-label="Sezioni">
     <button type="button" data-tab="zona" class="on"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-6.5-5.6-6.5-11A6.5 6.5 0 0 1 12 3.5 6.5 6.5 0 0 1 18.5 10c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/></svg><span>Zona</span></button>
@@ -40,7 +41,6 @@ try{var o=JSON.parse(localStorage.getItem('pg.opts')||'{}');['quick','hero','ver
     <button type="button" data-tab="percorso"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="6" r="2.5"/><path d="M8.5 18H15a3 3 0 0 0 0-6H9a3 3 0 0 1 0-6h6.5"/></svg><span>Percorso</span></button>
   </nav>
 
-  <div id="ticker" hidden aria-label="Notizie sul carburante"><span class="tlabel" id="tclock"></span><div class="tview" id="tview"><div class="ttrack" id="ttrack"></div></div><span class="tfoot">NOTIZIE</span></div>
 
   <section class="panel" id="quick" aria-label="Filtri comuni">
     <div class="grid">
