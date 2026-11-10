@@ -2,14 +2,14 @@
  "date": "2026-11-10",
  "keys": {
   "B0": {
-   "n": 7252,
+   "n": 7257,
    "min": 1.569,
    "p5": 1.969,
    "med": 2.189,
    "p95": 2.299,
    "max": 2.999,
    "sotto_1.7": 2,
-   "sopra_2.4": 63,
+   "sopra_2.4": 62,
    "piu_bassi": [
     [
      1.569,
@@ -96,14 +96,14 @@
    ]
   },
   "B1": {
-   "n": 10457,
+   "n": 10453,
    "min": 1.569,
    "p5": 1.959,
    "med": 1.99,
    "p95": 2.069,
    "max": 2.789,
-   "sotto_1.7": 6,
-   "sopra_2.4": 17,
+   "sotto_1.7": 7,
+   "sopra_2.4": 16,
    "piu_bassi": [
     [
      1.569,
@@ -130,6 +130,14 @@
      false
     ],
     [
+     1.659,
+     "17918",
+     "di vincenzo gennaro",
+     "Calvizzano",
+     "NA",
+     false
+    ],
+    [
      1.668,
      "50492",
      "STAZIONE DI SERVIZIO ENI di Valsecchi Andrea",
@@ -143,14 +151,6 @@
      "IP San Romano",
      "Montopoli In Val D'Arno",
      "PI",
-     false
-    ],
-    [
-     1.699,
-     "53725",
-     "56140 ENI",
-     "Napoli",
-     "NA",
      false
     ]
    ],
@@ -190,14 +190,14 @@
    ]
   },
   "D0": {
-   "n": 7236,
+   "n": 7240,
    "min": 1.599,
    "p5": 2.199,
    "med": 2.399,
    "p95": 2.549,
    "max": 3.225,
    "sotto_1.7": 5,
-   "sopra_2.4": 3505,
+   "sopra_2.4": 3509,
    "piu_bassi": [
     [
      1.599,
@@ -284,13 +284,13 @@
    ]
   },
   "D1": {
-   "n": 10448,
+   "n": 10441,
    "min": 1.589,
    "p5": 2.189,
-   "med": 2.21,
+   "med": 2.209,
    "p95": 2.329,
    "max": 2.799,
-   "sotto_1.7": 10,
+   "sotto_1.7": 11,
    "sopra_2.4": 121,
    "piu_bassi": [
     [
@@ -326,19 +326,19 @@
      false
     ],
     [
+     1.639,
+     "17918",
+     "di vincenzo gennaro",
+     "Calvizzano",
+     "NA",
+     false
+    ],
+    [
      1.649,
      "50492",
      "STAZIONE DI SERVIZIO ENI di Valsecchi Andrea",
      "Bergamo",
      "BG",
-     false
-    ],
-    [
-     1.659,
-     "33454",
-     "ZENO CIRO",
-     "Torre Del Greco",
-     "NA",
      false
     ]
    ],
@@ -378,13 +378,13 @@
    ]
   },
   "G0": {
-   "n": 2288,
+   "n": 2281,
    "min": 0.549,
    "p5": 0.754,
    "med": 0.839,
-   "p95": 0.93,
+   "p95": 0.935,
    "max": 1.399,
-   "sotto_1.7": 2288,
+   "sotto_1.7": 2281,
    "sopra_2.4": 0,
    "piu_bassi": [
     [
@@ -392,14 +392,6 @@
      "32490",
      "CASTEL VOLTURNO SS 7/IV DOMITIANA KM 30+800",
      "Castel Volturno",
-     "CE",
-     false
-    ],
-    [
-     0.669,
-     "55084",
-     "GREEN GAS  STAZIONE DI SERVIZIO ",
-     "San Cipriano D'Aversa",
      "CE",
      false
     ],
@@ -433,6 +425,14 @@
      "LEONARDO ENERGY POWER",
      "San Vitaliano",
      "NA",
+     false
+    ],
+    [
+     0.697,
+     "34936",
+     "LORO F.LLI SPA - CASTELNUOVO",
+     "Castelnuovo",
+     "TN",
      false
     ]
    ],
@@ -472,13 +472,13 @@
    ]
   },
   "G1": {
-   "n": 91,
+   "n": 93,
    "min": 0.605,
    "p5": 0.699,
-   "med": 0.815,
+   "med": 0.799,
    "p95": 0.919,
    "max": 0.999,
-   "sotto_1.7": 91,
+   "sotto_1.7": 93,
    "sopra_2.4": 0,
    "piu_bassi": [
     [
@@ -566,14 +566,14 @@
    ]
   },
   "M0": {
-   "n": 748,
+   "n": 738,
    "min": 0.936,
-   "p5": 1.699,
+   "p5": 1.69,
    "med": 2.149,
    "p95": 2.499,
    "max": 4.999,
    "sotto_1.7": 41,
-   "sopra_2.4": 71,
+   "sopra_2.4": 68,
    "piu_bassi": [
     [
      0.936,
@@ -660,7 +660,7 @@
    ]
   },
   "M1": {
-   "n": 51,
+   "n": 52,
    "min": 1.49,
    "p5": 1.625,
    "med": 2.099,
