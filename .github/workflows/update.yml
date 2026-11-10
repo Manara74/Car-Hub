@@ -70,6 +70,7 @@ jobs:
           cp -r icons _site/icons
           cp -r fonts _site/fonts
           cp -r garage _site/garage
+          cp -r pompa _site/pompa
           cp data/pompe.json data/meta.json data/history.json _site/data/
           if [ -f data/news.json ]; then cp data/news.json _site/data/; fi
 

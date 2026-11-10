@@ -1,15 +1,15 @@
 /* Numero di versione di Car Hub (vale per tutta l'app, Pompa Giusta compresa).
    Si aggiorna a ogni pubblicazione. */
-window.APP_VERSION = { v: '1.2', date: '2026-11-09' }; // la data non viene mostrata
+window.APP_VERSION = { v: '1.3', date: '2026-11-09' }; // la data non viene mostrata
 
 (function () {
   function etichetta(v) { return 'Versione ' + v; }
   window.appVersionLabel = function () { return etichetta(window.APP_VERSION.v); };
 
   // Controlla se online c'è una versione più nuova; se sì, scarica i file aggiornati e ricarica.
-  // base = '' (da Pompa Giusta) oppure '../' (dal menu di Car Hub)
+  // base = '' (dal menu di Car Hub, alla radice) oppure '../' (da Pompa Giusta, in pompa/)
   window.appCheckUpdate = function (base, out, btn) {
-    var FILES = ['', 'app.js', 'lib.js', 'style.css', 'version.js', 'garage/', 'garage/garage.js', 'garage/garage.css'];
+    var FILES = ['', 'pompa/', 'app.js', 'lib.js', 'style.css', 'version.js', 'garage/garage.js', 'garage/garage.css'];
     function say(t) { if (out) out.textContent = t; }
     if (btn) btn.disabled = true;
     say('Controllo in corso…');

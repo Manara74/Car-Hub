@@ -15,7 +15,7 @@ L'app gratuita per chi ha un'auto o una moto. Un solo menu, tanti strumenti, e t
 
 ## Come usarla sul telefono
 
-Apri **https://manara74.github.io/Car-Hub/garage/** (le maiuscole contano): è il menu di Car Hub. Non serve nessun account e non c'è niente da scaricare. Per averla come una app con la sua icona:
+Apri **https://manara74.github.io/Car-Hub/** (le maiuscole contano): è il menu di Car Hub. Non serve nessun account e non c'è niente da scaricare. Per averla come una app con la sua icona:
 
 **iPhone (iOS)**
 1. Apri il link con **Safari** (con Chrome non funziona).
