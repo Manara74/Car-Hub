@@ -3,249 +3,185 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Pompa Giusta</title>
-<meta name="description" content="Prezzi dei carburanti in Italia a confronto con la media della regione, con percorso, vicino a te e servizi.">
+<title>Car Hub</title>
+<meta name="description" content="Il tuo ambiente per auto e moto: carburante, scadenze, rifornimenti e spese.">
 <meta name="theme-color" content="#070c16">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="icon" href="garage/icons/icon-192.png" type="image/png">
 <link rel="apple-touch-icon" href="garage/icons/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-title" content="Car Hub">
 <link rel="preload" href="fonts/archivo-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/archivo-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="fonts/ibm-plex-mono-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
 <script>
-/* applico subito modo e colore scelti, prima di disegnare la pagina */
+/* stessi colori scelti in Pompa Giusta (stesso telefono, stessa memoria) */
 (function(){var m='auto',a='blu';try{var t=JSON.parse(localStorage.getItem('pg.theme')||'{}');if(t.mode)m=t.mode;if(t.accent)a=t.accent}catch(e){}
 var d=m==='auto'?(window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'):m;
-var r=document.documentElement;r.dataset.theme=d;r.dataset.accent=a;
-try{var o=JSON.parse(localStorage.getItem('pg.opts')||'{}');['quick','hero','verdict','charts','ticker','news','favs'].forEach(function(k){if(o[k]===false)r.classList.add('h-'+k)})}catch(e){}})();
+var r=document.documentElement;r.dataset.theme=d;r.dataset.accent=a})();
 </script>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin>
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="garage/garage.css">
 </head>
-<body>
+<body class="gg">
 <div class="wrap">
   <header class="top">
-    <h1><img class="logo" src="icon.svg" alt="" width="36" height="36">Pompa Giusta</h1>
-    <div class="hbtns">
-      <a class="icon-btn" id="btnHub" href="garage/" aria-label="Torna a Car Hub" title="Torna a Car Hub"><svg viewBox="3.25 3.25 17.5 17.5" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-7 8 7"/><path d="M6 10v10h12V10"/><path d="M10 20v-5h4v5"/></svg></a>
-      <button class="icon-btn" id="btnOpt" type="button" aria-label="Opzioni"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
-    </div>
+    <h1><img class="logo" src="garage/icons/icon-192.png" alt="" width="36" height="36"><span id="ggTitle">Car Hub</span></h1>
+    <a class="icon-btn" id="btnOpz" href="pompa/#opzioni" aria-label="Opzioni"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></a>
+    <button class="icon-btn" id="btnBack" type="button" aria-label="Torna al menu" hidden><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
   </header>
-  <div class="status"><span class="chip" id="chipData">Carico i prezzi…</span></div>
 
-  <nav class="tabs" id="tabs" aria-label="Sezioni">
-    <button type="button" data-tab="zona" class="on"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-6.5-5.6-6.5-11A6.5 6.5 0 0 1 12 3.5 6.5 6.5 0 0 1 18.5 10c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/></svg><span>Zona</span></button>
-    <button type="button" data-tab="vicino"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="7.5"/><circle cx="12" cy="12" r="2.2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg><span>Vicino a me</span></button>
-    <button type="button" data-tab="percorso"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="6" r="2.5"/><path d="M8.5 18H15a3 3 0 0 0 0-6H9a3 3 0 0 1 0-6h6.5"/></svg><span>Percorso</span></button>
-  </nav>
-
-  <div id="ticker" hidden aria-label="Notizie sul carburante"><span class="tlabel">NEWS</span><div class="tview" id="tview"><div class="ttrack" id="ttrack"></div></div></div>
-
-  <section class="panel" id="quick" aria-label="Filtri comuni">
-    <div class="grid">
-      <div class="field wide"><span>Carburante</span>
-        <div class="seg" id="segFuel" role="group" aria-label="Carburante">
-          <button type="button" data-f="B">Benzina</button><button type="button" data-f="D">Gasolio</button><button type="button" data-f="G">GPL</button><button type="button" data-f="M">Metano</button>
-        </div></div>
-      <div class="field"><span>Modalità</span>
-        <div class="seg" id="segMode" role="group" aria-label="Modalità">
-          <button type="button" data-m="1">Self</button><button type="button" data-m="0">Servito</button>
-        </div></div>
+  <!-- MENU -->
+  <section id="vMenu" class="gview">
+    <p class="hint" id="menuAlert" hidden></p>
+    <div class="gtiles">
+      <a class="gtile" href="pompa/">
+        <span class="gi"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V6a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v15"/><path d="M3 21h14"/><path d="M7 8h6"/><path d="M15 10h2.5a1.5 1.5 0 0 1 1.5 1.5V17a1.5 1.5 0 0 0 3 0V9l-2.5-2.5"/></svg></span>
+        <b>Pompa Giusta</b><small>Prezzi dei carburanti, vicino a te e sul percorso</small>
+      </a>
+      <a class="gtile" href="#diario" id="tileDiario">
+        <span class="gi"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3.5h9a1.5 1.5 0 0 1 1.5 1.5v15.5H4.5V5A1.5 1.5 0 0 1 6 3.5z"/><path d="M8 8h5M8 11.5h5M8 15h3"/><path d="M16.5 8H19v8.5"/></svg></span>
+        <b>Diario rifornimenti</b><small id="diaSub">Litri, spesa e consumi reali</small>
+      </a>
+      <a class="gtile" href="#scadenze" id="tileScad">
+        <span class="gi"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M8 3v4M16 3v4M3.5 10h17"/><path d="M9 15l2 2 4-4"/></svg></span>
+        <b>Scadenze auto</b><small id="scadSub">Bollo, assicurazione, revisione, tagliando</small><em class="badge" id="scadBadge" hidden></em>
+      </a>
+      <a class="gtile" href="#mezzi" id="tileMezzi">
+        <span class="gi"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 16v-5l2-5h10l2 5v5"/><path d="M3 16h18"/><circle cx="7.5" cy="17.8" r="1.8"/><circle cx="16.5" cy="17.8" r="1.8"/></svg></span>
+        <b>I miei mezzi</b><small id="mezziSub">Auto e moto</small>
+      </a>
+      <a class="gtile" href="#backup">
+        <span class="gi"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7.5 10.5L12 15l4.5-4.5"/><path d="M4 17v2.5A1.5 1.5 0 0 0 5.5 21h13a1.5 1.5 0 0 0 1.5-1.5V17"/></svg></span>
+        <b>Backup</b><small>Salva e ripristina i tuoi dati</small>
+      </a>
+      <a class="gtile" href="#spese" id="tileSpese">
+        <span class="gi"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3.5h12v17l-2.4-1.6-1.8 1.6-1.8-1.6-1.8 1.6-2.4-1.6z"/><path d="M9 8.5h6M9 12h6"/><path d="M9 15.5h3"/></svg></span>
+        <b>Spese dell'auto</b><small id="spesaSub">Manutenzione, gomme, pedaggi, multe</small>
+      </a>
+      <a class="gtile" href="#statistiche" id="tileStat">
+        <span class="gi"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V4"/><path d="M4 20h16"/><path d="M8 16v-4M12.5 16V8M17 16v-6"/></svg></span>
+        <b>Statistiche</b><small id="statSub">Quanto spendi, consumi, costo al km</small>
+      </a>
     </div>
-    <div class="field"><span>Servizi richiesti</span>
-      <div class="chips scroll" id="chipsSv" role="group" aria-label="Servizi richiesti"></div></div>
+    <p class="hint">I tuoi dati restano solo su questo telefono.</p>
+    <p class="hint ver" id="appVer"></p>
   </section>
 
-  <!-- ZONA -->
-  <section id="viewZona" class="view">
-    <section class="panel" aria-label="Zona">
+  <!-- SCADENZE -->
+  <section id="vScad" class="gview" hidden>
+    <div class="panel vbar" data-vbar></div>
+    <p class="verdict" id="scadSum"></p>
+    <p class="msg" id="scadMsg" role="status" aria-live="polite"></p>
+    <div id="dlList" class="gdl"></div>
+    <p class="hint">Imposta la prossima data di ogni scadenza: l'app ti dice quanto manca. Con «Rinnovata» sposti la data avanti del periodo scelto. Gli avvisi compaiono quando apri l'app.</p>
+  </section>
+
+  <!-- DIARIO -->
+  <section id="vDiario" class="gview" hidden>
+    <div class="panel vbar" data-vbar></div>
+    <form class="panel og" id="fillForm" autocomplete="off">
+      <h3 id="fillTitle">Nuovo rifornimento</h3>
       <div class="grid">
-        <div class="field"><span>Provincia</span><select id="selProv"></select></div>
-        <div class="field"><span>Comune</span><select id="selComune"></select></div>
+        <div class="field"><span>Data</span><input id="fDate" type="date" required></div>
+        <div class="field"><span>Chilometri</span><input id="fKm" type="number" inputmode="numeric" min="0" step="1" placeholder="Contachilometri" required></div>
+        <div class="field"><span>Litri</span><input id="fL" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Es. 38,52" required></div>
+        <div class="field"><span>Totale pagato (€)</span><input id="fTot" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Es. 72,40" required></div>
+        <div class="field"><span>Carburante</span><select id="fFuel"><option value="B">Benzina</option><option value="D">Gasolio</option><option value="G">GPL</option><option value="M">Metano</option></select></div>
+        <div class="field"><span>Prezzo calcolato</span><div class="calc" id="fPrice">—</div></div>
+        <div class="field wide"><span>Distributore o nota (facoltativo)</span><input id="fNote" type="text" maxlength="60" placeholder="Es. Tamoil Via Aurelia" autocomplete="off"></div>
       </div>
-      <details class="opt">
-        <summary>Bandiera, strada e preferiti</summary>
-        <div class="grid">
-          <div class="field"><span>Bandiera</span><select id="selBrand"></select></div>
-          <div class="field"><span>Strada</span>
-            <select id="selTipo"><option value="all">Tutti gli impianti</option><option value="road">Solo fuori autostrada</option><option value="hw">Solo autostrada</option></select></div>
-        </div>
-        <div class="chips"><button type="button" id="btnFav">Solo preferiti</button></div>
-      </details>
-    </section>
-    <section class="summary" id="summary" aria-label="Riepilogo"><div class="hero skel"></div></section>
-    <p class="verdict" id="verdictText"></p>
-    <details class="panel newsd" id="favCard" open hidden>
-      <summary><span>I tuoi preferiti</span><b id="favCount"></b></summary>
-      <ul id="favBody" class="favl"></ul>
-    </details>
-    <details class="panel newsd" id="newsCard" hidden>
-      <summary><span>Novità sul carburante</span><b id="newsCount"></b></summary>
-      <div id="newsBody"></div>
-    </details>
-    <div class="layout">
-      <main>
-        <ul class="list" id="list"><li class="row skel"></li><li class="row skel"></li><li class="row skel"></li></ul>
-        <div class="center"><button class="btn ghost more" id="btnMore" type="button" hidden>Mostra altri distributori</button></div>
-      </main>
-      <aside class="side">
-        <div class="panel"><h3>Come sono distribuiti i prezzi in provincia</h3><div id="histo"></div><p class="hint" id="histoHint"></p></div>
-        <div class="panel"><h3>Andamento della media regionale</h3><div id="trend"></div></div>
-      </aside>
+      <label class="tg"><span>Pieno completo<small>Spegni se hai messo solo una parte: i consumi restano giusti</small></span><input type="checkbox" id="fFull" checked></label>
+      <div class="inline"><button class="btn" type="submit" id="btnFill">Salva il rifornimento</button><button class="btn ghost" type="button" id="btnFillCancel" hidden>Annulla modifica</button></div>
+      <p class="msg" id="fillMsg" role="status" aria-live="polite"></p>
+    </form>
+    <div class="panel og" id="diaStats" hidden>
+      <h3>Riepilogo</h3>
+      <div class="gstats" id="statsGrid"></div>
+      <p class="hint" id="statsNote"></p>
+    </div>
+    <div id="fillList" class="fl"></div>
+  </section>
+
+  <!-- MEZZI -->
+  <section id="vMezzi" class="gview" hidden>
+    <div class="panel og">
+      <h3>I tuoi mezzi</h3>
+      <div class="vlist" id="vehList"></div>
+      <button class="btn" id="btnAddVeh" type="button">Aggiungi un mezzo</button>
+    </div>
+    <div class="panel og">
+      <h3>Dati del mezzo selezionato</h3>
+      <div class="grid">
+        <div class="field wide"><span>Nome</span><input id="vName" type="text" placeholder="Es. Panda, Vespa" maxlength="40" autocomplete="off"></div>
+        <div class="field"><span>Tipo</span>
+          <div class="seg" id="vType" role="group" aria-label="Tipo"><button type="button" data-t="auto">Auto</button><button type="button" data-t="moto">Moto</button></div></div>
+        <div class="field"><span>Targa (facoltativa)</span><input id="vPlate" type="text" placeholder="AB123CD" maxlength="10" autocomplete="off" autocapitalize="characters"></div>
+        <div class="field wide"><span>Chilometri attuali (facoltativi)</span><input id="vKm" type="number" inputmode="numeric" min="0" step="1" placeholder="Es. 84500"></div>
+      </div>
+    </div>
+    <div class="panel og">
+      <h3>Elimina</h3>
+      <p class="hint" id="delHint">Elimina questo mezzo con le sue scadenze e il suo diario dei rifornimenti. Non si può annullare: fai prima un backup se vuoi tenerne una copia.</p>
+      <button class="btn ghost danger" id="btnDelVeh" type="button">Elimina questo mezzo</button>
     </div>
   </section>
 
-  <!-- VICINO A ME -->
-  <section id="viewVicino" class="view" hidden>
-    <section class="panel">
-      <div class="inline">
-        <button class="btn" id="btnGeo" type="button">Usa la mia posizione</button>
-        <div class="field" style="min-width:140px"><span>Raggio</span>
-          <select id="selRadius"></select></div>
-        <div class="field" style="min-width:180px"><span>Ordina per</span>
-          <select id="selSort"><option value="conv">Più conveniente (viaggio incluso)</option><option value="price">Prezzo</option><option value="dist">Distanza</option></select></div>
-      </div>
-      <p class="msg" id="nearMsg" role="status" aria-live="polite"></p>
-    </section>
-    <p class="verdict" id="nearSum" hidden></p>
-    <ul class="list" id="nearList"></ul>
-    <div class="center"><button class="btn ghost more" id="btnMoreNear" type="button" hidden>Mostra altri distributori</button></div>
-  </section>
-
-  <!-- PERCORSO -->
-  <section id="viewPercorso" class="view" hidden>
-    <section class="panel">
-      <div class="row-inputs">
-        <div class="field"><span>Partenza</span><input id="inFrom" type="text" placeholder="Via, numero, comune" autocomplete="street-address"></div>
-        <div class="field"><span>Arrivo</span><input id="inTo" type="text" placeholder="Via, numero, comune" autocomplete="off"></div>
-      </div>
-      <div class="inline">
-        <button class="btn small ghost" id="btnHomeWork" type="button" disabled>Casa → Lavoro</button>
-        <button class="btn small ghost" id="btnWorkHome" type="button" disabled>Lavoro → Casa</button>
-        <button class="btn small ghost" id="btnSaveHome" type="button">Salva partenza come Casa</button>
-        <button class="btn small ghost" id="btnSaveWork" type="button">Salva arrivo come Lavoro</button>
-      </div>
-      <div class="inline">
-        <div class="field" style="min-width:180px"><span>Deviazione massima</span>
-          <select id="selDetour"></select></div>
-        <button class="btn" id="btnRoute" type="button">Cerca sul percorso</button>
-      </div>
-      <p class="msg" id="routeMsg" role="status" aria-live="polite"></p>
-      <p class="hint">Gli indirizzi si salvano solo su questo telefono. Per trovarli e tracciare il percorso vengono inviati ai servizi pubblici di OpenStreetMap.</p>
-    </section>
-    <p class="verdict" id="routeSum" hidden></p>
-    <div id="map" hidden></div>
-    <ul class="list" id="routeList"></ul>
-    <div class="center"><button class="btn ghost more" id="btnMoreRoute" type="button" hidden>Mostra altri distributori</button></div>
-  </section>
-
-  <!-- OPZIONI -->
-  <section id="optPanel" hidden aria-labelledby="optTitle">
-    <header class="opthead">
-      <button class="icon-btn" id="btnCloseOpt" type="button" aria-label="Torna all'app"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
-      <h2 id="optTitle">Opzioni</h2>
-    </header>
-
-    <section class="panel og" aria-label="Zona">
-      <h3>Zona</h3>
+  <!-- SPESE -->
+  <section id="vSpese" class="gview" hidden>
+    <div class="panel vbar" data-vbar></div>
+    <form class="panel og" id="expForm" autocomplete="off">
+      <h3 id="expTitle">Nuova spesa</h3>
       <div class="grid">
-        <div class="field"><span>Regione</span><select id="o_reg"></select></div>
-        <div class="field"><span>Provincia</span><select id="o_prov"></select></div>
-        <div class="field wide"><span>Comune</span><select id="o_comune"></select></div>
-        <div class="field"><span>Raggio «Vicino a me»</span><select id="o_radius"></select></div>
-        <div class="field"><span>Deviazione sul percorso</span><select id="o_detour"></select></div>
+        <div class="field"><span>Data</span><input id="eDate" type="date" required></div>
+        <div class="field"><span>Importo (€)</span><input id="eAmt" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Es. 120,00" required></div>
+        <div class="field wide"><span>Categoria</span><select id="eCat"></select></div>
+        <div class="field"><span>Chilometri (facoltativi)</span><input id="eKm" type="number" inputmode="numeric" min="0" step="1" placeholder="Contachilometri"></div>
+        <div class="field"><span>Nota (facoltativa)</span><input id="eNote" type="text" maxlength="60" placeholder="Es. Pneumatici invernali" autocomplete="off"></div>
       </div>
-      <p class="hint">Dalla tua posizione (km 0) cerco i distributori entro il raggio scelto. La zona resta quella che hai scelto anche alla prossima apertura.</p>
-    </section>
-
-    <section class="panel og" aria-label="Carburante e auto">
-      <h3>Carburante e auto</h3>
-      <div class="field wide"><span>Carburante</span>
-        <div class="seg" id="o_fuel" role="group" aria-label="Carburante">
-          <button type="button" data-f="B">Benzina</button><button type="button" data-f="D">Gasolio</button><button type="button" data-f="G">GPL</button><button type="button" data-f="M">Metano</button>
-        </div></div>
-      <div class="field"><span>Modalità</span>
-        <div class="seg" id="o_mode" role="group" aria-label="Modalità">
-          <button type="button" data-m="1">Self</button><button type="button" data-m="0">Servito</button>
-        </div></div>
-      <div class="grid">
-        <div class="field"><span>Litri del pieno</span><input id="litri" type="number" inputmode="decimal" min="1" max="200" step="1" value="40"></div>
-        <div class="field"><span>Consumo (l/100 km)</span><input id="consumo" type="number" inputmode="decimal" min="1" max="40" step="0.1" value="6.5"></div>
-      </div>
-      <div class="field"><span>Servizi richiesti</span>
-        <div class="chips" id="chipsSv2" role="group" aria-label="Servizi richiesti"></div></div>
-      <p class="hint">I servizi arrivano da OpenStreetMap, scritta dai volontari: se uno manca, il distributore potrebbe averlo comunque. Puoi segnarlo tu aprendo la scheda del distributore.</p>
-    </section>
-
-    <section class="panel og" aria-label="Aspetto">
-      <h3>Aspetto</h3>
-      <div class="field"><span>Modo</span>
-        <div class="seg" id="segThemeMode" role="group" aria-label="Modo">
-          <button type="button" data-tm="auto">Come il telefono</button><button type="button" data-tm="light">Chiaro</button><button type="button" data-tm="dark">Scuro</button>
-        </div></div>
-      <div class="field"><span>Colore</span><div class="swatches" id="swatches"></div></div>
-      <p class="hint">I camouflage sono sempre scuri, per leggere bene i prezzi.</p>
-    </section>
-
-    <section class="panel og" aria-label="Cosa mostrare">
-      <h3>Cosa mostrare</h3>
-      <p class="hint">Spegni quello che non ti serve: l'app si apre più leggera e pulita.</p>
-      <label class="tg"><span>Filtri veloci in alto<small>Carburante, modalità e servizi sotto il titolo</small></span><input type="checkbox" data-o="quick"></label>
-      <label class="tg"><span>Scheda grande col prezzo minimo<small>Il prezzo più basso e le medie</small></span><input type="checkbox" data-o="hero"></label>
-      <label class="tg"><span>Frase sul risparmio<small>Quanto risparmi sul pieno</small></span><input type="checkbox" data-o="verdict"></label>
-      <label class="tg"><span>Grafici<small>Distribuzione dei prezzi e andamento della media</small></span><input type="checkbox" data-o="charts"></label>
-      <label class="tg"><span>Fascia delle news in basso<small>Testo che scorre sopra i pulsanti, con variazioni e titoli</small></span><input type="checkbox" data-o="ticker"></label>
-      <label class="tg"><span>Scheda «I tuoi preferiti»<small>I distributori con la stella, di ogni provincia, con l'andamento del prezzo</small></span><input type="checkbox" data-o="favs"></label>
-      <label class="tg"><span>Scheda «Novità»<small>Le stesse notizie in forma di elenco, sopra i distributori</small></span><input type="checkbox" data-o="news"></label>
-      <div class="field"><span>Velocità della fascia</span>
-        <div class="seg" id="o_speed" role="group" aria-label="Velocità della fascia">
-          <button type="button" data-sp="slow">Lenta</button><button type="button" data-sp="normal">Normale</button><button type="button" data-sp="fast">Veloce</button>
-        </div></div>
-    </section>
-
-    <section class="panel og" aria-label="Car Hub">
-      <h3>Car Hub</h3>
-      <p class="hint">Pompa Giusta è uno dei moduli di Car Hub, insieme a scadenze, diario dei rifornimenti, spese e statistiche. Le impostazioni di questa pagina valgono per tutta l'app.</p>
-      <a class="btn ghost" href="garage/">Vai al menu di Car Hub</a>
-      <p class="hint" id="verLine" style="margin-top:12px"></p>
-      <button type="button" class="btn ghost" id="btnUpd">Controlla aggiornamenti</button>
-      <p class="hint" id="updMsg" role="status"></p>
-    </section>
-
-    <section class="panel og" aria-label="Guida">
-      <h3>Guida</h3>
-      <ul class="guide">
-        <li>I prezzi si aggiornano da soli ogni giorno alle 12. Sono quelli comunicati dai gestori, quindi possono cambiare durante il giorno.</li>
-        <li>La freccia verde o rossa dice di quanti centesimi al litro il distributore sta sotto o sopra la media della sua regione (impianti autostradali esclusi).</li>
-        <li>In «Vicino a me» e «Percorso» il costo del pieno include il carburante consumato per la deviazione, stimata da te al distributore e ritorno. È una stima, non un calcolo sulle strade.</li>
-        <li>I servizi vengono da OpenStreetMap. Il gonfiaggio indica solo la presenza dell'aria compressa: non si sa se ci sia il manometro. Orari e ricarica dell'aria condizionata non sono disponibili.</li>
-        <li>Casa, lavoro, preferiti, servizi segnati da te e tutte queste opzioni restano solo su questo telefono.</li>
-        <li>Per averla come app: su iPhone apri il sito con Safari, tocca il pulsante di condivisione e scegli «Aggiungi alla schermata Home». Su Android, con Chrome, dal menu dei tre puntini scegli «Installa app».</li>
-      </ul>
-    </section>
-
-    <section class="panel og" aria-label="Dati">
-      <h3>Dati e informazioni</h3>
-      <p class="hint" id="optData">—</p>
-      <details class="opt">
-        <summary>Se i prezzi automatici non ci sono</summary>
-        <p class="hint">Scarica dal sito del Ministero i file «Prezzi alle 8» e «Anagrafica impianti» e trascinali qui: li leggo direttamente nel telefono.</p>
-        <div class="drop" id="drop"><span>Trascina qui i file CSV</span><label class="btn small" for="files">Scegli i file</label><input id="files" type="file" accept=".csv,.txt,text/csv" multiple></div>
-        <p class="msg" id="msg" role="status" aria-live="polite"></p>
-      </details>
-      <button class="btn ghost" id="btnReset" type="button">Ripristina le impostazioni iniziali</button>
-    </section>
+      <div class="inline"><button class="btn" type="submit" id="btnExp">Salva la spesa</button><button class="btn ghost" type="button" id="btnExpCancel" hidden>Annulla modifica</button></div>
+      <p class="msg" id="expMsg" role="status" aria-live="polite"></p>
+    </form>
+    <div class="panel og" id="expStats" hidden>
+      <h3>Riepilogo</h3>
+      <div class="gstats" id="expGrid"></div>
+      <p class="hint">Qui ci sono le spese diverse dal carburante. Il carburante lo trovi nel Diario rifornimenti e nelle Statistiche.</p>
+    </div>
+    <div id="expList" class="fl"></div>
   </section>
 
-  <footer>
-    Fonte dei prezzi: dati aperti del Ministero delle Imprese e del Made in Italy (licenza IODL 2.0) e Osservaprezzi carburanti del Ministero. Servizi, mappe e percorsi: OpenStreetMap e contributori. Le medie escludono gli impianti autostradali e i carburanti speciali, e scartano i prezzi comunicati più di 8 giorni prima.
-  </footer>
+  <!-- STATISTICHE -->
+  <section id="vStat" class="gview" hidden>
+    <div class="panel vbar" data-vbar="stat"></div>
+    <div class="field"><span>Periodo</span>
+      <div class="seg" id="stPeriod" role="group" aria-label="Periodo"><button type="button" data-p="30">30 giorni</button><button type="button" data-p="365">12 mesi</button><button type="button" data-p="all">Sempre</button></div></div>
+    <p class="empty" id="stEmpty" hidden>Registra qualche rifornimento o spesa per vedere le statistiche di questo mezzo.</p>
+    <div id="stBody" class="gview">
+      <div class="gstats" id="stCards"></div>
+      <div class="panel og" id="stVehBox" hidden><h3>Confronto tra i mezzi</h3><div id="stVeh" class="vtable"></div></div>
+      <div class="panel og"><h3>Spesa mese per mese</h3><div id="stMonths" class="chart"></div></div>
+      <div class="panel og"><h3>Come si divide la spesa</h3><div id="stBreak" class="bars"></div></div>
+      <div class="panel og"><h3>Consumo nel tempo</h3><div id="stCons" class="chart"></div></div>
+      <p class="hint" id="stNote"></p>
+    </div>
+  </section>
+
+  <!-- BACKUP -->
+  <section id="vBackup" class="gview" hidden>
+    <div class="panel og">
+      <h3>Salva i tuoi dati</h3>
+      <p class="hint">Crea un file con le scadenze del tuo mezzo e tutte le impostazioni di Pompa Giusta (zona, preferiti, colori). Conservalo in un posto sicuro, per esempio nel Drive o inviandolo a te stesso.</p>
+      <button class="btn" id="btnExport" type="button">Scarica il file di backup</button>
+      <p class="msg" id="expMsg" role="status" aria-live="polite"></p>
+    </div>
+    <div class="panel og">
+      <h3>Ripristina da un file</h3>
+      <p class="hint">Scegli un file di backup salvato in precedenza. I dati di questo telefono verranno sostituiti da quelli del file.</p>
+      <div class="drop"><span id="impName">Nessun file scelto</span><label class="btn small" for="impFile">Scegli il file</label><input id="impFile" type="file" accept=".json,application/json"></div>
+      <button class="btn ghost" id="btnImport" type="button" hidden>Sostituisci i dati con quelli del file</button>
+      <p class="msg" id="impMsg" role="status" aria-live="polite"></p>
+    </div>
+  </section>
 </div>
-
 <script src="version.js"></script>
-<script src="lib.js"></script>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin></script>
-<script src="app.js"></script>
+<script src="garage/garage.js"></script>
 </body>
 </html>

@@ -80,14 +80,14 @@ function expand(r) {
   return { id: r.i, brand: r.b || 'Altro', name: r.n, addr: r.a || '', comune: r.c || '', prov: r.p, hw: !!r.h,
     lat: r.la == null ? null : r.la, lon: r.lo == null ? null : r.lo, p: r.x, d: r.d || {}, s: r.s || [] };
 }
-async function loadProvinces() { PG.setProvinces(await getJSON('province.json')); }
+async function loadProvinces() { PG.setProvinces(await getJSON('../province.json')); }
 async function loadAll() {
   await loadProvinces();
-  try { S.hist = await getJSON('data/history.json'); } catch (e) { S.hist = {}; }
-  const meta = await getJSON('data/meta.json', { cache: 'no-store' });
-  const d = await getJSON('data/pompe.json?v=' + encodeURIComponent(meta.v));
+  try { S.hist = await getJSON('../data/history.json'); } catch (e) { S.hist = {}; }
+  const meta = await getJSON('../data/meta.json', { cache: 'no-store' });
+  const d = await getJSON('../data/pompe.json?v=' + encodeURIComponent(meta.v));
   S.meta = meta;
-  try { const nw = await getJSON('data/news.json?v=' + encodeURIComponent(meta.v)); S.news = Array.isArray(nw.items) ? nw.items.filter(i => i && i.t && i.u) : []; } catch (e) { S.news = []; }
+  try { const nw = await getJSON('../data/news.json?v=' + encodeURIComponent(meta.v)); S.news = Array.isArray(nw.items) ? nw.items.filter(i => i && i.t && i.u) : []; } catch (e) { S.news = []; }
   setStations(d.s.map(expand), d.date, false);
 }
 function setStations(st, date, manual) {
@@ -735,7 +735,7 @@ function closeOpt() {
   renderActive();
   if (S.tab === 'percorso' && S.map) setTimeout(() => S.map.invalidateSize(), 60);
   window.scrollTo(0, optScroll);
-  if (fromHub) location.replace('garage/');
+  if (fromHub) location.replace('../');
 }
 
 /* ---------- caricamento manuale di riserva ---------- */
@@ -880,5 +880,5 @@ function wire() {
 (function () {
   var l = document.getElementById('verLine'), b = document.getElementById('btnUpd'), m = document.getElementById('updMsg');
   if (l && window.appVersionLabel) l.textContent = window.appVersionLabel();
-  if (b) b.addEventListener('click', function () { window.appCheckUpdate('', m, b); });
+  if (b) b.addEventListener('click', function () { window.appCheckUpdate('../', m, b); });
 })();

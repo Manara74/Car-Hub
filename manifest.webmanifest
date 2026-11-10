@@ -1,10 +1,10 @@
 {
-  "id": "/Car-Hub/garage/",
+  "id": "/Car-Hub/",
   "name": "Car Hub",
   "short_name": "Car Hub",
   "description": "Il tuo ambiente per auto e moto: prezzi dei carburanti, scadenze, rifornimenti, spese e statistiche.",
   "lang": "it",
-  "start_url": "./garage/",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "background_color": "#040a1b",
