@@ -98,7 +98,7 @@ function route() {
   const v = VIEWS[h] ? h : 'menu';
   Object.keys(VIEWS).forEach(k => { $(VIEWS[k]).hidden = k !== v; });
   $('ggTitle').textContent = TITLES[v]; $('btnBack').hidden = v === 'menu'; $('btnOpz').hidden = v !== 'menu';
-  if (v === 'menu') renderMenu(); if (v === 'scadenze') renderScad(); if (v === 'diario') renderDiario(true); if (v === 'mezzi') renderMezzi(); if (v === 'spese') renderSpese(true); if (v === 'statistiche') renderStat(); if (v === 'strada') { renderStrada(); stradaT = setInterval(renderSosta, 1000); }
+  if (v === 'menu') renderMenu(); if (v === 'scadenze') renderScad(); if (v === 'diario') renderDiario(true); if (v === 'mezzi') renderMezzi(); if (v === 'spese') renderSpese(true); if (v === 'statistiche') renderStat(); if (v === 'strada') { renderStrada(); tripInit(); stradaT = setInterval(renderSosta, 1000); }
   window.scrollTo(0, 0);
 }
 function renderMenu() {
@@ -421,7 +421,7 @@ function leftTxt(ms) {
 function stradaSub(v) {
   if (v.sosta && v.sosta > Date.now()) return 'Sosta: scade alle ' + hhmm(v.sosta);
   if (v.park) return 'Parcheggiata alle ' + hhmm(v.park.at);
-  return 'Parcheggio, sosta ed emergenza';
+  return 'Parcheggio, sosta, emergenza, costo del viaggio';
 }
 function parkWhen(at) {
   const d = new Date(at), same = iso(d) === iso(new Date());
@@ -482,6 +482,30 @@ function shareLoc() {
   }, t => { m.className = 'msg err'; m.textContent = t; });
 }
 
+
+/* ---------- costo del viaggio ---------- */
+const numv = id => { const n = parseFloat(String($(id).value).replace(',', '.')); return n >= 0 ? n : NaN; };
+function tripInit() {
+  const v = cur(), st = fillStats(v), last = st.sorted.filter(x => x.liters > 0).pop();
+  $('tCons').value = st.avg != null ? (Math.round(st.avg * 10) / 10) : '';
+  $('tPrice').value = last ? (Math.round(last.total / last.liters * 1000) / 1000) : '';
+  const bits = [];
+  if (st.avg != null) bits.push('consumo medio dal tuo diario');
+  if (last) bits.push('prezzo dell\'ultimo rifornimento');
+  $('tHint').textContent = bits.length ? 'Compilati in automatico: ' + bits.join(' e ') + '. Puoi cambiarli.' : 'Scrivi il consumo e il prezzo del carburante. Con qualche rifornimento nel diario li compilo io.';
+  tripCalc();
+}
+function tripCalc() {
+  const km = numv('tKm'), c = numv('tCons'), p = numv('tPrice'), toll = numv('tToll') || 0, n = Math.max(1, Math.min(9, parseInt($('tPers').value, 10) || 1));
+  const out = $('tOut');
+  if (!(km > 0) || !(c > 0) || !(p > 0)) { out.hidden = true; return; }
+  const d = km * ($('tRound').checked ? 2 : 1), L = d * c / 100, fuel = L * p, tot = fuel + toll;
+  out.hidden = false;
+  out.innerHTML = '<div><small>CARBURANTE</small><b>' + fmtN(fuel, 2) + ' €</b><em>' + fmtN(L, 1) + ' litri su ' + fmtN(d, 0) + ' km</em></div>' +
+    '<div><small>TOTALE</small><b>' + fmtN(tot, 2) + ' €</b><em>' + (toll > 0 ? 'con pedaggi e parcheggi' : 'senza pedaggi') + '</em></div>' +
+    (n > 1 ? '<div class="wide2"><small>A PERSONA (' + n + ')</small><b>' + fmtN(tot / n, 2) + ' €</b></div>' : '');
+}
+
 /* ---------- eventi ---------- */
 function wire() {
   window.addEventListener('hashchange', route);
@@ -507,6 +531,7 @@ function wire() {
   $('btnParkDel').addEventListener('click', () => askDel('Cancellare la posizione?', 'La posizione e la foto del parcheggio verranno cancellate.', () => { delete cur().park; save(); $('parkMsg').textContent = ''; renderStrada(); }));
   $('sostaBtns').addEventListener('click', e => { const b = e.target.closest('button[data-min]'); if (!b) return; cur().sosta = Date.now() + parseInt(b.dataset.min, 10) * 60000; save(); renderSosta(); });
   $('btnSostaOff').addEventListener('click', () => { delete cur().sosta; save(); renderSosta(); });
+  ['tKm', 'tPers', 'tCons', 'tPrice', 'tToll', 'tRound'].forEach(i => $(i).addEventListener('input', tripCalc));
   $('btnShareLoc').addEventListener('click', shareLoc);
   $('btnAddVeh').addEventListener('click', () => {
     const x = newVehicle('', D.vehicles.some(y => y.type === 'auto') && !D.vehicles.some(y => y.type === 'moto') ? 'moto' : 'auto');

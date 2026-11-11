@@ -63,7 +63,7 @@ var r=document.documentElement;r.dataset.theme=d;r.dataset.accent=a})();
       </a>
       <a class="gtile" href="#strada" id="tileStrada">
         <span class="gi"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/></svg></span>
-        <b>In strada</b><small id="stradaSub">Parcheggio, sosta ed emergenza</small>
+        <b>In strada</b><small id="stradaSub">Parcheggio, sosta, emergenza, costo del viaggio</small>
       </a>
     </div>
     <p class="hint ver" id="appVer"></p>
@@ -206,6 +206,19 @@ var r=document.documentElement;r.dataset.theme=d;r.dataset.accent=a})();
       <div class="inline" id="sostaBtns"><button class="btn small ghost" type="button" data-min="30">30 min</button><button class="btn small ghost" type="button" data-min="60">1 ora</button><button class="btn small ghost" type="button" data-min="90">1 ora e mezza</button><button class="btn small ghost" type="button" data-min="120">2 ore</button></div>
       <button class="btn small ghost danger" id="btnSostaOff" type="button" hidden>Spegni il timer</button>
       <p class="hint">Il timer si vede quando riapri l'app: non può suonare da chiusa. Se serve un avviso preciso, metti anche una sveglia sul telefono.</p>
+    </div>
+    <div class="panel og">
+      <h3>Costo del viaggio</h3>
+      <div class="grid">
+        <div class="field"><span>Chilometri</span><input id="tKm" type="number" inputmode="decimal" min="0" step="0.1" placeholder="Es. 180"></div>
+        <div class="field"><span>Persone in auto</span><input id="tPers" type="number" inputmode="numeric" min="1" max="9" step="1" value="1"></div>
+        <div class="field"><span>Consumo (l/100 km)</span><input id="tCons" type="number" inputmode="decimal" min="0" step="0.1" placeholder="Es. 6,5"></div>
+        <div class="field"><span>Prezzo (€ al litro)</span><input id="tPrice" type="number" inputmode="decimal" min="0" step="0.001" placeholder="Es. 1,850"></div>
+        <div class="field wide"><span>Pedaggi e parcheggi (€)</span><input id="tToll" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Facoltativi"></div>
+      </div>
+      <label class="tg"><span>Andata e ritorno<small>Raddoppia i chilometri</small></span><input type="checkbox" id="tRound"></label>
+      <div class="gstats" id="tOut" hidden></div>
+      <p class="hint" id="tHint"></p>
     </div>
     <div class="panel og">
       <h3>Emergenza</h3>

@@ -75,3 +75,4 @@ input[type=date]{font:inherit;color:var(--ink);background:var(--bg);border:1px s
 .pphoto{width:100%;max-height:260px;object-fit:cover;border-radius:14px;border:1px solid var(--line)}
 #vStrada .inline{flex-wrap:wrap}
 #vStrada .inline .btn{flex:1 1 auto;text-align:center}
+.gstats .wide2{grid-column:1/-1}
