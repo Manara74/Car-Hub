@@ -2,9 +2,9 @@ html body.gg{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 28px)}
 .gview{display:flex;flex-direction:column;gap:16px}
 .gview[hidden]{display:none}
 .gtiles{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.gtile{position:relative;display:flex;flex-direction:column;gap:6px;padding:16px 14px;border-radius:18px;background:var(--surface);border:1px solid var(--line);
-  color:var(--ink);text-decoration:none;box-shadow:0 1px 0 rgba(255,255,255,.03) inset;transition:border-color .15s,box-shadow .15s;min-height:132px}
-a.gtile:hover,a.gtile:active{border-color:rgba(var(--glow),.5);box-shadow:0 0 18px rgba(var(--glow),.14)}
+.gtile{position:relative;display:flex;flex-direction:column;gap:6px;padding:16px 14px;border-radius:18px;background:var(--surface);border:1px solid rgba(var(--glow),.38);
+  color:var(--ink);text-decoration:none;box-shadow:0 0 0 1px rgba(var(--glow),.06),0 6px 18px rgba(0,0,0,.25);transition:border-color .15s,box-shadow .15s;min-height:132px}
+a.gtile:hover,a.gtile:active{border-color:rgba(var(--glow),.7);box-shadow:0 0 18px rgba(var(--glow),.2)}
 .gtile .gi{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:color-mix(in srgb,var(--accent) 16%,transparent);color:var(--accent);font-size:1.4rem}
 .gtile b{font-size:.98rem}
 .gtile small{color:var(--muted);font-size:.76rem;line-height:1.3}
