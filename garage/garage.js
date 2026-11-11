@@ -192,11 +192,17 @@ let editId = null;
 function fillPrice() {
   const l = parseFloat($('fL').value), t = parseFloat($('fTot').value);
   $('fPrice').textContent = l > 0 && t > 0 ? fmtN(t / l, 3) + ' €/L' : '—';
-  const mk = $('fMkt'), a = mktAvg($('fFuel').value, 1, $('fDate').value || iso(new Date()));
-  if (!a) { mk.textContent = ''; return; }
+  const mk = $('fMkt'), a = mktAvg($('fFuel').value, 1, $('fDate').value || iso(new Date())), ex = fSt && fSt.price ? 'Prezzo esposto dal distributore: ' + fmtN(fSt.price, 3) + ' €/L' : '';
+  if (!a) { mk.textContent = ex; return; }
   let txt = 'Media self ' + FN[$('fFuel').value].toLowerCase() + ' in ' + a.where + ' il ' + fmtDate(a.d).slice(0, 5) + ': ' + fmtN(a.v, 3) + ' €/L';
   if (l > 0 && t > 0) { const df = (t / l - a.v) * 100; txt += Math.abs(df) < 0.5 ? ' · sei in linea con il mercato.' : ' · stai pagando ' + fmtN(Math.abs(df), 1) + ' cent/L ' + (df > 0 ? 'in più.' : 'in meno.'); }
-  mk.textContent = txt;
+  mk.textContent = txt + (ex ? ' · ' + ex : '');
+}
+function applyPrefill() {
+  let p = null; try { p = JSON.parse(localStorage.getItem('gg.prefill') || 'null'); localStorage.removeItem('gg.prefill'); } catch (e) { /* niente */ }
+  if (!p || !p.id || Date.now() - p.t > 30 * 60000) return;
+  fSt = { id: p.id, name: p.name, price: p.price }; if (['B', 'D', 'G', 'M'].includes(p.fuel)) $('fFuel').value = p.fuel;
+  renderStChip(); fillPrice(); $('fillMsg').className = 'msg'; $('fillMsg').textContent = 'Distributore e carburante compilati da Pompa Giusta: scrivi litri, importo e chilometri.';
 }
 function resetForm(keepMsg) {
   const v = cur(), last = v.fills.slice().sort(byDate).pop();
@@ -208,7 +214,7 @@ function resetForm(keepMsg) {
 }
 function renderDiario(reset) {
   renderVbars(); loadMarket();
-  if (reset) resetForm();
+  if (reset) { resetForm(); applyPrefill(); }
   const v = cur(), st = fillStats(v), f = st.sorted.slice().reverse();
   const box = $('diaStats'); box.hidden = !f.length;
   if (f.length) {
@@ -980,7 +986,7 @@ function wire() {
   $('btnStNo').addEventListener('click', () => { $('dlgSt').hidden = true; });
   $('dlgSt').addEventListener('click', e => { if (e.target === $('dlgSt')) $('dlgSt').hidden = true; });
   $('stQ').addEventListener('input', stSearch);
-  $('stRes').addEventListener('click', e => { const b = e.target.closest('.stit'); if (!b) return; const s = (STN || []).find(x => x.id === b.dataset.id); if (!s) return; fSt = { id: s.id, name: stLabel(s) }; renderStChip(); $('dlgSt').hidden = true; });
+  $('stRes').addEventListener('click', e => { const b = e.target.closest('.stit'); if (!b) return; const s = (STN || []).find(x => x.id === b.dataset.id); if (!s) return; const pr = s.p[$('fFuel').value + '1'] != null ? s.p[$('fFuel').value + '1'] : s.p[$('fFuel').value + '0']; fSt = { id: s.id, name: stLabel(s), price: pr }; renderStChip(); fillPrice(); $('dlgSt').hidden = true; });
   $('btnShareLoc').addEventListener('click', shareLoc);
   $('btnAddVeh').addEventListener('click', () => {
     const x = newVehicle('', D.vehicles.some(y => y.type === 'auto') && !D.vehicles.some(y => y.type === 'moto') ? 'moto' : 'auto');

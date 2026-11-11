@@ -235,7 +235,7 @@ function detailHTML(s, set) {
   return '<div class="detail"><div class="svgrid">' + boxes + '</div>' +
     '<p class="hint">Servizi da OpenStreetMap. Se ne manca uno che sai esserci, spuntalo: lo ricordo solo su questo telefono.</p>' +
     '<div class="acts">' + nav + '<button type="button" class="btn small ghost" data-act="fav" data-id="' + esc(s.id) + '">' +
-    (isFav(s.id) ? '★ Nei preferiti' : '☆ Aggiungi ai preferiti') + '</button></div></div>';
+    (isFav(s.id) ? '★ Nei preferiti' : '☆ Aggiungi ai preferiti') + '</button><button type="button" class="btn small ghost" data-act="fill" data-id="' + esc(s.id) + '">Ho fatto il pieno qui</button></div></div>';
 }
 function emptyMsg(where, pool, hint) {
   const base = 'Nessun distributore con ' + FUELS[S.f].toLowerCase() + ' (' + (S.m ? 'self' : 'servito') + ') ' + where;
@@ -269,9 +269,10 @@ function rowHTML(s, o) {
   const set = effSv(s), open = S.open === s.id;
   const age = s.d && s.d[k] != null && S.date ? s.d[k] : null;
   const when = age == null ? '' : PG.priceDate(S.date, age);
+  const short = odd ? 'da verificare' : '';
   const delta = d != null
-    ? '<div class="delta ' + cls + '"><strong>' + PG.fmtC(d) + '</strong><span>' + lab + '</span><em>' +
-      (d * S.litri < 0 ? '−' : d * S.litri > 0 ? '+' : '') + PG.fmtE(Math.abs(d * S.litri)) + ' sul pieno</em></div>' : '';
+    ? '<span class="delta ' + cls + '" title="' + esc(lab) + '"><strong>' + PG.fmtC(d) + '</strong><em>' +
+      (d * S.litri < 0 ? '−' : d * S.litri > 0 ? '+' : '') + PG.fmtE(Math.abs(d * S.litri)) + ' sul pieno</em>' + (short ? '<b>' + short + '</b>' : '') + '</span>' : '';
   return '<li class="row' + (open ? ' open' : '') + '" data-id="' + esc(s.id) + '">' +
     '<div class="main" tabindex="0" role="button" aria-expanded="' + open + '">' +
     '<div><span class="rank">N. ' + o.rank + ' di ' + o.total + (isFav(s.id) ? ' · ★' : '') + '</span>' +
@@ -280,7 +281,7 @@ function rowHTML(s, o) {
     '<div class="info"><b>' + brandBadge(s.brand) + '<span>' + esc(s.name) + '</span></b>' +
     '<span class="l">' + esc(s.brand) + (s.comune ? ' · ' + esc(s.comune) : '') + (s.hw ? ' · autostrada' : '') + '</span>' +
     (s.addr ? '<span class="l">' + esc(s.addr) + '</span>' : '') +
-    (o.extra ? '<span class="extra">' + o.extra + '</span>' : '') + svChips(set) + '</div>' + delta + '</div>' +
+    (o.extra ? '<span class="extra">' + o.extra + '</span>' : '') + delta + svChips(set) + '</div></div>' +
     (open ? detailHTML(s, set) : '') + '</li>';
 }
 
@@ -817,6 +818,12 @@ function wire() {
 
   document.addEventListener('click', e => {
     const a = e.target.closest('[data-act]');
+    if (a && a.dataset.act === 'fill') {
+      const s = S.byId.get(a.dataset.id); if (!s) return;
+      const pr = s.p[S.f + S.m] != null ? s.p[S.f + S.m] : s.p[S.f + (S.m ? 0 : 1)];
+      lsSet('gg.prefill', { id: s.id, name: s.brand + ' · ' + (s.addr ? s.addr + ', ' : '') + s.comune, fuel: S.f, price: pr == null ? null : pr, t: Date.now() });
+      location.href = '../#diario'; return;
+    }
     if (a && a.dataset.act === 'fav') { toggleFav(a.dataset.id); renderActive(); renderNews(); renderFavs(); return; }
     const fv = e.target.closest('#favBody li'); if (fv) { openFav(fv.dataset.fid); return; }
     const m = e.target.closest('.main');
