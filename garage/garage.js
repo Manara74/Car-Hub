@@ -584,7 +584,7 @@ function renderCost(list, from) {
   const cell = (k, v, sub) => '<div><small>' + k + '</small><b class="num">' + v + '</b>' + (sub ? '<em>' + sub + '</em>' : '') + '</div>';
   const perMonth = cur2.t / days * 30.44;
   let c = cell('Al mese', fmtN(perMonth, 0) + ' €', 'media del periodo') + cell('Al giorno', fmtN(cur2.t / days, 2) + ' €', plural(days, 'giorno', 'giorni') + ' considerati');
-  c += cell('In un anno', fmtN(perMonth * 12, 0) + ' €', 'se continui così');
+  c += cell('In un anno', fmtN(perMonth * 12, 0) + ' €', days < 180 ? 'indicativo: ancora pochi mesi di dati' : 'se continui così');
   if (STP !== 'all') {
     const p0 = new Date(from + 'T12:00:00'); p0.setDate(p0.getDate() - parseInt(STP, 10));
     const prev = sumRange(list, iso(p0), from), dl = prev.t > 0 ? (cur2.t - prev.t) / prev.t * 100 : null;
