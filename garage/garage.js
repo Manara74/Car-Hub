@@ -229,14 +229,26 @@ function renderDiario(reset) {
       cell('Prezzo medio', fmtN(tot.c / tot.l, 3) + ' €/L', '');
     $('statsNote').textContent = plural(f.length, 'rifornimento', 'rifornimenti') + ' · ' + fmtN(tot.l, 1) + ' litri · ' + fmtN(tot.c, 2) + ' € in totale' + (st.td ? ' · ' + fmtN(st.td, 0) + ' km misurati' : '') + '.';
   }
-  $('fillList').innerHTML = f.length ? f.map(x => {
+  const MN = ['gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno', 'luglio', 'agosto', 'settembre', 'ottobre', 'novembre', 'dicembre'];
+  const card = x => {
     const r = st.res.get(x.id);
-    const cons = r ? fmtN(r.cons, 1) + ' l/100 km · ' + fmtN(r.dist, 0) + ' km dal pieno precedente' : x.full ? 'Primo pieno: il consumo parte dal prossimo' : 'Pieno parziale';
-    return '<div class="fill" data-id="' + esc(x.id) + '"><div class="ft"><b>' + fmtDate(x.date) + '</b><span>' + esc(FUELN[x.fuel] || x.fuel) + (x.note ? ' · ' + esc(x.note) : '') + '</span></div>' + (x.sn ? '<div class="fk">' + esc(x.sn) + '</div>' : '') +
-      '<div class="fv"><span class="num">' + fmtN(x.liters, 2) + ' L</span><span class="num">' + fmtN(x.total, 2) + ' €</span><span class="num">' + fmtN(x.total / x.liters, 3) + ' €/L</span></div>' +
-      '<div class="fk">' + fmtN(x.km, 0) + ' km · ' + esc(cons) + '</div>' +
-      '<div class="dl-acts"><button type="button" class="btn small ghost" data-act="edit">Modifica</button><button type="button" class="btn small ghost danger" data-act="del">Elimina</button></div></div>';
-  }).join('') : '<p class="empty">Nessun rifornimento registrato per questo mezzo. Inserisci il primo qui sopra: per i consumi servono almeno due pieni completi.</p>';
+    const cons = r ? fmtN(r.cons, 1) + ' l/100 km · ' + fmtN(r.dist, 0) + ' km dal pieno prima' : x.full ? 'Primo pieno: il consumo parte dal prossimo' : 'Pieno parziale';
+    const where = [x.sn, x.note].filter(Boolean).map(esc).join(' · ');
+    return '<div class="fill" data-id="' + esc(x.id) + '"><div class="ft"><b>' + fmtDate(x.date).slice(0, 5) + '</b><span>' + esc(FUELN[x.fuel] || x.fuel) + ' · ' + fmtN(x.total / x.liters, 3) + ' €/L</span></div>' +
+      (where ? '<div class="fs">' + where + '</div>' : '') +
+      '<div class="fv"><span class="num">' + fmtN(x.liters, 2) + ' L</span><span class="num">' + fmtN(x.total, 2) + ' €</span><span class="num">' + fmtN(x.km, 0) + ' km</span></div>' +
+      '<div class="fk"><span>' + esc(cons) + '</span><span class="fa"><button type="button" class="lnk" data-act="edit">Modifica</button><button type="button" class="lnk danger" data-act="del">Elimina</button></span></div></div>';
+  };
+  let html = '', mk = '';
+  f.forEach(x => {
+    const m = x.date.slice(0, 7);
+    if (m !== mk) {
+      mk = m; const grp = f.filter(y => y.date.slice(0, 7) === m), L = grp.reduce((a, y) => a + y.liters, 0), C = grp.reduce((a, y) => a + y.total, 0);
+      html += '<div class="mh"><b>' + cap(MN[+m.slice(5) - 1]) + ' ' + m.slice(0, 4) + '</b><span>' + plural(grp.length, 'rifornimento', 'rifornimenti') + ' · ' + fmtN(L, 0) + ' L · ' + fmtN(C, 2) + ' €</span></div>';
+    }
+    html += card(x);
+  });
+  $('fillList').innerHTML = f.length ? html : '<p class="empty">Nessun rifornimento registrato per questo mezzo. Inserisci il primo qui sopra: per i consumi servono almeno due pieni completi.</p>';
 }
 function saveFill(e) {
   e.preventDefault();
@@ -896,8 +908,8 @@ function loadStations() {
 }
 const stLabel = s => s.brand + ' · ' + (s.addr ? s.addr + ', ' : '') + s.comune;
 function renderStChip() {
-  $('fStName').hidden = !fSt; $('btnStClear').hidden = !fSt; $('fStName').textContent = fSt ? fSt.name : '';
-  $('btnPickSt').textContent = fSt ? 'Cambia' : 'Scegli il distributore';
+  $('btnStClear').hidden = !fSt;
+  const b = $('btnPickSt'); b.textContent = fSt ? fSt.name : 'Scegli…'; b.title = fSt ? fSt.name : '';
 }
 function stSearch() {
   const q = stNorm($('stQ').value).trim(), box = $('stRes'), hint = $('stHint');

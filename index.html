@@ -91,9 +91,9 @@ var r=document.documentElement;r.dataset.theme=d;r.dataset.accent=a})();
         <div class="field"><span>Carburante</span><select id="fFuel"><option value="B">Benzina</option><option value="D">Gasolio</option><option value="G">GPL</option><option value="M">Metano</option></select></div>
         <div class="field"><span>Prezzo calcolato</span><div class="calc" id="fPrice">—</div></div>
         <p class="hint wide" id="fMkt" style="grid-column:1/-1;margin:0"></p>
-        <div class="field wide"><span>Distributore di Pompa Giusta (facoltativo)</span>
-          <div class="inline"><button class="btn small ghost" type="button" id="btnPickSt">Scegli il distributore</button><span class="chipn" id="fStName" hidden></span><button class="btn small ghost danger" type="button" id="btnStClear" hidden>Togli</button></div></div>
-        <div class="field wide"><span>Nota (facoltativa)</span><input id="fNote" type="text" maxlength="60" placeholder="Es. Tamoil Via Aurelia" autocomplete="off"></div>
+        <div class="field"><span>Distributore</span>
+          <div class="inline nowrap"><button class="btn ghost" type="button" id="btnPickSt">Scegli…</button><button class="btn small ghost danger" type="button" id="btnStClear" hidden>Togli</button></div></div>
+        <div class="field"><span>Nota</span><input id="fNote" type="text" maxlength="60" placeholder="Facoltativa" autocomplete="off"></div>
       </div>
       <label class="tg"><span>Pieno completo<small>Spegni se hai messo solo una parte: i consumi restano giusti</small></span><input type="checkbox" id="fFull" checked></label>
       <div class="inline"><button class="btn" type="submit" id="btnFill">Salva il rifornimento</button><button class="btn ghost" type="button" id="btnFillCancel" hidden>Annulla modifica</button></div>

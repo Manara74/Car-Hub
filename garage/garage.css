@@ -91,3 +91,21 @@ input[type=date]{font:inherit;color:var(--ink);background:var(--bg);border:1px s
 .stres{display:flex;flex-direction:column;gap:6px;overflow-y:auto;max-height:44vh}
 .stit{display:flex;flex-direction:column;gap:2px;text-align:left;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 12px;cursor:pointer}
 .stit span{color:var(--muted);font-size:.8rem}
+
+/* ---- diario: campi allineati, modulo e elenco compatti ---- */
+.og .grid{align-items:start}
+.og .field input:not([type=checkbox]):not([type=file]),.og .field select,.og .calc,.og .field .seg{min-height:46px;box-sizing:border-box}
+.og .field input[type=date]{padding:9px 10px}
+.msg:empty{display:none}
+.inline.nowrap{flex-wrap:nowrap}
+#btnPickSt{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-height:46px;padding:0 12px}
+.mh{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin:10px 2px 0;font-size:.84rem}
+.mh b{color:var(--accent);letter-spacing:.04em}
+.mh span{color:var(--muted);font-size:.76rem;text-align:right}
+.fill{padding:10px 12px;gap:4px}
+.fill .fs{color:var(--ink);font-size:.84rem}
+.fill .fv{display:flex;justify-content:space-between;gap:8px;font-size:.92rem}
+.fill .fk{display:flex;justify-content:space-between;align-items:center;gap:10px;color:var(--muted);font-size:.76rem}
+.fill .fa{display:flex;gap:12px;flex:none}
+.lnk{background:none;border:0;padding:6px 0;font:inherit;font-weight:600;color:var(--accent);cursor:pointer}
+.lnk.danger{color:var(--bad)}
