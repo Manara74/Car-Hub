@@ -109,3 +109,14 @@ input[type=date]{font:inherit;color:var(--ink);background:var(--bg);border:1px s
 .fill .fa{display:flex;gap:12px;flex:none}
 .lnk{background:none;border:0;padding:6px 0;font:inherit;font-weight:600;color:var(--accent);cursor:pointer}
 .lnk.danger{color:var(--bad)}
+
+/* ---- scadenze ripiegabili ---- */
+details.dl-card{padding:0;gap:0}
+details.dl-card>summary{list-style:none;cursor:pointer;display:flex;flex-direction:column;gap:4px;padding:12px 14px}
+details.dl-card>summary::-webkit-details-marker{display:none}
+details.dl-card>summary .dl-top{width:100%}
+details.dl-card>summary small{color:var(--muted);font-size:.8rem}
+details.dl-card>summary::after{content:'+';position:absolute;right:14px;bottom:10px;color:var(--accent);font-weight:700}
+details.dl-card[open]>summary::after{content:'−'}
+details.dl-card{position:relative}
+details.dl-card .dl-body{display:flex;flex-direction:column;gap:12px;padding:0 14px 14px}

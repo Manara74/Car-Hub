@@ -8,7 +8,7 @@ const KEY = 'gg.data';
 const TYPES = [
   ['bollo', 'Bollo', 12], ['assicurazione', 'Assicurazione', 12], ['revisione', 'Revisione', 24], ['tagliando', 'Tagliando', 12], ['gomme', 'Cambio gomme', 6]
 ];
-let renewK = null;
+let renewK = null, openDl = new Set();
 const RENEWCAT = { bollo: 'bollo', assicurazione: 'assicurazione', revisione: 'revisione', tagliando: 'manutenzione', gomme: 'gomme' };
 const EVERY = [[6, '6 mesi'], [12, '1 anno'], [24, '2 anni'], [36, '3 anni'], [48, '4 anni']];
 const uid = () => 'v' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
@@ -124,19 +124,21 @@ function renderScad() {
   const al = alerts();
   $('scadSum').textContent = al.length ? (al.length === 1 ? '1 scadenza da controllare: ' : al.length + ' scadenze da controllare: ') + al.slice(0, 3).map(x => cap(x.t)).join(' · ') + '.' : 'Nessuna scadenza nei prossimi 30 giorni.';
   const ks = kmStatus(v);
-  $('dlList').innerHTML = TYPES.map(([k, label]) => {
+  const urg = k => { const dd = daysLeft(v.dl[k].date); return k === 'tagliando' && ks && ks.c === 'late' ? Math.min(dd == null ? 1e9 : dd, -1) : dd == null ? 1e9 : dd; };
+  $('dlList').innerHTML = TYPES.slice().sort((a, b) => urg(a[0]) - urg(b[0])).map(([k, label]) => {
     const dl = v.dl[k], d = daysLeft(dl.date), st = status(d);
     const cost = lastCost(v, k);
     const km = k === 'tagliando' && ks ? '<p class="kmline ' + ks.c + '">' + esc(ks.t) + '</p>' : '';
-    return '<div class="dl-card ' + st.c + '" data-k="' + k + '"><div class="dl-top"><b>' + label + '</b><span class="dl-st ' + st.c + '">' + esc(st.t) + '</span></div>' +
+    const sub = (dl.date ? 'Scade il ' + fmtDate(dl.date) : 'Data non impostata') + (k === 'tagliando' && ks ? ' · ' + ks.t : '');
+    return '<details class="dl-card ' + st.c + '" data-k="' + k + '"' + (openDl.has(k) || renewK === k ? ' open' : '') + '><summary><span class="dl-top"><b>' + label + '</b><span class="dl-st ' + st.c + '">' + esc(st.t) + '</span></span><small>' + esc(sub) + '</small></summary><div class="dl-body">' +
       '<div class="grid"><div class="field"><span>Prossima scadenza</span><input type="date" data-f="date" value="' + esc(dl.date) + '"></div>' +
       '<div class="field"><span>Si ripete ogni</span><select data-f="every">' + EVERY.map(([n, t]) => '<option value="' + n + '"' + (n === dl.every ? ' selected' : '') + '>' + t + '</option>').join('') + '</select></div>' +
       (k === 'tagliando' ? '<div class="field"><span>Km attuali</span><input type="number" inputmode="numeric" min="0" step="1" data-f="vkm" placeholder="Es. 84500" value="' + (v.km == null ? '' : v.km) + '"></div><div class="field"><span>Tagliando ai km</span><input type="number" inputmode="numeric" min="0" step="1" data-f="kmDue" placeholder="Es. 90000" value="' + (dl.kmDue == null ? '' : dl.kmDue) + '"></div>' : '') +
       '<div class="field wide"><span>Nota (facoltativa)</span><input type="text" data-f="note" maxlength="80" placeholder="' + (k === 'assicurazione' ? 'Compagnia, numero polizza' : k === 'bollo' ? 'Regione, importo' : k === 'gomme' ? 'Es. Invernali, dal gommista' : 'Officina, cosa fare') + '" value="' + esc(dl.note) + '" autocomplete="off"></div></div>' +
-      km + cost + (renewK === k
+      cost + (renewK === k
         ? '<div class="renew"><div class="field"><span>Quanto hai pagato? (€)</span><input type="number" inputmode="decimal" min="0" step="0.01" id="rAmt" placeholder="Es. 180,00"></div>' +
           '<div class="dl-acts"><button type="button" class="btn small" data-act="renew-save">Rinnova e registra la spesa</button><button type="button" class="btn small ghost" data-act="renew-skip">Rinnova senza spesa</button><button type="button" class="btn small ghost" data-act="renew-cancel">Annulla</button></div></div>'
-        : '<div class="dl-acts"><button type="button" class="btn small" data-act="renew">Rinnovata</button>' + (dl.date ? '<button type="button" class="btn small ghost" data-act="clear">Togli data</button>' : '') + '</div>') + '</div>';
+        : '<div class="dl-acts"><button type="button" class="btn small" data-act="renew">Rinnovata</button>' + (dl.date ? '<button type="button" class="btn small ghost" data-act="clear">Togli data</button>' : '') + '</div>') + '</div></details>';
   }).join('');
 }
 
@@ -890,9 +892,9 @@ function buyCopy() {
 }
 function lastCost(v, k) {
   const cat = RENEWCAT[k], from = fromDate('365'), ex = v.expenses.filter(x => x.cat === cat).sort((a, b) => b.date.localeCompare(a.date));
-  if (!ex.length) return '<p class="kmline">Nessuna spesa registrata: usa «Rinnovata» oppure aggiungila in «Spese dell\'auto».</p>';
+  if (!ex.length) return '<p class="kmline">Nessuna spesa registrata</p>';
   const y = ex.filter(x => x.date >= from).reduce((a, x) => a + x.amount, 0);
-  return '<p class="kmline">Ultima spesa: <b>' + fmtN(ex[0].amount, 2) + ' €</b> il ' + fmtDate(ex[0].date) + ' · ultimi 12 mesi: ' + fmtN(y, 2) + ' €</p>';
+  return '<p class="kmline">Ultima spesa <b>' + fmtN(ex[0].amount, 2) + ' €</b> il ' + fmtDate(ex[0].date) + ' · 12 mesi: ' + fmtN(y, 2) + ' €</p>';
 }
 
 
@@ -1034,6 +1036,7 @@ function wire() {
     else dl[f] = e.target.value;
     save(); renderScad();
   });
+  $('dlList').addEventListener('toggle', e => { const c = e.target.closest && e.target.closest('.dl-card'); if (c) { if (e.target.open) openDl.add(c.dataset.k); else openDl.delete(c.dataset.k); } }, true);
   $('dlList').addEventListener('click', e => {
     const b = e.target.closest('button[data-act]'); if (!b) return;
     const k = b.closest('.dl-card').dataset.k, v = cur(), dl = v.dl[k], act = b.dataset.act, msg = $('scadMsg');
