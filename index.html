@@ -90,6 +90,7 @@ var r=document.documentElement;r.dataset.theme=d;r.dataset.accent=a})();
         <div class="field"><span>Totale pagato (€)</span><input id="fTot" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Es. 72,40" required></div>
         <div class="field"><span>Carburante</span><select id="fFuel"><option value="B">Benzina</option><option value="D">Gasolio</option><option value="G">GPL</option><option value="M">Metano</option></select></div>
         <div class="field"><span>Prezzo calcolato</span><div class="calc" id="fPrice">—</div></div>
+        <p class="hint wide" id="fMkt" style="grid-column:1/-1;margin:0"></p>
         <div class="field wide"><span>Distributore o nota (facoltativo)</span><input id="fNote" type="text" maxlength="60" placeholder="Es. Tamoil Via Aurelia" autocomplete="off"></div>
       </div>
       <label class="tg"><span>Pieno completo<small>Spegni se hai messo solo una parte: i consumi restano giusti</small></span><input type="checkbox" id="fFull" checked></label>

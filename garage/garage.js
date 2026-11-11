@@ -98,7 +98,7 @@ function route() {
   const v = VIEWS[h] ? h : 'menu';
   Object.keys(VIEWS).forEach(k => { $(VIEWS[k]).hidden = k !== v; });
   $('ggTitle').textContent = TITLES[v]; $('btnBack').hidden = v === 'menu'; $('btnOpz').hidden = v !== 'menu';
-  if (v === 'menu') renderMenu(); if (v === 'scadenze') renderScad(); if (v === 'diario') renderDiario(true); if (v === 'mezzi') renderMezzi(); if (v === 'spese') renderSpese(true); if (v === 'statistiche') renderStat(); if (v === 'strada') { renderStrada(); tripInit(); stradaT = setInterval(renderSosta, 1000); }
+  if (v === 'menu') renderMenu(); if (v === 'scadenze') renderScad(); if (v === 'diario') renderDiario(true); if (v === 'mezzi') renderMezzi(); if (v === 'spese') renderSpese(true); if (v === 'statistiche') renderStat(); if (v === 'strada') { renderStrada(); tPriceTouched = false; tripInit(); stradaT = setInterval(renderSosta, 1000); }
   window.scrollTo(0, 0);
 }
 function renderMenu() {
@@ -189,6 +189,11 @@ let editId = null;
 function fillPrice() {
   const l = parseFloat($('fL').value), t = parseFloat($('fTot').value);
   $('fPrice').textContent = l > 0 && t > 0 ? fmtN(t / l, 3) + ' €/L' : '—';
+  const mk = $('fMkt'), a = mktAvg($('fFuel').value, 1, $('fDate').value || iso(new Date()));
+  if (!a) { mk.textContent = ''; return; }
+  let txt = 'Media self ' + FN[$('fFuel').value].toLowerCase() + ' in ' + a.where + ' il ' + fmtDate(a.d).slice(0, 5) + ': ' + fmtN(a.v, 3) + ' €/L';
+  if (l > 0 && t > 0) { const df = (t / l - a.v) * 100; txt += Math.abs(df) < 0.5 ? ' · sei in linea con il mercato.' : ' · stai pagando ' + fmtN(Math.abs(df), 1) + ' cent/L ' + (df > 0 ? 'in più.' : 'in meno.'); }
+  mk.textContent = txt;
 }
 function resetForm(keepMsg) {
   const v = cur(), last = v.fills.slice().sort(byDate).pop();
@@ -199,7 +204,7 @@ function resetForm(keepMsg) {
   fillPrice();
 }
 function renderDiario(reset) {
-  renderVbars();
+  renderVbars(); loadMarket();
   if (reset) resetForm();
   const v = cur(), st = fillStats(v), f = st.sorted.slice().reverse();
   const box = $('diaStats'); box.hidden = !f.length;
@@ -488,12 +493,15 @@ function shareLoc() {
 const numv = id => { const n = parseFloat(String($(id).value).replace(',', '.')); return n >= 0 ? n : NaN; };
 function tripInit() {
   const v = cur(), st = fillStats(v), last = st.sorted.filter(x => x.liters > 0).pop();
+  loadMarket();
+  const a = last ? mktAvg(last.fuel, 1, iso(new Date())) : null;
   $('tCons').value = st.avg != null ? (Math.round(st.avg * 10) / 10) : '';
-  $('tPrice').value = last ? (Math.round(last.total / last.liters * 1000) / 1000) : '';
+  if (!tPriceTouched) $('tPrice').value = a ? Math.round(a.v * 1000) / 1000 : last ? (Math.round(last.total / last.liters * 1000) / 1000) : '';
   const bits = [];
-  if (st.avg != null) bits.push('consumo medio dal tuo diario');
-  if (last) bits.push('prezzo dell\'ultimo rifornimento');
-  $('tHint').textContent = bits.length ? 'Compilati in automatico: ' + bits.join(' e ') + '. Puoi cambiarli.' : 'Scrivi il consumo e il prezzo del carburante. Con qualche rifornimento nel diario li compilo io.';
+  if (st.avg != null) bits.push('il consumo medio è quello del tuo diario');
+  if (a) bits.push('il prezzo è la media self di oggi in ' + a.where + (last ? ' (il tuo ultimo pieno: ' + fmtN(last.total / last.liters, 3) + ' €/L)' : ''));
+  else if (last) bits.push('il prezzo è quello del tuo ultimo rifornimento');
+  $('tHint').textContent = bits.length ? 'Compilati in automatico: ' + bits.join('; ') + '. Puoi cambiarli.' : 'Scrivi il consumo e il prezzo del carburante. Con qualche rifornimento nel diario li compilo io.';
   tripCalc();
 }
 function tripCalc() {
@@ -509,18 +517,30 @@ function tripCalc() {
 
 
 /* ---------- prezzi di mercato contro i tuoi rifornimenti ---------- */
-let HIST = null, PROVL = null, MKF = '', MKM = 1;
+let HIST = null, PROVL = null, MKF = '', MKM = 1, tPriceTouched = false;
 const FN = { B: 'Benzina', D: 'Gasolio', G: 'GPL', M: 'Metano' };
 function loadMarket() {
   if (HIST) return;
   HIST = {}; PROVL = [];
   fetch('data/history.json').then(r => r.json()).then(j => { HIST = j || {}; }, () => {})
     .then(() => fetch('province.json')).then(r => r.json()).then(j => { PROVL = j || []; }, () => {})
-    .then(() => { if (!$('vStat').hidden) renderMarket(); });
+    .then(afterMarketLoad);
 }
 function myRegion() {
   let prov = ''; try { prov = (JSON.parse(localStorage.getItem('pg.prefs') || '{}')).prov || ''; } catch (e) { /* niente */ }
   const r = PROVL.find(x => x[0] === prov); return r ? r[2] : 'ALL';
+}
+function mktAvg(fuel, mode, date) {
+  const days = Object.keys(HIST || {}).sort(), key = fuel + mode, region = myRegion(); let dd = null;
+  for (const d of days) { if (d <= date && HIST[d][key]) dd = d; }
+  if (!dd) return null;
+  const r = HIST[dd][key][region] != null ? region : 'ALL';
+  return { v: HIST[dd][key][r], d: dd, where: r === 'ALL' ? 'Italia' : r };
+}
+function afterMarketLoad() {
+  if (!$('vStat').hidden) renderMarket();
+  if (!$('vDiario').hidden) fillPrice();
+  if (!$('vStrada').hidden && !tPriceTouched) tripInit();
 }
 function renderMarket(list) {
   list = list || (STALL && D.vehicles.length > 1 ? D.vehicles : [cur()]);
@@ -627,6 +647,7 @@ function wire() {
   $('sostaBtns').addEventListener('click', e => { const b = e.target.closest('button[data-min]'); if (!b) return; cur().sosta = Date.now() + parseInt(b.dataset.min, 10) * 60000; save(); renderSosta(); });
   $('btnSostaOff').addEventListener('click', () => { delete cur().sosta; save(); renderSosta(); });
   ['tKm', 'tPers', 'tCons', 'tPrice', 'tToll', 'tRound'].forEach(i => $(i).addEventListener('input', tripCalc));
+  $('tPrice').addEventListener('input', () => { tPriceTouched = true; });
   $('mkF').addEventListener('change', e => { MKF = e.target.value; renderMarket(); });
   $('mkM').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; MKM = +b.dataset.m; renderMarket(); });
   $('btnShareLoc').addEventListener('click', shareLoc);
@@ -649,7 +670,7 @@ function wire() {
   $('btnDelOk').addEventListener('click', () => { const f = delFn; closeDel(); if (f) f(); });
   $('fillForm').addEventListener('submit', saveFill);
   $('btnFillCancel').addEventListener('click', () => { resetForm(); });
-  ['fL', 'fTot'].forEach(i => $(i).addEventListener('input', fillPrice));
+  ['fL', 'fTot', 'fFuel', 'fDate'].forEach(i => $(i).addEventListener('input', fillPrice));
   $('fillList').addEventListener('click', fillAction);
   $('expForm').addEventListener('submit', saveExp);
   $('btnExpCancel').addEventListener('click', () => { resetExp(); });
