@@ -71,3 +71,4 @@ input[type=date]{font:inherit;color:var(--ink);background:var(--bg);border:1px s
 .vrow .vi small{color:var(--muted);font-size:.76rem}
 
 .ver{margin-top:4px;font-size:.78rem;opacity:.75}
+.dlg .btn.danger{background:var(--bad);border-color:var(--bad);color:#fff}

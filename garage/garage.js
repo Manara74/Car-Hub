@@ -420,11 +420,18 @@ function wire() {
     const x = newVehicle('', D.vehicles.some(y => y.type === 'auto') && !D.vehicles.some(y => y.type === 'moto') ? 'moto' : 'auto');
     D.vehicles.push(x); D.active = x.id; save(); renderMezzi(); $('vName').focus();
   });
-  let delT = 0;
+  const dlgDel = $('dlgDel'), closeDel = () => { dlgDel.hidden = true; };
   $('btnDelVeh').addEventListener('click', () => {
-    const b = $('btnDelVeh');
-    if (!delT) { b.textContent = 'Tocca ancora per eliminare'; delT = setTimeout(() => { delT = 0; b.textContent = 'Elimina questo mezzo'; }, 3500); return; }
-    clearTimeout(delT); delT = 0; b.textContent = 'Elimina questo mezzo';
+    if (D.vehicles.length < 2) return;
+    const v = D.vehicles.find(x => x.id === D.active);
+    $('dlgDelP').textContent = '«' + vName(v) + '» verrà eliminato con le sue scadenze e il suo diario dei rifornimenti. Non si può annullare.';
+    dlgDel.hidden = false;
+  });
+  $('btnDelNo').addEventListener('click', closeDel);
+  dlgDel.addEventListener('click', e => { if (e.target === dlgDel) closeDel(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !dlgDel.hidden) closeDel(); });
+  $('btnDelOk').addEventListener('click', () => {
+    closeDel();
     if (D.vehicles.length < 2) return;
     D.vehicles = D.vehicles.filter(x => x.id !== D.active); D.active = D.vehicles[0].id; save(); renderMezzi();
   });
