@@ -4,12 +4,12 @@
   "B0": {
    "n": 7249,
    "min": 1.569,
-   "p5": 1.956,
+   "p5": 1.949,
    "med": 2.15,
    "p95": 2.299,
    "max": 2.999,
    "sotto_1.7": 1,
-   "sopra_2.4": 59,
+   "sopra_2.4": 58,
    "piu_bassi": [
     [
      1.569,
@@ -96,13 +96,13 @@
    ]
   },
   "B1": {
-   "n": 10445,
+   "n": 10453,
    "min": 1.569,
-   "p5": 1.94,
+   "p5": 1.939,
    "med": 1.989,
    "p95": 2.059,
    "max": 2.789,
-   "sotto_1.7": 7,
+   "sotto_1.7": 6,
    "sopra_2.4": 16,
    "piu_bassi": [
     [
@@ -130,14 +130,6 @@
      false
     ],
     [
-     1.659,
-     "17918",
-     "di vincenzo gennaro",
-     "Calvizzano",
-     "NA",
-     false
-    ],
-    [
      1.668,
      "50492",
      "STAZIONE DI SERVIZIO ENI di Valsecchi Andrea",
@@ -151,6 +143,14 @@
      "IP San Romano",
      "Montopoli In Val D'Arno",
      "PI",
+     false
+    ],
+    [
+     1.699,
+     "53725",
+     "56140 ENI",
+     "Napoli",
+     "NA",
      false
     ]
    ],
@@ -190,14 +190,14 @@
    ]
   },
   "D0": {
-   "n": 7232,
+   "n": 7233,
    "min": 1.639,
    "p5": 2.19,
    "med": 2.399,
    "p95": 2.529,
    "max": 3.225,
    "sotto_1.7": 4,
-   "sopra_2.4": 3340,
+   "sopra_2.4": 3317,
    "piu_bassi": [
     [
      1.639,
@@ -284,14 +284,14 @@
    ]
   },
   "D1": {
-   "n": 10433,
+   "n": 10444,
    "min": 1.589,
    "p5": 2.188,
    "med": 2.2,
-   "p95": 2.309,
+   "p95": 2.306,
    "max": 2.799,
-   "sotto_1.7": 11,
-   "sopra_2.4": 111,
+   "sotto_1.7": 10,
+   "sopra_2.4": 110,
    "piu_bassi": [
     [
      1.589,
@@ -326,19 +326,19 @@
      false
     ],
     [
-     1.639,
-     "17918",
-     "di vincenzo gennaro",
-     "Calvizzano",
-     "NA",
-     false
-    ],
-    [
      1.649,
      "50492",
      "STAZIONE DI SERVIZIO ENI di Valsecchi Andrea",
      "Bergamo",
      "BG",
+     false
+    ],
+    [
+     1.659,
+     "33454",
+     "ZENO CIRO",
+     "Torre Del Greco",
+     "NA",
      false
     ]
    ],
@@ -378,13 +378,13 @@
    ]
   },
   "G0": {
-   "n": 2280,
+   "n": 2289,
    "min": 0.549,
    "p5": 0.759,
    "med": 0.839,
    "p95": 0.939,
    "max": 1.399,
-   "sotto_1.7": 2280,
+   "sotto_1.7": 2289,
    "sopra_2.4": 0,
    "piu_bassi": [
     [
@@ -401,6 +401,14 @@
      "VULCANGAS CUCCURANO",
      "Fano",
      "PU",
+     false
+    ],
+    [
+     0.669,
+     "55084",
+     "GREEN GAS  STAZIONE DI SERVIZIO ",
+     "San Cipriano D'Aversa",
+     "CE",
      false
     ],
     [
@@ -425,14 +433,6 @@
      "SERVICE AREA MONTANARELLA SRL",
      "Melfi",
      "PZ",
-     false
-    ],
-    [
-     0.695,
-     "57829",
-     "LEONARDO ENERGY POWER",
-     "San Vitaliano",
-     "NA",
      false
     ]
    ],
@@ -472,13 +472,13 @@
    ]
   },
   "G1": {
-   "n": 93,
+   "n": 91,
    "min": 0.605,
    "p5": 0.699,
    "med": 0.819,
    "p95": 0.919,
    "max": 0.999,
-   "sotto_1.7": 93,
+   "sotto_1.7": 91,
    "sopra_2.4": 0,
    "piu_bassi": [
     [
@@ -566,14 +566,14 @@
    ]
   },
   "M0": {
-   "n": 736,
+   "n": 745,
    "min": 0.936,
-   "p5": 1.699,
+   "p5": 1.724,
    "med": 2.149,
    "p95": 2.499,
    "max": 4.999,
-   "sotto_1.7": 37,
-   "sopra_2.4": 63,
+   "sotto_1.7": 35,
+   "sopra_2.4": 66,
    "piu_bassi": [
     [
      0.936,
@@ -626,14 +626,6 @@
    ],
    "piu_alti": [
     [
-     2.809,
-     "60977",
-     "TPXX6",
-     "Mazara Del Vallo",
-     "TP",
-     false
-    ],
-    [
      2.867,
      "60378",
      "JONIA CARBURANTI",
@@ -650,6 +642,14 @@
      false
     ],
     [
+     2.999,
+     "47939",
+     "Castelfranco Veneto Azzalini Energie",
+     "Castelfranco Veneto",
+     "TV",
+     false
+    ],
+    [
      4.999,
      "50753",
      "AREA DI SERVIZIO FORMIGINE",
@@ -660,13 +660,13 @@
    ]
   },
   "M1": {
-   "n": 50,
+   "n": 49,
    "min": 1.49,
    "p5": 1.625,
    "med": 2.099,
    "p95": 2.499,
-   "max": 2.699,
-   "sotto_1.7": 4,
+   "max": 2.999,
+   "sotto_1.7": 3,
    "sopra_2.4": 4,
    "piu_bassi": [
     [
@@ -694,7 +694,7 @@
      false
     ],
     [
-     1.652,
+     1.732,
      "50282",
      "Curno",
      "Curno",
@@ -744,7 +744,7 @@
      false
     ],
     [
-     2.699,
+     2.999,
      "47939",
      "Castelfranco Veneto Azzalini Energie",
      "Castelfranco Veneto",
