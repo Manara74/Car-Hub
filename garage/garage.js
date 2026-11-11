@@ -413,7 +413,7 @@ function renderStat() {
     g2 += '<text x="' + L2 + '" y="' + (H2 - 6) + '" class="ax">' + fmtDate(iso(d0)).slice(0, 5) + '</text><text x="' + (W2 - R2) + '" y="' + (H2 - 6) + '" text-anchor="end" class="ax">' + fmtDate(iso(d1)).slice(0, 5) + '</text></svg>';
     $('stCons').innerHTML = g2 + (ser.length > 1 ? '<p class="legend">' + ser.map(x => '<i style="background:' + x.col + '"></i>' + esc(x.name)).join(' ') + '</p>' : '');
   }
-  renderCost(list, from); loadMarket(); renderMarket(list);
+  renderCost(list, from); loadMarket(); renderMarket(list); renderSpunti(list);
   $('stNote').textContent = 'Il costo al km usa i chilometri tra il primo e l\'ultimo rifornimento o spesa con chilometri nel periodo' + (multi ? ', mezzo per mezzo, e poi li somma' : '') + '. Le statistiche si aggiornano da sole con quello che registri.';
 }
 
@@ -538,7 +538,7 @@ function mktAvg(fuel, mode, date) {
   return { v: HIST[dd][key][r], d: dd, where: r === 'ALL' ? 'Italia' : r };
 }
 function afterMarketLoad() {
-  if (!$('vStat').hidden) renderMarket();
+  if (!$('vStat').hidden) { renderMarket(); renderSpunti(STALL && D.vehicles.length > 1 ? D.vehicles : [cur()]); }
   if (!$('vDiario').hidden) fillPrice();
   if (!$('vStrada').hidden && !tPriceTouched) tripInit();
 }
@@ -621,6 +621,64 @@ function renderCost(list, from) {
   $('coNote').textContent = 'Mette insieme carburante e tutte le spese registrate (anche i rinnovi di bollo, assicurazione, revisione e gomme). Il confronto «rispetto a prima» usa un periodo lungo quanto quello scelto, subito precedente.';
 }
 
+
+/* ---------- spunti automatici ed esportazione ---------- */
+function renderSpunti(list) {
+  const out = [], today = iso(new Date()), day = new Date().getDate(), fm = today.slice(0, 7) + '-01';
+  const tom = (() => { const d = new Date(); d.setDate(d.getDate() + 1); return iso(d); })();
+  const pm = new Date(); pm.setDate(1); pm.setMonth(pm.getMonth() - 1);
+  const pmFirst = iso(pm), pmEnd = (() => { const e = new Date(pm.getFullYear(), pm.getMonth(), Math.min(day, new Date(pm.getFullYear(), pm.getMonth() + 1, 0).getDate()) + 1); return iso(e) > fm ? fm : iso(e); })();
+  const cm = sumRange(list, fm, tom), pv = sumRange(list, pmFirst, pmEnd);
+  if (cm.t > 0 && pv.t > 0) {
+    const d = (cm.t - pv.t) / pv.t * 100;
+    if (Math.abs(d) >= 5) out.push([d > 0 ? 'bad' : 'good', d > 0 ? '▲' : '▼', 'Questo mese hai speso il <b>' + fmtN(Math.abs(d), 0) + '% in ' + (d > 0 ? 'più' : 'meno') + '</b> dello stesso periodo del mese scorso (' + fmtN(cm.t, 0) + ' € contro ' + fmtN(pv.t, 0) + ' €).']);
+    else out.push(['', '=', 'La spesa di questo mese è in linea con quella del mese scorso (' + fmtN(cm.t, 0) + ' €).']);
+  }
+  if (list.length === 1) {
+    const st = fillStats(list[0]), pts = st.sorted.filter(x => st.res.has(x.id)).map(x => st.res.get(x.id).cons);
+    if (pts.length >= 5) {
+      const rec = pts.slice(-3).reduce((a, x) => a + x, 0) / 3, old = pts.slice(0, -3).reduce((a, x) => a + x, 0) / (pts.length - 3), d = (rec - old) / old * 100;
+      if (Math.abs(d) >= 5) out.push([d > 0 ? 'bad' : 'good', d > 0 ? '▲' : '▼', 'Il consumo recente è <b>' + (d > 0 ? 'salito' : 'sceso') + ' del ' + fmtN(Math.abs(d), 0) + '%</b>: ' + fmtN(rec, 1) + ' l/100 km negli ultimi tre pieni contro ' + fmtN(old, 1) + ' di prima.' + (d > 0 ? ' Controlla la pressione delle gomme.' : '')]);
+    }
+  }
+  const fills = [].concat(...list.map(v => v.fills)), cnt = {}; fills.forEach(x => { cnt[x.fuel] = (cnt[x.fuel] || 0) + 1; });
+  const fuel = Object.keys(cnt).sort((a, b) => cnt[b] - cnt[a])[0], days = Object.keys(HIST || {}).sort();
+  if (fuel && days.length > 7) {
+    const key = fuel + '1', region = myRegion(), ds = days.filter(d => HIST[d][key] && (HIST[d][key][region] != null || HIST[d][key].ALL != null));
+    const val = d => HIST[d][key][region] != null ? HIST[d][key][region] : HIST[d][key].ALL;
+    if (ds.length > 7) {
+      const last = ds[ds.length - 1], t7 = new Date(last + 'T12:00:00'); t7.setDate(t7.getDate() - 7);
+      let ref = null; ds.forEach(d => { if (d <= iso(t7)) ref = d; });
+      const where = HIST[last][key][region] != null ? region : 'Italia', nm = FN[fuel].toLowerCase();
+      if (ref) {
+        const d = (val(last) - val(ref)) * 100;
+        if (Math.abs(d) >= 0.5) out.push([d > 0 ? 'bad' : 'good', d > 0 ? '▲' : '▼', 'In ' + esc(where) + ' la ' + nm + ' self è ' + (d > 0 ? '<b>salita' : '<b>scesa') + ' di ' + fmtN(Math.abs(d), 1) + ' cent</b> in una settimana (ora ' + fmtN(val(last), 3) + ' €/L).']);
+      }
+      if (ds.length >= 14 && val(last) <= Math.min(...ds.map(val)) + 0.0005) out.push(['good', '★', 'La ' + nm + ' in ' + esc(where) + ' è <b>ai minimi</b> da quando teniamo lo storico (dal ' + fmtDate(ds[0]).slice(0, 5) + '). Buon momento per fare il pieno.']);
+    }
+    const my = fills.filter(x => x.fuel === fuel && x.liters > 0).slice().sort((a, b) => b.date.localeCompare(a.date)).slice(0, 5).map(x => { const a = mktAvg(fuel, 1, x.date); return a ? { p: x.total / x.liters, m: a.v, l: x.liters } : null; }).filter(Boolean);
+    if (my.length >= 2) {
+      const L = my.reduce((a, x) => a + x.l, 0), d = my.reduce((a, x) => a + (x.p - x.m) * x.l, 0) / L * 100;
+      if (Math.abs(d) >= 0.5) out.push([d > 0 ? 'bad' : 'good', d > 0 ? '▲' : '▼', 'Negli ultimi ' + my.length + ' rifornimenti hai pagato in media <b>' + fmtN(Math.abs(d), 1) + ' cent/L ' + (d > 0 ? 'in più' : 'in meno') + '</b> della media di zona.' + (d > 0 ? ' Con Pompa Giusta puoi cercare un distributore più conveniente.' : '')]);
+    }
+  }
+  const al = alerts(); if (al.length) out.push(['warn', '!', plural(al.length, 'scadenza richiede', 'scadenze richiedono') + ' attenzione: ' + esc(cap(al[0].t)) + (al.length > 1 ? ' e altre.' : '.')]);
+  $('insList').innerHTML = out.length ? out.map(([c, i, t]) => '<li class="' + c + '"><i>' + i + '</i><span>' + t + '</span></li>').join('') : '<li><i>·</i><span>Per ora non ho spunti: registra qualche rifornimento in più e ne troverai.</span></li>';
+}
+function exportCsv() {
+  const q = s => '"' + String(s == null ? '' : s).replace(/"/g, '""') + '"', n = (x, d) => x == null || x === '' ? '' : Number(x).toFixed(d).replace('.', ',');
+  const rows = [['Data', 'Mezzo', 'Tipo', 'Categoria', 'Importo (€)', 'Litri', 'Prezzo (€/L)', 'Km', 'Nota']];
+  D.vehicles.forEach(v => {
+    v.fills.forEach(x => rows.push([x.date, vName(v), 'Rifornimento', FN[x.fuel] || x.fuel, n(x.total, 2), n(x.liters, 2), n(x.total / x.liters, 3), x.km, x.note || '']));
+    v.expenses.forEach(x => rows.push([x.date, vName(v), 'Spesa', CATN[x.cat] || x.cat, n(x.amount, 2), '', '', x.km == null ? '' : x.km, x.note || '']));
+  });
+  const body = rows.slice(0, 1).concat(rows.slice(1).sort((a, b) => a[0].localeCompare(b[0]))).map(r => r.map(q).join(';')).join('\r\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob(['\ufeff' + body], { type: 'text/csv;charset=utf-8' }));
+  a.download = 'car-hub-dati-' + iso(new Date()) + '.csv';
+  document.body.appendChild(a); a.click(); a.remove();
+}
+
 /* ---------- eventi ---------- */
 function wire() {
   window.addEventListener('hashchange', route);
@@ -650,6 +708,7 @@ function wire() {
   $('tPrice').addEventListener('input', () => { tPriceTouched = true; });
   $('mkF').addEventListener('change', e => { MKF = e.target.value; renderMarket(); });
   $('mkM').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; MKM = +b.dataset.m; renderMarket(); });
+  $('btnCsv').addEventListener('click', exportCsv);
   $('btnShareLoc').addEventListener('click', shareLoc);
   $('btnAddVeh').addEventListener('click', () => {
     const x = newVehicle('', D.vehicles.some(y => y.type === 'auto') && !D.vehicles.some(y => y.type === 'moto') ? 'moto' : 'auto');

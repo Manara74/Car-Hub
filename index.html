@@ -180,6 +180,7 @@ var r=document.documentElement;r.dataset.theme=d;r.dataset.accent=a})();
       <div class="seg" id="stPeriod" role="group" aria-label="Periodo"><button type="button" data-p="30">30 giorni</button><button type="button" data-p="365">12 mesi</button><button type="button" data-p="all">Sempre</button></div></div>
     <p class="empty" id="stEmpty" hidden>Registra qualche rifornimento o spesa per vedere le statistiche di questo mezzo.</p>
     <div id="stBody" class="gview">
+      <div class="panel og" id="stIns"><h3>Cosa noto</h3><ul class="ins" id="insList"></ul></div>
       <div class="gstats" id="stCards"></div>
       <div class="panel og" id="stCost">
         <h3>Il quadro dei costi</h3>
@@ -201,6 +202,11 @@ var r=document.documentElement;r.dataset.theme=d;r.dataset.accent=a})();
       <div class="panel og"><h3>Spesa mese per mese</h3><div id="stMonths" class="chart"></div></div>
       <div class="panel og"><h3>Come si divide la spesa</h3><div id="stBreak" class="bars"></div></div>
       <div class="panel og"><h3>Consumo nel tempo</h3><div id="stCons" class="chart"></div></div>
+      <div class="panel og">
+        <h3>Esporta</h3>
+        <p class="hint">Scarica tutti i rifornimenti e le spese in una tabella che si apre con Excel o Fogli Google, per esempio per il commercialista o per un tuo archivio.</p>
+        <button class="btn ghost" id="btnCsv" type="button">Scarica la tabella dei dati</button>
+      </div>
       <p class="hint" id="stNote"></p>
     </div>
   </section>
