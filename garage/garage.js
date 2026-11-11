@@ -6,10 +6,10 @@ const KEY = 'gg.data';
 
 /* ---------- dati: pronti per più veicoli, mostrati uno alla volta ---------- */
 const TYPES = [
-  ['bollo', 'Bollo', 12], ['assicurazione', 'Assicurazione', 12], ['revisione', 'Revisione', 24], ['tagliando', 'Tagliando', 12]
+  ['bollo', 'Bollo', 12], ['assicurazione', 'Assicurazione', 12], ['revisione', 'Revisione', 24], ['tagliando', 'Tagliando', 12], ['gomme', 'Cambio gomme', 6]
 ];
 let renewK = null;
-const RENEWCAT = { bollo: 'bollo', assicurazione: 'assicurazione', revisione: 'revisione', tagliando: 'manutenzione' };
+const RENEWCAT = { bollo: 'bollo', assicurazione: 'assicurazione', revisione: 'revisione', tagliando: 'manutenzione', gomme: 'gomme' };
 const EVERY = [[6, '6 mesi'], [12, '1 anno'], [24, '2 anni'], [36, '3 anni'], [48, '4 anni']];
 const uid = () => 'v' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
 function newVehicle(name, type) {
@@ -116,7 +116,7 @@ function renderMenu() {
   const tot12 = periodTotals(cv, 365);
   $('statSub').textContent = tot12.total > 0 ? 'Ultimi 12 mesi: ' + fmtN(tot12.total, 0) + ' € in tutto' : 'Quanto spendi, consumi, costo al km';
   $('stradaSub').textContent = stradaSub(cur());
-  $('scadSub').textContent = al.length ? cap(al[0].t) : 'Bollo, assicurazione, revisione, tagliando';
+  $('scadSub').textContent = al.length ? cap(al[0].t) : 'Bollo, assicurazione, revisione, tagliando, gomme';
 }
 function renderScad() {
   const v = cur(); renderVbars();
@@ -130,7 +130,7 @@ function renderScad() {
       '<div class="grid"><div class="field"><span>Prossima scadenza</span><input type="date" data-f="date" value="' + esc(dl.date) + '"></div>' +
       '<div class="field"><span>Si ripete ogni</span><select data-f="every">' + EVERY.map(([n, t]) => '<option value="' + n + '"' + (n === dl.every ? ' selected' : '') + '>' + t + '</option>').join('') + '</select></div>' +
       (k === 'tagliando' ? '<div class="field"><span>Km attuali</span><input type="number" inputmode="numeric" min="0" step="1" data-f="vkm" placeholder="Es. 84500" value="' + (v.km == null ? '' : v.km) + '"></div><div class="field"><span>Tagliando ai km</span><input type="number" inputmode="numeric" min="0" step="1" data-f="kmDue" placeholder="Es. 90000" value="' + (dl.kmDue == null ? '' : dl.kmDue) + '"></div>' : '') +
-      '<div class="field wide"><span>Nota (facoltativa)</span><input type="text" data-f="note" maxlength="80" placeholder="' + (k === 'assicurazione' ? 'Compagnia, numero polizza' : k === 'bollo' ? 'Regione, importo' : 'Officina, cosa fare') + '" value="' + esc(dl.note) + '" autocomplete="off"></div></div>' +
+      '<div class="field wide"><span>Nota (facoltativa)</span><input type="text" data-f="note" maxlength="80" placeholder="' + (k === 'assicurazione' ? 'Compagnia, numero polizza' : k === 'bollo' ? 'Regione, importo' : k === 'gomme' ? 'Es. Invernali, dal gommista' : 'Officina, cosa fare') + '" value="' + esc(dl.note) + '" autocomplete="off"></div></div>' +
       km + (renewK === k
         ? '<div class="renew"><div class="field"><span>Quanto hai pagato? (€)</span><input type="number" inputmode="decimal" min="0" step="0.01" id="rAmt" placeholder="Es. 180,00"></div>' +
           '<div class="dl-acts"><button type="button" class="btn small" data-act="renew-save">Rinnova e registra la spesa</button><button type="button" class="btn small ghost" data-act="renew-skip">Rinnova senza spesa</button><button type="button" class="btn small ghost" data-act="renew-cancel">Annulla</button></div></div>'
@@ -158,6 +158,8 @@ function renderMezzi() {
   if (document.activeElement !== $('vName')) $('vName').value = v.name;
   if (document.activeElement !== $('vPlate')) $('vPlate').value = v.plate;
   if (document.activeElement !== $('vKm')) $('vKm').value = v.km == null ? '' : v.km;
+  document.querySelectorAll('[data-info]').forEach(i => { if (document.activeElement !== i) i.value = (v.info || {})[i.dataset.info] || ''; });
+  document.querySelectorAll('[data-phone]').forEach(i => { if (document.activeElement !== i) i.value = (v.phones || {})[i.dataset.phone] || ''; });
   document.querySelectorAll('#vType button').forEach(b => b.classList.toggle('on', b.dataset.t === v.type));
   const only = D.vehicles.length < 2;
   $('btnDelVeh').disabled = only;
@@ -488,6 +490,8 @@ function wire() {
   $('vPlate').addEventListener('change', e => { cur().plate = e.target.value.trim().toUpperCase(); save(); renderMezzi(); });
   $('vKm').addEventListener('change', e => { const n = parseInt(e.target.value, 10); cur().km = n >= 0 ? n : null; save(); renderMezzi(); });
   $('vType').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; cur().type = b.dataset.t; save(); renderMezzi(); });
+  document.querySelectorAll('[data-info]').forEach(i => i.addEventListener('change', e => { const v = cur(); v.info = v.info || {}; v.info[e.target.dataset.info] = e.target.value.trim(); save(); }));
+  document.querySelectorAll('[data-phone]').forEach(i => i.addEventListener('change', e => { const v = cur(); v.phones = v.phones || {}; v.phones[e.target.dataset.phone] = e.target.value.trim(); save(); }));
   $('vehList').addEventListener('click', e => { const b = e.target.closest('.vitem'); if (!b) return; D.active = b.dataset.vid; save(); renderMezzi(); });
   document.addEventListener('change', e => {
     if (!e.target.matches || !e.target.matches('select[data-vsel]')) return;

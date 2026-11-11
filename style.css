@@ -59,7 +59,7 @@ a{color:var(--accent)}
 .field>span{font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
 .field.wide{grid-column:span 2}
 @media (max-width:520px){.field.wide{grid-column:1/-1}}
-select,input[type=number],input[type=text]{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px 10px;min-width:0}
+select,input[type=number],input[type=text],input[type=tel]{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px 10px;min-width:0}
 .seg{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--bg)}
 .seg button{flex:1;border:0;background:transparent;padding:9px 6px;cursor:pointer;font-weight:500;min-width:0}
 .seg button+button{border-left:1px solid var(--line)}
@@ -149,7 +149,7 @@ body{background:radial-gradient(900px 520px at 50% -160px,rgba(var(--glow),.22),
 .tabs button,.seg button,.chips button,.btn{transition:background .15s,color .15s,border-color .15s,box-shadow .15s}
 .tabs button.on,.btn{box-shadow:0 0 14px rgba(var(--glow),.22)}
 .btn.ghost{box-shadow:none}
-select,input[type=number],input[type=text]{transition:border-color .15s,box-shadow .15s}
+select,input[type=number],input[type=text],input[type=tel]{transition:border-color .15s,box-shadow .15s}
 select:focus,input:focus{outline:none;border-color:rgba(var(--glow),.6);box-shadow:0 0 0 3px rgba(var(--glow),.14)}
 .lcd{border:1px solid rgba(255,207,92,.18);box-shadow:0 0 16px rgba(255,207,92,.07) inset}
 .chip{background:transparent}
