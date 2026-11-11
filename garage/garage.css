@@ -120,3 +120,8 @@ details.dl-card>summary::after{content:'+';position:absolute;right:14px;bottom:1
 details.dl-card[open]>summary::after{content:'−'}
 details.dl-card{position:relative}
 details.dl-card .dl-body{display:flex;flex-direction:column;gap:12px;padding:0 14px 14px}
+
+.cbtn{background:none;border:0;padding:6px 8px;margin:0 -8px;border-radius:10px;font:inherit;color:inherit;text-align:left;cursor:pointer;width:calc(100% + 16px)}
+.cbtn.on{background:var(--chip)}
+.fill .ft .amt{color:var(--ink);font-size:.95rem;font-weight:700;flex:none}
+.fill .ft b{flex:none}.fill .ft span:nth-child(2){flex:1;text-align:left}

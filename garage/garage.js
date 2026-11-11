@@ -299,7 +299,7 @@ const CATS = [['manutenzione', 'Manutenzione e tagliando'], ['riparazione', 'Rip
   ['bollo', 'Bollo'], ['revisione', 'Revisione'], ['pedaggio', 'Pedaggi'], ['parcheggio', 'Parcheggi'], ['lavaggio', 'Lavaggio'],
   ['multa', 'Multe'], ['accessori', 'Accessori'], ['altro', 'Altro']];
 const CATN = {}; CATS.forEach(([k, n]) => { CATN[k] = n; });
-let expEdit = null;
+let expEdit = null, expFilter = '';
 function resetExp(keepMsg) {
   expEdit = null; $('expTitle').textContent = 'Nuova spesa'; $('btnExp').textContent = 'Salva la spesa'; $('btnExpCancel').hidden = true;
   $('eDate').value = iso(new Date()); $('eAmt').value = ''; $('eKm').value = ''; $('eNote').value = '';
@@ -317,10 +317,25 @@ function renderSpese(reset) {
     $('expGrid').innerHTML = cell('Questo mese', fmtN(sum(x => x.date.slice(0, 7) === mk), 2) + ' €', '') + cell('Ultimi 12 mesi', fmtN(sum(x => x.date >= l12), 2) + ' €', '') +
       cell('Da sempre', fmtN(sum(() => true), 2) + ' €', plural(e.length, 'spesa', 'spese'));
   }
-  $('expList').innerHTML = e.length ? e.map(x => '<div class="fill" data-id="' + esc(x.id) + '"><div class="ft"><b>' + fmtDate(x.date) + '</b><span>' + esc(CATN[x.cat] || x.cat) + '</span></div>' +
-    '<div class="fv"><span class="num">' + fmtN(x.amount, 2) + ' €</span>' + (x.km != null ? '<span class="num">' + fmtN(x.km, 0) + ' km</span>' : '') + '</div>' +
-    (x.note ? '<div class="fk">' + esc(x.note) + '</div>' : '') +
-    '<div class="dl-acts"><button type="button" class="btn small ghost" data-act="edit">Modifica</button><button type="button" class="btn small ghost danger" data-act="del">Elimina</button></div></div>').join('')
+  const cats = {}; e.forEach(x => { cats[x.cat] = (cats[x.cat] || 0) + x.amount; });
+  const tot = e.reduce((a, x) => a + x.amount, 0), keys = Object.keys(cats).sort((a, b) => cats[b] - cats[a]);
+  if (expFilter && !cats[expFilter]) expFilter = '';
+  $('expCats').innerHTML = keys.map(k => '<button type="button" class="bar cbtn' + (expFilter === k ? ' on' : '') + '" data-cat="' + k + '"><div class="bl"><span>' + esc(CATN[k] || k) + '</span><b class="num">' + fmtN(cats[k], 2) + ' €</b></div><div class="bt"><i style="width:' + Math.max(3, Math.round(cats[k] / tot * 100)) + '%;background:' + (CATCOL[k] || 'var(--accent)') + '"></i></div></button>').join('');
+  const MN = ['gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno', 'luglio', 'agosto', 'settembre', 'ottobre', 'novembre', 'dicembre'];
+  const fl = expFilter ? e.filter(x => x.cat === expFilter) : e;
+  const card = x => '<div class="fill" data-id="' + esc(x.id) + '"><div class="ft"><b>' + fmtDate(x.date).slice(0, 5) + '</b><span>' + esc(CATN[x.cat] || x.cat) + '</span><span class="num amt">' + fmtN(x.amount, 2) + ' €</span></div>' +
+    ((x.note || x.km != null) ? '<div class="fs">' + [x.note ? esc(x.note) : '', x.km != null ? fmtN(x.km, 0) + ' km' : ''].filter(Boolean).join(' · ') + '</div>' : '') +
+    '<div class="fk"><span></span><span class="fa"><button type="button" class="lnk" data-act="edit">Modifica</button><button type="button" class="lnk danger" data-act="del">Elimina</button></span></div></div>';
+  let html = expFilter ? '<div class="mh"><b>' + esc(CATN[expFilter]) + '</b><span><button type="button" class="lnk" id="expFClr">Mostra tutte</button></span></div>' : '', mk = '';
+  fl.forEach(x => {
+    const m = x.date.slice(0, 7);
+    if (m !== mk) {
+      mk = m; const grp = fl.filter(y => y.date.slice(0, 7) === m);
+      html += '<div class="mh"><b>' + cap(MN[+m.slice(5) - 1]) + ' ' + m.slice(0, 4) + '</b><span>' + plural(grp.length, 'spesa', 'spese') + ' · ' + fmtN(grp.reduce((a, y) => a + y.amount, 0), 2) + ' €</span></div>';
+    }
+    html += card(x);
+  });
+  $('expList').innerHTML = e.length ? html
     : '<p class="empty">Nessuna spesa registrata per questo mezzo. Inserisci la prima qui sopra: manutenzione, gomme, pedaggi, multe e tutto quello che non è carburante.</p>';
 }
 function saveExp(e) {
@@ -1027,7 +1042,8 @@ function wire() {
   $('fillList').addEventListener('click', fillAction);
   $('expForm').addEventListener('submit', saveExp);
   $('btnExpCancel').addEventListener('click', () => { resetExp(); });
-  $('expList').addEventListener('click', expAction);
+  $('expList').addEventListener('click', e => { if (e.target.id === 'expFClr') { expFilter = ''; renderSpese(false); } else expAction(e); });
+  $('expCats').addEventListener('click', e => { const b = e.target.closest('[data-cat]'); if (!b) return; expFilter = expFilter === b.dataset.cat ? '' : b.dataset.cat; renderSpese(false); });
   $('stPeriod').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; STP = b.dataset.p; renderStat(); });
   $('dlList').addEventListener('change', e => {
     const card = e.target.closest('.dl-card'), f = e.target.dataset.f; if (!card || !f) return;

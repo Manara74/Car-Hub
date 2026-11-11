@@ -184,7 +184,7 @@ var r=document.documentElement;r.dataset.theme=d;r.dataset.accent=a})();
         <div class="field"><span>Data</span><input id="eDate" type="date" required></div>
         <div class="field"><span>Importo (€)</span><input id="eAmt" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Es. 120,00" required></div>
         <div class="field wide"><span>Categoria</span><select id="eCat"></select></div>
-        <div class="field"><span>Chilometri (facoltativi)</span><input id="eKm" type="number" inputmode="numeric" min="0" step="1" placeholder="Contachilometri"></div>
+        <div class="field"><span>Km (facoltativi)</span><input id="eKm" type="number" inputmode="numeric" min="0" step="1" placeholder="Contachilometri"></div>
         <div class="field"><span>Nota (facoltativa)</span><input id="eNote" type="text" maxlength="60" placeholder="Es. Pneumatici invernali" autocomplete="off"></div>
       </div>
       <div class="inline"><button class="btn" type="submit" id="btnExp">Salva la spesa</button><button class="btn ghost" type="button" id="btnExpCancel" hidden>Annulla modifica</button></div>
@@ -193,7 +193,8 @@ var r=document.documentElement;r.dataset.theme=d;r.dataset.accent=a})();
     <div class="panel og" id="expStats" hidden>
       <h3>Riepilogo</h3>
       <div class="gstats" id="expGrid"></div>
-      <p class="hint">Qui ci sono le spese diverse dal carburante. Il carburante lo trovi nel Diario rifornimenti e nelle Statistiche.</p>
+      <div id="expCats" class="bars"></div>
+      <p class="hint">Tocca una categoria per vedere solo quelle spese. Il carburante non è qui: lo trovi nel Diario e nelle Statistiche.</p>
     </div>
     <div id="expList" class="fl"></div>
   </section>
