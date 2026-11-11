@@ -195,7 +195,7 @@ try{var o=JSON.parse(localStorage.getItem('pg.opts')||'{}');['quick','hero','ver
       <label class="tg"><span>Scheda grande col prezzo minimo<small>Il prezzo più basso e le medie</small></span><input type="checkbox" data-o="hero"></label>
       <label class="tg"><span>Frase sul risparmio<small>Quanto risparmi sul pieno</small></span><input type="checkbox" data-o="verdict"></label>
       <label class="tg"><span>Grafici<small>Distribuzione dei prezzi e andamento della media</small></span><input type="checkbox" data-o="charts"></label>
-      <label class="tg"><span>Fascia delle news in basso<small>Testo che scorre sopra i pulsanti, con variazioni e titoli</small></span><input type="checkbox" data-o="ticker"></label>
+      <label class="tg"><span>Fascia delle news<small>Striscia in alto con le notizie, che scorre con variazioni e titoli</small></span><input type="checkbox" data-o="ticker"></label>
       <label class="tg"><span>Scheda «I tuoi preferiti»<small>I distributori con la stella, di ogni provincia, con l'andamento del prezzo</small></span><input type="checkbox" data-o="favs"></label>
       <label class="tg"><span>Scheda «Novità»<small>Le stesse notizie in forma di elenco, sopra i distributori</small></span><input type="checkbox" data-o="news"></label>
       <div class="field"><span>Velocità della fascia</span>
@@ -213,8 +213,8 @@ try{var o=JSON.parse(localStorage.getItem('pg.opts')||'{}');['quick','hero','ver
       <p class="hint" id="updMsg" role="status"></p>
     </section>
 
-    <section class="panel og" aria-label="Guida">
-      <h3>Guida</h3>
+    <details class="panel og gd" aria-label="Guida">
+      <summary>Guida</summary>
       <ul class="guide">
         <li>I prezzi si aggiornano da soli ogni giorno alle 12. Sono quelli comunicati dai gestori, quindi possono cambiare durante il giorno.</li>
         <li>La freccia verde o rossa dice di quanti centesimi al litro il distributore sta sotto o sopra la media della sua regione (impianti autostradali esclusi).</li>
@@ -223,7 +223,7 @@ try{var o=JSON.parse(localStorage.getItem('pg.opts')||'{}');['quick','hero','ver
         <li>Casa, lavoro, preferiti, servizi segnati da te e tutte queste opzioni restano solo su questo telefono.</li>
         <li>Per averla come app: su iPhone apri il sito con Safari, tocca il pulsante di condivisione e scegli «Aggiungi alla schermata Home». Su Android, con Chrome, dal menu dei tre puntini scegli «Installa app».</li>
       </ul>
-    </section>
+    </details>
 
     <section class="panel og" aria-label="Dati">
       <h3>Dati e informazioni</h3>
@@ -243,6 +243,13 @@ try{var o=JSON.parse(localStorage.getItem('pg.opts')||'{}');['quick','hero','ver
   </footer>
 </div>
 
+<div class="dlg" id="dlgReset" role="dialog" aria-modal="true" aria-labelledby="dlgResetT" hidden>
+  <div class="box">
+    <h4 id="dlgResetT">Ripristinare le impostazioni?</h4>
+    <p>Le opzioni, i colori e le preferenze di Pompa Giusta tornano come all'inizio. I tuoi mezzi, le scadenze, il diario e le spese non vengono toccati.</p>
+    <div class="acts"><button type="button" class="btn ghost" id="btnResetNo">Annulla</button><button type="button" class="btn" id="btnResetOk">Conferma</button></div>
+  </div>
+</div>
 <script src="../version.js"></script>
 <script src="../lib.js"></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin></script>

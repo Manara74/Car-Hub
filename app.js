@@ -847,11 +847,12 @@ function wire() {
     O[c.dataset.o] = c.checked; saveOpts(); applyOpts();
   }));
   $('o_speed').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; SPEED = b.dataset.sp; saveOpts(); applyOpts(); lastTicker = ''; renderNews(); });
-  let rs = 0;
-  $('btnReset').addEventListener('click', () => {
-    const b = $('btnReset');
-    if (!rs) { rs = setTimeout(() => { rs = 0; b.textContent = 'Ripristina le impostazioni iniziali'; }, 4000); b.textContent = 'Tocca ancora per confermare'; return; }
-    clearTimeout(rs); rs = 0;
+  const dlg = $('dlgReset'), closeDlg = () => { dlg.hidden = true; };
+  $('btnReset').addEventListener('click', () => { dlg.hidden = false; $('btnResetNo').focus(); });
+  $('btnResetNo').addEventListener('click', closeDlg);
+  dlg.addEventListener('click', e => { if (e.target === dlg) closeDlg(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !dlg.hidden) closeDlg(); });
+  $('btnResetOk').addEventListener('click', () => {
     ['pg.prefs', 'pg.theme', 'pg.opts'].forEach(k => { try { localStorage.removeItem(k); } catch (er) { /* niente */ } });
     location.reload();
   });
