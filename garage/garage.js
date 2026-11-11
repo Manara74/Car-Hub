@@ -237,7 +237,13 @@ function saveFill(e) {
   if (v.km == null || km > v.km) v.km = km;
   save(); resetForm(true); m.className = 'msg'; m.textContent = 'Rifornimento salvato.'; renderDiario(false);
 }
-let delArm = null;
+
+/* ---------- finestra di conferma per eliminare ---------- */
+let delFn = null;
+function askDel(title, text, fn) {
+  delFn = fn; $('dlgDelT').textContent = title; $('dlgDelP').textContent = text; $('dlgDel').hidden = false;
+}
+
 function fillAction(e) {
   const b = e.target.closest('button[data-act]'); if (!b) return;
   const id = b.closest('.fill').dataset.id, v = cur();
@@ -247,8 +253,8 @@ function fillAction(e) {
     $('fDate').value = x.date; $('fKm').value = x.km; $('fL').value = x.liters; $('fTot').value = x.total; $('fFuel').value = x.fuel; $('fNote').value = x.note || ''; $('fFull').checked = !!x.full;
     $('fillMsg').textContent = ''; fillPrice(); $('fillForm').scrollIntoView({ block: 'start' });
   } else if (b.dataset.act === 'del') {
-    if (delArm !== id) { delArm = id; b.textContent = 'Tocca ancora per eliminare'; setTimeout(() => { if (delArm === id) { delArm = null; b.textContent = 'Elimina'; } }, 3500); return; }
-    delArm = null; v.fills = v.fills.filter(x => x.id !== id); save(); resetForm(); renderDiario(false);
+    askDel('Eliminare questo rifornimento?', 'Il rifornimento verrà eliminato dal diario. Non si può annullare.',
+      () => { v.fills = v.fills.filter(x => x.id !== id); save(); resetForm(); renderDiario(false); });
   }
 }
 
@@ -295,7 +301,6 @@ function saveExp(e) {
   if (km != null && (v.km == null || km > v.km)) v.km = km;
   save(); resetExp(true); m.className = 'msg'; m.textContent = 'Spesa salvata.'; renderSpese(false);
 }
-let expArm = null;
 function expAction(e) {
   const b = e.target.closest('button[data-act]'); if (!b) return;
   const id = b.closest('.fill').dataset.id, v = cur();
@@ -305,8 +310,8 @@ function expAction(e) {
     $('eDate').value = x.date; $('eAmt').value = x.amount; $('eCat').value = x.cat; $('eKm').value = x.km == null ? '' : x.km; $('eNote').value = x.note || '';
     $('expMsg').textContent = ''; $('expForm').scrollIntoView({ block: 'start' });
   } else if (b.dataset.act === 'del') {
-    if (expArm !== id) { expArm = id; b.textContent = 'Tocca ancora per eliminare'; setTimeout(() => { if (expArm === id) { expArm = null; b.textContent = 'Elimina'; } }, 3500); return; }
-    expArm = null; v.expenses = v.expenses.filter(x => x.id !== id); save(); resetExp(); renderSpese(false);
+    askDel('Eliminare questa spesa?', 'La spesa verrà eliminata. Non si può annullare.',
+      () => { v.expenses = v.expenses.filter(x => x.id !== id); save(); resetExp(); renderSpese(false); });
   }
 }
 
@@ -420,21 +425,19 @@ function wire() {
     const x = newVehicle('', D.vehicles.some(y => y.type === 'auto') && !D.vehicles.some(y => y.type === 'moto') ? 'moto' : 'auto');
     D.vehicles.push(x); D.active = x.id; save(); renderMezzi(); $('vName').focus();
   });
-  const dlgDel = $('dlgDel'), closeDel = () => { dlgDel.hidden = true; };
+  const dlgDel = $('dlgDel'), closeDel = () => { dlgDel.hidden = true; delFn = null; };
   $('btnDelVeh').addEventListener('click', () => {
     if (D.vehicles.length < 2) return;
     const v = D.vehicles.find(x => x.id === D.active);
-    $('dlgDelP').textContent = '«' + vName(v) + '» verrà eliminato con le sue scadenze e il suo diario dei rifornimenti. Non si può annullare.';
-    dlgDel.hidden = false;
+    askDel('Eliminare questo mezzo?', '«' + vName(v) + '» verrà eliminato con le sue scadenze e il suo diario dei rifornimenti. Non si può annullare.', () => {
+      if (D.vehicles.length < 2) return;
+      D.vehicles = D.vehicles.filter(x => x.id !== D.active); D.active = D.vehicles[0].id; save(); renderMezzi();
+    });
   });
   $('btnDelNo').addEventListener('click', closeDel);
   dlgDel.addEventListener('click', e => { if (e.target === dlgDel) closeDel(); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && !dlgDel.hidden) closeDel(); });
-  $('btnDelOk').addEventListener('click', () => {
-    closeDel();
-    if (D.vehicles.length < 2) return;
-    D.vehicles = D.vehicles.filter(x => x.id !== D.active); D.active = D.vehicles[0].id; save(); renderMezzi();
-  });
+  $('btnDelOk').addEventListener('click', () => { const f = delFn; closeDel(); if (f) f(); });
   $('fillForm').addEventListener('submit', saveFill);
   $('btnFillCancel').addEventListener('click', () => { resetForm(); });
   ['fL', 'fTot'].forEach(i => $(i).addEventListener('input', fillPrice));
