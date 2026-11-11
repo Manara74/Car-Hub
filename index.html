@@ -61,6 +61,10 @@ var r=document.documentElement;r.dataset.theme=d;r.dataset.accent=a})();
         <span class="gi"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V4"/><path d="M4 20h16"/><path d="M8 16v-4M12.5 16V8M17 16v-6"/></svg></span>
         <b>Statistiche</b><small id="statSub">Quanto spendi, consumi, costo al km</small>
       </a>
+      <a class="gtile" href="#strada" id="tileStrada">
+        <span class="gi"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/></svg></span>
+        <b>In strada</b><small id="stradaSub">Parcheggio, sosta ed emergenza</small>
+      </a>
     </div>
     <p class="hint ver" id="appVer"></p>
   </section>
@@ -161,6 +165,55 @@ var r=document.documentElement;r.dataset.theme=d;r.dataset.accent=a})();
       <div class="panel og"><h3>Consumo nel tempo</h3><div id="stCons" class="chart"></div></div>
       <p class="hint" id="stNote"></p>
     </div>
+  </section>
+
+  <!-- IN STRADA -->
+  <section id="vStrada" class="gview" hidden>
+    <div class="panel vbar" data-vbar></div>
+    <div class="panel og">
+      <h3>Dove ho parcheggiato</h3>
+      <p class="verdict" id="parkSt"></p>
+      <img id="parkPhoto" class="pphoto" alt="Foto del parcheggio" hidden>
+      <div class="field wide"><span>Nota (facoltativa)</span><input id="parkNote" type="text" maxlength="60" placeholder="Es. Piano -2, settore C" autocomplete="off"></div>
+      <div class="inline"><button class="btn" id="btnPark" type="button">Salva la posizione qui</button><a class="btn ghost" id="btnGoCar" target="_blank" rel="noopener" hidden>Portami all'auto</a></div>
+      <div class="inline" id="parkMore" hidden><label class="btn small ghost" for="parkPic">Aggiungi una foto</label><input id="parkPic" type="file" accept="image/*" capture="environment" hidden><button class="btn small ghost danger" id="btnParkDel" type="button">Cancella la posizione</button></div>
+      <p class="msg" id="parkMsg" role="status" aria-live="polite"></p>
+    </div>
+    <div class="panel og">
+      <h3>Sosta a pagamento</h3>
+      <p class="verdict" id="sostaSt">Nessun timer attivo.</p>
+      <div class="inline" id="sostaBtns"><button class="btn small ghost" type="button" data-min="30">30 min</button><button class="btn small ghost" type="button" data-min="60">1 ora</button><button class="btn small ghost" type="button" data-min="90">1 ora e mezza</button><button class="btn small ghost" type="button" data-min="120">2 ore</button></div>
+      <button class="btn small ghost danger" id="btnSostaOff" type="button" hidden>Spegni il timer</button>
+      <p class="hint">Il timer si vede quando riapri l'app: non può suonare da chiusa. Se serve un avviso preciso, metti anche una sveglia sul telefono.</p>
+    </div>
+    <div class="panel og">
+      <h3>Emergenza</h3>
+      <div class="inline"><a class="btn" href="tel:112">Chiama il 112</a><a class="btn ghost" href="tel:803116">Soccorso ACI 803 116</a></div>
+      <div id="emPhones" class="inline"></div>
+      <button class="btn ghost" id="btnShareLoc" type="button">Invia la mia posizione</button>
+      <p class="msg" id="emMsg" role="status" aria-live="polite"></p>
+    </div>
+    <details class="panel og gd" aria-label="Guasto">
+      <summary>Se ti fermi per un guasto</summary>
+      <ul class="guide">
+        <li>Accendi le quattro frecce e porta l'auto il più lontano possibile dalla corsia.</li>
+        <li>Indossa il giubbotto catarifrangente prima di scendere.</li>
+        <li>Metti il triangolo ad almeno 50 metri dietro l'auto, di più in autostrada o dopo una curva.</li>
+        <li>Fai scendere i passeggeri dal lato opposto alla strada e falli aspettare dietro il guard-rail.</li>
+        <li>Chiama il soccorso stradale e comunica la tua posizione (usa «Invia la mia posizione»).</li>
+      </ul>
+    </details>
+    <details class="panel og gd" aria-label="Incidente">
+      <summary>Se hai un incidente</summary>
+      <ul class="guide">
+        <li>Se ci sono feriti o pericolo, chiama subito il 112.</li>
+        <li>Metti in sicurezza: quattro frecce, giubbotto, triangolo. Non spostare i veicoli se ci sono feriti.</li>
+        <li>Fotografa la scena, le targhe, i danni e la posizione dei veicoli.</li>
+        <li>Annota nome, telefono, targa e assicurazione dell'altro conducente.</li>
+        <li>Compila insieme il modulo blu (constatazione amichevole) e firmatelo entrambi.</li>
+        <li>Avvisa la tua assicurazione appena possibile.</li>
+      </ul>
+    </details>
   </section>
 
   <!-- BACKUP -->

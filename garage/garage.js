@@ -89,15 +89,16 @@ function alerts() {
 }
 
 /* ---------- schermate ---------- */
-const VIEWS = { menu: 'vMenu', scadenze: 'vScad', diario: 'vDiario', spese: 'vSpese', statistiche: 'vStat', mezzi: 'vMezzi', backup: 'vBackup' };
-const TITLES = { menu: 'Car Hub', scadenze: 'Scadenze auto', diario: 'Diario rifornimenti', spese: 'Spese dell\'auto', statistiche: 'Statistiche', mezzi: 'I miei mezzi', backup: 'Backup' };
+let stradaT = 0;
+const VIEWS = { menu: 'vMenu', scadenze: 'vScad', diario: 'vDiario', spese: 'vSpese', statistiche: 'vStat', mezzi: 'vMezzi', backup: 'vBackup', strada: 'vStrada' };
+const TITLES = { menu: 'Car Hub', scadenze: 'Scadenze auto', diario: 'Diario rifornimenti', spese: 'Spese dell\'auto', statistiche: 'Statistiche', mezzi: 'I miei mezzi', backup: 'Backup', strada: 'In strada' };
 function route() {
-  renewK = null;
+  renewK = null; clearInterval(stradaT); stradaT = 0;
   const h = (location.hash || '#menu').slice(1);
   const v = VIEWS[h] ? h : 'menu';
   Object.keys(VIEWS).forEach(k => { $(VIEWS[k]).hidden = k !== v; });
   $('ggTitle').textContent = TITLES[v]; $('btnBack').hidden = v === 'menu'; $('btnOpz').hidden = v !== 'menu';
-  if (v === 'menu') renderMenu(); if (v === 'scadenze') renderScad(); if (v === 'diario') renderDiario(true); if (v === 'mezzi') renderMezzi(); if (v === 'spese') renderSpese(true); if (v === 'statistiche') renderStat();
+  if (v === 'menu') renderMenu(); if (v === 'scadenze') renderScad(); if (v === 'diario') renderDiario(true); if (v === 'mezzi') renderMezzi(); if (v === 'spese') renderSpese(true); if (v === 'statistiche') renderStat(); if (v === 'strada') { renderStrada(); stradaT = setInterval(renderSosta, 1000); }
   window.scrollTo(0, 0);
 }
 function renderMenu() {
@@ -114,6 +115,7 @@ function renderMenu() {
   $('spesaSub').textContent = cv.expenses.length ? 'Questo mese ' + fmtN(mm, 2) + ' € (carburante escluso)' : 'Manutenzione, gomme, pedaggi, multe';
   const tot12 = periodTotals(cv, 365);
   $('statSub').textContent = tot12.total > 0 ? 'Ultimi 12 mesi: ' + fmtN(tot12.total, 0) + ' € in tutto' : 'Quanto spendi, consumi, costo al km';
+  $('stradaSub').textContent = stradaSub(cur());
   $('scadSub').textContent = al.length ? cap(al[0].t) : 'Bollo, assicurazione, revisione, tagliando';
 }
 function renderScad() {
@@ -407,6 +409,77 @@ function renderStat() {
   $('stNote').textContent = 'Il costo al km usa i chilometri tra il primo e l\'ultimo rifornimento o spesa con chilometri nel periodo' + (multi ? ', mezzo per mezzo, e poi li somma' : '') + '. Le statistiche si aggiornano da sole con quello che registri.';
 }
 
+
+/* ---------- in strada: parcheggio, sosta, emergenza ---------- */
+const hhmm = ms => new Date(ms).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
+function leftTxt(ms) {
+  const s = Math.max(0, Math.round(ms / 1000)), h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60);
+  return h ? h + ' h ' + pad(m) + ' min' : m ? m + ' min ' + pad(s % 60) + ' s' : s + ' s';
+}
+function stradaSub(v) {
+  if (v.sosta && v.sosta > Date.now()) return 'Sosta: scade alle ' + hhmm(v.sosta);
+  if (v.park) return 'Parcheggiata alle ' + hhmm(v.park.at);
+  return 'Parcheggio, sosta ed emergenza';
+}
+function parkWhen(at) {
+  const d = new Date(at), same = iso(d) === iso(new Date());
+  return (same ? 'oggi' : 'il ' + fmtDate(iso(d))) + ' alle ' + hhmm(at);
+}
+function renderStrada() {
+  renderVbars();
+  const v = cur(), p = v.park;
+  $('parkSt').textContent = p ? 'Posizione salvata ' + parkWhen(p.at) + (p.acc ? ' (precisione circa ' + Math.round(p.acc) + ' m)' : '') + '.' : 'Nessuna posizione salvata per questo mezzo.';
+  if (document.activeElement !== $('parkNote')) $('parkNote').value = p ? p.note || '' : '';
+  $('btnPark').textContent = p ? 'Aggiorna la posizione' : 'Salva la posizione qui';
+  const go = $('btnGoCar'); go.hidden = !p;
+  if (p) go.href = 'https://www.google.com/maps/dir/?api=1&travelmode=walking&destination=' + p.lat + ',' + p.lng;
+  $('parkMore').hidden = !p;
+  const ph = $('parkPhoto'); ph.hidden = !(p && p.photo); if (p && p.photo) ph.src = p.photo;
+  renderSosta();
+  const pn = v.phones || {}, box = $('emPhones'), tel = s => String(s).replace(/[^\d+]/g, '');
+  box.innerHTML = [['assist', 'Assistenza stradale'], ['assic', 'Assicurazione']].map(([k, t]) => pn[k] && tel(pn[k]) ?
+    '<a class="btn ghost" href="tel:' + esc(tel(pn[k])) + '">' + t + '</a>' : '').join('') +
+    (pn.assist && pn.assic ? '' : '<a class="btn small ghost" href="#mezzi">Aggiungi i tuoi numeri</a>');
+}
+function renderSosta() {
+  const v = cur(), st = $('sostaSt'), on = v.sosta && v.sosta > Date.now();
+  if (v.sosta && !on) { st.textContent = 'Sosta scaduta alle ' + hhmm(v.sosta) + '.'; st.className = 'verdict'; }
+  else if (on) { st.textContent = 'Scade alle ' + hhmm(v.sosta) + ': mancano ' + leftTxt(v.sosta - Date.now()) + '.'; }
+  else { st.textContent = 'Nessun timer attivo.'; }
+  $('btnSostaOff').hidden = !v.sosta;
+}
+function getPos(ok, ko) {
+  if (!navigator.geolocation) { ko('Questo telefono non fornisce la posizione.'); return; }
+  navigator.geolocation.getCurrentPosition(ok, e => ko(e && e.code === 1 ? 'Non ho il permesso di leggere la posizione: consentilo nelle impostazioni del browser.' : 'Non riesco a trovare la posizione. Riprova all\'aperto.'), { enableHighAccuracy: true, timeout: 20000, maximumAge: 0 });
+}
+function parkSave() {
+  const m = $('parkMsg'), b = $('btnPark'); m.className = 'msg'; m.textContent = 'Cerco la posizione…'; b.disabled = true;
+  getPos(pos => {
+    const v = cur(), old = v.park || {};
+    v.park = { lat: Math.round(pos.coords.latitude * 1e6) / 1e6, lng: Math.round(pos.coords.longitude * 1e6) / 1e6, acc: pos.coords.accuracy, at: Date.now(), note: $('parkNote').value.trim(), photo: old.photo || null };
+    save(); b.disabled = false; m.textContent = 'Posizione salvata.'; renderStrada();
+  }, t => { b.disabled = false; m.className = 'msg err'; m.textContent = t; });
+}
+function shrink(file, cb) {
+  const img = new Image(), u = URL.createObjectURL(file);
+  img.onload = () => {
+    const s = Math.min(1, 900 / Math.max(img.width, img.height)), c = document.createElement('canvas');
+    c.width = Math.round(img.width * s); c.height = Math.round(img.height * s); c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+    URL.revokeObjectURL(u); cb(c.toDataURL('image/jpeg', 0.6));
+  };
+  img.onerror = () => { URL.revokeObjectURL(u); cb(null); };
+  img.src = u;
+}
+function shareLoc() {
+  const m = $('emMsg'); m.className = 'msg'; m.textContent = 'Cerco la posizione…';
+  getPos(pos => {
+    const url = 'https://maps.google.com/?q=' + pos.coords.latitude.toFixed(6) + ',' + pos.coords.longitude.toFixed(6), text = 'Mi trovo qui: ' + url;
+    if (navigator.share) { navigator.share({ text }).then(() => { m.textContent = ''; }, () => { m.textContent = ''; }); return; }
+    if (navigator.clipboard) navigator.clipboard.writeText(text).then(() => { m.textContent = 'Posizione copiata: incollala in un messaggio.'; }, () => { m.textContent = text; });
+    else m.textContent = text;
+  }, t => { m.className = 'msg err'; m.textContent = t; });
+}
+
 /* ---------- eventi ---------- */
 function wire() {
   window.addEventListener('hashchange', route);
@@ -421,6 +494,16 @@ function wire() {
     if (e.target.value === '*') { STALL = true; renderStat(); return; }
     STALL = false; D.active = e.target.value; save(); route();
   });
+  $('btnPark').addEventListener('click', parkSave);
+  $('parkNote').addEventListener('change', e => { const v = cur(); if (v.park) { v.park.note = e.target.value.trim(); save(); } });
+  $('parkPic').addEventListener('change', e => {
+    const f = e.target.files[0]; e.target.value = ''; if (!f || !cur().park) return;
+    shrink(f, d => { const m = $('parkMsg'); if (!d) { m.className = 'msg err'; m.textContent = 'Non riesco a leggere la foto.'; return; } cur().park.photo = d; save(); m.className = 'msg'; m.textContent = 'Foto salvata.'; renderStrada(); });
+  });
+  $('btnParkDel').addEventListener('click', () => askDel('Cancellare la posizione?', 'La posizione e la foto del parcheggio verranno cancellate.', () => { delete cur().park; save(); $('parkMsg').textContent = ''; renderStrada(); }));
+  $('sostaBtns').addEventListener('click', e => { const b = e.target.closest('button[data-min]'); if (!b) return; cur().sosta = Date.now() + parseInt(b.dataset.min, 10) * 60000; save(); renderSosta(); });
+  $('btnSostaOff').addEventListener('click', () => { delete cur().sosta; save(); renderSosta(); });
+  $('btnShareLoc').addEventListener('click', shareLoc);
   $('btnAddVeh').addEventListener('click', () => {
     const x = newVehicle('', D.vehicles.some(y => y.type === 'auto') && !D.vehicles.some(y => y.type === 'moto') ? 'moto' : 'auto');
     D.vehicles.push(x); D.active = x.id; save(); renderMezzi(); $('vName').focus();
