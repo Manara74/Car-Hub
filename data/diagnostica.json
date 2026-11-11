@@ -2,14 +2,14 @@
  "date": "2026-11-11",
  "keys": {
   "B0": {
-   "n": 7246,
+   "n": 6867,
    "min": 1.569,
    "p5": 1.949,
    "med": 2.15,
    "p95": 2.299,
    "max": 2.999,
    "sotto_1.7": 1,
-   "sopra_2.4": 58,
+   "sopra_2.4": 56,
    "piu_bassi": [
     [
      1.569,
@@ -44,19 +44,19 @@
      false
     ],
     [
-     1.779,
-     "45516",
-     "EASY SERVICE S.R.L. / PIOSSASCO",
-     "Piossasco",
-     "TO",
-     false
-    ],
-    [
      1.789,
      "10464",
      "ANGELI SABRINA",
      "Cagli",
      "PU",
+     false
+    ],
+    [
+     1.789,
+     "37062",
+     "AdS Agip - Candela Casello A16",
+     "Candela",
+     "FG",
      false
     ]
    ],
@@ -96,13 +96,13 @@
    ]
   },
   "B1": {
-   "n": 10447,
+   "n": 9743,
    "min": 1.569,
    "p5": 1.939,
    "med": 1.989,
-   "p95": 2.059,
+   "p95": 2.067,
    "max": 2.789,
-   "sotto_1.7": 6,
+   "sotto_1.7": 5,
    "sopra_2.4": 16,
    "piu_bassi": [
     [
@@ -119,14 +119,6 @@
      "ALA TERRICCIOLA",
      "Terricciola",
      "PI",
-     false
-    ],
-    [
-     1.629,
-     "45516",
-     "EASY SERVICE S.R.L. / PIOSSASCO",
-     "Piossasco",
-     "TO",
      false
     ],
     [
@@ -151,6 +143,14 @@
      "56140 ENI",
      "Napoli",
      "NA",
+     false
+    ],
+    [
+     1.709,
+     "59989",
+     "Easy Service, Via Aurelia",
+     "Roma",
+     "RM",
      false
     ]
    ],
@@ -190,14 +190,14 @@
    ]
   },
   "D0": {
-   "n": 7231,
+   "n": 6851,
    "min": 1.639,
    "p5": 2.19,
    "med": 2.399,
    "p95": 2.529,
    "max": 3.225,
    "sotto_1.7": 4,
-   "sopra_2.4": 3314,
+   "sopra_2.4": 3138,
    "piu_bassi": [
     [
      1.639,
@@ -232,19 +232,19 @@
      false
     ],
     [
-     1.739,
-     "45516",
-     "EASY SERVICE S.R.L. / PIOSSASCO",
-     "Piossasco",
-     "TO",
-     false
-    ],
-    [
      1.799,
      "9144",
      "SP ENERGIA SICILIANA",
      "Avola",
      "SR",
+     false
+    ],
+    [
+     1.82,
+     "44315",
+     "stazione ip",
+     "Corleto Perticara",
+     "PZ",
      false
     ]
    ],
@@ -284,23 +284,15 @@
    ]
   },
   "D1": {
-   "n": 10438,
-   "min": 1.589,
+   "n": 9737,
+   "min": 1.619,
    "p5": 2.187,
    "med": 2.2,
-   "p95": 2.302,
+   "p95": 2.31,
    "max": 2.799,
-   "sotto_1.7": 10,
-   "sopra_2.4": 109,
+   "sotto_1.7": 9,
+   "sopra_2.4": 107,
    "piu_bassi": [
-    [
-     1.589,
-     "45516",
-     "EASY SERVICE S.R.L. / PIOSSASCO",
-     "Piossasco",
-     "TO",
-     false
-    ],
     [
      1.619,
      "62020",
@@ -340,6 +332,14 @@
      "Torre Del Greco",
      "NA",
      false
+    ],
+    [
+     1.669,
+     "6681",
+     "FROSINONE SS. 155 KM 0 767",
+     "Frosinone",
+     "FR",
+     false
     ]
    ],
    "piu_alti": [
@@ -378,13 +378,13 @@
    ]
   },
   "G0": {
-   "n": 2285,
+   "n": 2109,
    "min": 0.549,
    "p5": 0.759,
    "med": 0.839,
    "p95": 0.939,
    "max": 1.399,
-   "sotto_1.7": 2285,
+   "sotto_1.7": 2109,
    "sopra_2.4": 0,
    "piu_bassi": [
     [
@@ -472,23 +472,15 @@
    ]
   },
   "G1": {
-   "n": 91,
-   "min": 0.605,
-   "p5": 0.699,
-   "med": 0.819,
+   "n": 83,
+   "min": 0.697,
+   "p5": 0.702,
+   "med": 0.829,
    "p95": 0.919,
    "max": 0.999,
-   "sotto_1.7": 91,
+   "sotto_1.7": 83,
    "sopra_2.4": 0,
    "piu_bassi": [
-    [
-     0.605,
-     "48202",
-     "SOCOGAS Orbassano",
-     "Orbassano",
-     "TO",
-     false
-    ],
     [
      0.697,
      "28150",
@@ -528,6 +520,14 @@
      "Spezzano Della Sila",
      "CS",
      false
+    ],
+    [
+     0.725,
+     "62832",
+     "ESSO 14",
+     "Catanzaro",
+     "CZ",
+     false
     ]
    ],
    "piu_alti": [
@@ -566,14 +566,14 @@
    ]
   },
   "M0": {
-   "n": 746,
+   "n": 687,
    "min": 0.936,
-   "p5": 1.724,
-   "med": 2.159,
+   "p5": 1.732,
+   "med": 2.149,
    "p95": 2.499,
    "max": 4.999,
-   "sotto_1.7": 35,
-   "sopra_2.4": 65,
+   "sotto_1.7": 30,
+   "sopra_2.4": 56,
    "piu_bassi": [
     [
      0.936,
@@ -660,37 +660,21 @@
    ]
   },
   "M1": {
-   "n": 49,
-   "min": 1.49,
-   "p5": 1.625,
+   "n": 42,
+   "min": 1.499,
+   "p5": 1.749,
    "med": 2.099,
    "p95": 2.499,
    "max": 2.999,
-   "sotto_1.7": 3,
+   "sotto_1.7": 1,
    "sopra_2.4": 4,
    "piu_bassi": [
-    [
-     1.49,
-     "52329",
-     "Bosco Gerolo Valtrebbia Biometano",
-     "Rivergaro",
-     "PC",
-     false
-    ],
     [
      1.499,
      "41522",
      "B.CARBURANTI Via Prov.le Pianura",
      "Pozzuoli",
      "NA",
-     false
-    ],
-    [
-     1.625,
-     "50291",
-     "Rezzato",
-     "Rezzato",
-     "BS",
      false
     ],
     [
@@ -715,6 +699,22 @@
      "fuccifuel",
      "Andria",
      "BT",
+     false
+    ],
+    [
+     1.799,
+     "56188",
+     "IPERAL CARBURANTI GERA LARIO",
+     "Gera Lario",
+     "CO",
+     false
+    ],
+    [
+     1.859,
+     "56799",
+     "OG Clean Fuels NOVARA",
+     "Novara",
+     "NO",
      false
     ]
    ],
