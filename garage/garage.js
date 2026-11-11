@@ -408,6 +408,7 @@ function renderStat() {
     g2 += '<text x="' + L2 + '" y="' + (H2 - 6) + '" class="ax">' + fmtDate(iso(d0)).slice(0, 5) + '</text><text x="' + (W2 - R2) + '" y="' + (H2 - 6) + '" text-anchor="end" class="ax">' + fmtDate(iso(d1)).slice(0, 5) + '</text></svg>';
     $('stCons').innerHTML = g2 + (ser.length > 1 ? '<p class="legend">' + ser.map(x => '<i style="background:' + x.col + '"></i>' + esc(x.name)).join(' ') + '</p>' : '');
   }
+  loadMarket(); renderMarket(list);
   $('stNote').textContent = 'Il costo al km usa i chilometri tra il primo e l\'ultimo rifornimento o spesa con chilometri nel periodo' + (multi ? ', mezzo per mezzo, e poi li somma' : '') + '. Le statistiche si aggiornano da sole con quello che registri.';
 }
 
@@ -506,6 +507,63 @@ function tripCalc() {
     (n > 1 ? '<div class="wide2"><small>A PERSONA (' + n + ')</small><b>' + fmtN(tot / n, 2) + ' €</b></div>' : '');
 }
 
+
+/* ---------- prezzi di mercato contro i tuoi rifornimenti ---------- */
+let HIST = null, PROVL = null, MKF = '', MKM = 1;
+const FN = { B: 'Benzina', D: 'Gasolio', G: 'GPL', M: 'Metano' };
+function loadMarket() {
+  if (HIST) return;
+  HIST = {}; PROVL = [];
+  fetch('data/history.json').then(r => r.json()).then(j => { HIST = j || {}; }, () => {})
+    .then(() => fetch('province.json')).then(r => r.json()).then(j => { PROVL = j || []; }, () => {})
+    .then(() => { if (!$('vStat').hidden) renderMarket(); });
+}
+function myRegion() {
+  let prov = ''; try { prov = (JSON.parse(localStorage.getItem('pg.prefs') || '{}')).prov || ''; } catch (e) { /* niente */ }
+  const r = PROVL.find(x => x[0] === prov); return r ? r[2] : 'ALL';
+}
+function renderMarket(list) {
+  list = list || (STALL && D.vehicles.length > 1 ? D.vehicles : [cur()]);
+  const box = $('stMkt'), days = Object.keys(HIST || {}).sort();
+  if (!days.length) { box.hidden = true; return; }
+  box.hidden = false;
+  const fills = [].concat(...list.map(v => v.fills));
+  const cnt = {}; fills.forEach(x => { cnt[x.fuel] = (cnt[x.fuel] || 0) + 1; });
+  const present = Object.keys(FN).filter(c => days.some(d => HIST[d][c + '1'] || HIST[d][c + '0']));
+  if (!MKF || !present.includes(MKF)) MKF = present.sort((a, b) => (cnt[b] || 0) - (cnt[a] || 0))[0];
+  $('mkF').innerHTML = present.map(c => '<option value="' + c + '"' + (c === MKF ? ' selected' : '') + '>' + FN[c] + '</option>').join('');
+  document.querySelectorAll('#mkM button').forEach(b => b.classList.toggle('on', +b.dataset.m === MKM));
+  const key = MKF + MKM, region = myRegion(), from = fromDate(STP);
+  const ds = days.filter(d => d >= from && HIST[d][key] && (HIST[d][key][region] != null || HIST[d][key].ALL != null));
+  const val = d => HIST[d][key][region] != null ? HIST[d][key][region] : HIST[d][key].ALL;
+  const rname = region === 'ALL' || HIST[ds[0] || days[0]][key] && HIST[ds[0] || days[0]][key][region] == null ? 'Italia' : region;
+  if (ds.length < 2) { $('mkChart').innerHTML = '<p class="hint">Servono almeno due giorni di prezzi per questo carburante nel periodo scelto.</p>'; $('mkCards').innerHTML = ''; $('mkNote').textContent = ''; return; }
+  const my = fills.filter(x => x.fuel === MKF && x.liters > 0 && x.total > 0).map(x => {
+    let dd = null; for (const d of ds) { if (d <= x.date) dd = d; else break; }
+    return { d: x.date, md: dd, p: x.total / x.liters, l: x.liters, m: dd ? val(dd) : null };
+  }).filter(x => x.d >= ds[0] && x.d <= ds[ds.length - 1] && x.m != null);
+  const vals = ds.map(val).concat(my.map(x => x.p)), lo0 = Math.min(...vals), hi0 = Math.max(...vals), pd = Math.max(0.01, (hi0 - lo0) * .2), lo = lo0 - pd, hi = hi0 + pd;
+  const W = 360, H = 180, L = 8, R = 8, T = 16, B = 24, t0 = new Date(ds[0] + 'T12:00:00').getTime(), t1 = new Date(ds[ds.length - 1] + 'T12:00:00').getTime();
+  const X = d => L + (new Date(d + 'T12:00:00').getTime() - t0) / (t1 - t0) * (W - L - R), Y = v => T + (1 - (v - lo) / (hi - lo)) * (H - T - B);
+  let s = '<svg viewBox="0 0 ' + W + ' ' + H + '" class="svgc" role="img" aria-label="Prezzo di mercato e rifornimenti"><text x="' + L + '" y="11" class="ax">€/litro: da ' + fmtN(lo0, 3) + ' a ' + fmtN(hi0, 3) + '</text>';
+  s += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + (H - B) + '" y2="' + (H - B) + '" stroke="var(--line)"/>';
+  s += '<polyline points="' + ds.map(d => X(d).toFixed(1) + ',' + Y(val(d)).toFixed(1)).join(' ') + '" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round"/>';
+  my.forEach(x => { s += '<circle cx="' + X(x.d).toFixed(1) + '" cy="' + Y(x.p).toFixed(1) + '" r="4.5" fill="' + (x.p <= x.m + 0.0005 ? 'var(--good)' : 'var(--bad)') + '" stroke="var(--bg)" stroke-width="1.5"/>'; });
+  s += '<text x="' + L + '" y="' + (H - 7) + '" class="ax">' + fmtDate(ds[0]).slice(0, 5) + '</text><text x="' + (W - R) + '" y="' + (H - 7) + '" text-anchor="end" class="ax">' + fmtDate(ds[ds.length - 1]).slice(0, 5) + '</text></svg>';
+  $('mkChart').innerHTML = s + '<p class="legend"><i style="background:var(--accent)"></i>Media ' + esc(rname) + ' <i style="background:var(--good)"></i>hai pagato meno <i style="background:var(--bad)"></i>hai pagato più</p>';
+  const first = val(ds[0]), last = val(ds[ds.length - 1]), dv = last - first;
+  const cell = (k, v, sub) => '<div><small>' + k + '</small><b class="num">' + v + '</b>' + (sub ? '<em>' + sub + '</em>' : '') + '</div>';
+  let c = cell('Oggi', fmtN(last, 3) + ' €/L', esc(rname)) + cell('Nel periodo', (dv >= 0 ? '+' : '−') + fmtN(Math.abs(dv), 3) + ' €', fmtN(Math.abs(dv / first * 100), 1) + '% ' + (dv >= 0 ? 'in più' : 'in meno') + ' dal ' + fmtDate(ds[0]).slice(0, 5));
+  c += cell('Minimo', fmtN(Math.min(...ds.map(val)), 3) + ' €/L', 'massimo ' + fmtN(Math.max(...ds.map(val)), 3));
+  if (my.length) {
+    const L2 = my.reduce((a, x) => a + x.l, 0), diff = my.reduce((a, x) => a + (x.p - x.m) * x.l, 0) / L2, tot = my.reduce((a, x) => a + (x.p - x.m) * x.l, 0);
+    c += cell('Tu rispetto al mercato', (diff > 0 ? '+' : '−') + fmtN(Math.abs(diff) * 100, 1) + ' cent/L', diff > 0 ? 'hai pagato più della media' : 'hai pagato meno della media');
+    c += '<div class="wide2"><small>IN EURO, SU ' + plural(my.length, 'RIFORNIMENTO', 'RIFORNIMENTI') + '</small><b class="num">' + (tot > 0 ? '+' : '−') + fmtN(Math.abs(tot), 2) + ' €</b><em>' + (tot > 0 ? 'spesi in più' : 'risparmiati') + ' rispetto alla media di ' + esc(rname) + '</em></div>';
+  }
+  $('mkCards').innerHTML = c;
+  $('mkNote').textContent = (my.length ? '' : 'Registra rifornimenti di questo carburante nel diario per confrontarli con il mercato. ') + 'La media è di ' + rname + (rname === 'Italia' && region === 'ALL' ? ' (scegli la zona in Pompa Giusta per vedere la tua regione)' : '') + ', esclude gli impianti autostradali e la modalità è quella scelta qui sopra. Lo storico parte dal ' + fmtDate(days[0]) + '.';
+}
+
 /* ---------- eventi ---------- */
 function wire() {
   window.addEventListener('hashchange', route);
@@ -532,6 +590,8 @@ function wire() {
   $('sostaBtns').addEventListener('click', e => { const b = e.target.closest('button[data-min]'); if (!b) return; cur().sosta = Date.now() + parseInt(b.dataset.min, 10) * 60000; save(); renderSosta(); });
   $('btnSostaOff').addEventListener('click', () => { delete cur().sosta; save(); renderSosta(); });
   ['tKm', 'tPers', 'tCons', 'tPrice', 'tToll', 'tRound'].forEach(i => $(i).addEventListener('input', tripCalc));
+  $('mkF').addEventListener('change', e => { MKF = e.target.value; renderMarket(); });
+  $('mkM').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; MKM = +b.dataset.m; renderMarket(); });
   $('btnShareLoc').addEventListener('click', shareLoc);
   $('btnAddVeh').addEventListener('click', () => {
     const x = newVehicle('', D.vehicles.some(y => y.type === 'auto') && !D.vehicles.some(y => y.type === 'moto') ? 'moto' : 'auto');

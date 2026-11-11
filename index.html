@@ -180,6 +180,16 @@ var r=document.documentElement;r.dataset.theme=d;r.dataset.accent=a})();
     <p class="empty" id="stEmpty" hidden>Registra qualche rifornimento o spesa per vedere le statistiche di questo mezzo.</p>
     <div id="stBody" class="gview">
       <div class="gstats" id="stCards"></div>
+      <div class="panel og" id="stMkt">
+        <h3>Prezzo del carburante e quanto hai pagato</h3>
+        <div class="grid">
+          <div class="field"><span>Carburante</span><select id="mkF"></select></div>
+          <div class="field"><span>Modalità</span><div class="seg" id="mkM" role="group" aria-label="Modalità"><button type="button" data-m="1">Self</button><button type="button" data-m="0">Servito</button></div></div>
+        </div>
+        <div id="mkChart" class="chart"></div>
+        <div class="gstats" id="mkCards"></div>
+        <p class="hint" id="mkNote"></p>
+      </div>
       <div class="panel og" id="stVehBox" hidden><h3>Confronto tra i mezzi</h3><div id="stVeh" class="vtable"></div></div>
       <div class="panel og"><h3>Spesa mese per mese</h3><div id="stMonths" class="chart"></div></div>
       <div class="panel og"><h3>Come si divide la spesa</h3><div id="stBreak" class="bars"></div></div>
