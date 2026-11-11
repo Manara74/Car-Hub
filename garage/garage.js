@@ -112,7 +112,7 @@ function renderMenu() {
   if (needB) rows.push('<a class="malert" href="#backup"><b>' + (lb0 ? 'Backup vecchio di oltre 30 giorni' : 'Nessun backup dei tuoi dati') + '</b><span>Tocca per salvarlo ora</span></a>');
   $('menuBody').innerHTML = rows.join('');
   const nAl = al.length + (needB ? 1 : 0);
-  $('menuSum').textContent = nAl ? (nAl === 1 ? '1 da vedere' : nAl + ' da vedere') : 'tutto in ordine';
+  $('menuSum').textContent = nAl ? (nAl === 1 ? '1 da vedere' : nAl + ' da vedere') : 'Tutto in ordine';
   if (!menuSeen) { $('menuBox').open = nAl > 0; menuSeen = true; }
   const vs = D.vehicles, nb = vs.reduce((a, x) => a + Object.keys(x.parts || {}).filter(k => x.parts[k].buy).length, 0);
   $('mezziSub').textContent = (vs.length === 1 ? vName(vs[0]) : vs.length + ' mezzi: ' + vs.map(vName).join(', ')) + (nb ? ' · ' + nb + ' da comprare' : '');
