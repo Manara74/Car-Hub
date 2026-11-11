@@ -121,15 +121,16 @@ var r=document.documentElement;r.dataset.theme=d;r.dataset.accent=a})();
         <div class="field"><span>Tipo</span>
           <div class="seg" id="vType" role="group" aria-label="Tipo"><button type="button" data-t="auto">Auto</button><button type="button" data-t="moto">Moto</button></div></div>
         <div class="field"><span>Targa (facoltativa)</span><input id="vPlate" type="text" placeholder="AB123CD" maxlength="10" autocomplete="off" autocapitalize="characters"></div>
+        <div class="field"><span>Marca e modello</span><input type="text" data-info="model" maxlength="40" placeholder="Es. Fiat Panda" autocomplete="off"></div>
+        <div class="field"><span>Anno</span><input type="text" inputmode="numeric" data-info="year" maxlength="4" placeholder="Es. 2018" autocomplete="off"></div>
         <div class="field wide"><span>Chilometri attuali (facoltativi)</span><input id="vKm" type="number" inputmode="numeric" min="0" step="1" placeholder="Es. 84500"></div>
       </div>
     </div>
-    <div class="panel og">
-      <h3>Scheda del mezzo</h3>
+    <details class="panel og gd" aria-label="Scheda del mezzo">
+      <summary>Scheda del mezzo</summary>
+      <div class="gb">
       <p class="hint">Dati che si cercano sempre al momento sbagliato. Restano solo su questo telefono.</p>
       <div class="grid">
-        <div class="field"><span>Marca e modello</span><input type="text" data-info="model" maxlength="40" placeholder="Es. Fiat Panda" autocomplete="off"></div>
-        <div class="field"><span>Anno</span><input type="text" inputmode="numeric" data-info="year" maxlength="4" placeholder="Es. 2018" autocomplete="off"></div>
         <div class="field wide"><span>Numero di telaio</span><input type="text" data-info="vin" maxlength="20" placeholder="17 caratteri" autocomplete="off" autocapitalize="characters"></div>
         <div class="field"><span>Misura delle gomme</span><input type="text" data-info="tyre" maxlength="24" placeholder="Es. 185/65 R15" autocomplete="off" autocapitalize="characters"></div>
         <div class="field"><span>Gomme montate</span><select data-info="season"><option value="">—</option><option>Estive</option><option>Invernali</option><option>Quattro stagioni</option></select></div>
@@ -138,7 +139,8 @@ var r=document.documentElement;r.dataset.theme=d;r.dataset.accent=a})();
         <div class="field"><span>Olio motore</span><input type="text" data-info="oil" maxlength="30" placeholder="Es. 5W-30" autocomplete="off"></div>
         <div class="field"><span>Codice colore</span><input type="text" data-info="color" maxlength="20" placeholder="Es. 249/A" autocomplete="off"></div>
       </div>
-    </div>
+      </div>
+    </details>
     <details class="panel og gd" aria-label="Lampadine e ricambi" id="partsDet">
       <summary>Lampadine e ricambi</summary>
       <div class="gb">
@@ -153,19 +155,23 @@ var r=document.documentElement;r.dataset.theme=d;r.dataset.accent=a})();
       <button class="btn ghost" id="btnBuyCopy" type="button">Copia la lista</button>
       <p class="msg" id="buyMsg" role="status" aria-live="polite"></p>
     </div>
-    <div class="panel og">
-      <h3>Numeri utili</h3>
+    <details class="panel og gd" aria-label="Numeri utili">
+      <summary>Numeri utili</summary>
+      <div class="gb">
       <p class="hint">Compaiono come pulsanti di chiamata in «In strada», sotto Emergenza.</p>
       <div class="grid">
         <div class="field wide"><span>Assistenza stradale</span><input type="tel" data-phone="assist" maxlength="20" placeholder="Numero verde dell'assistenza" autocomplete="off"></div>
         <div class="field wide"><span>Assicurazione (sinistri)</span><input type="tel" data-phone="assic" maxlength="20" placeholder="Numero per denunciare un sinistro" autocomplete="off"></div>
       </div>
-    </div>
-    <div class="panel og">
-      <h3>Elimina</h3>
+      </div>
+    </details>
+    <details class="panel og gd" aria-label="Elimina">
+      <summary>Elimina</summary>
+      <div class="gb">
       <p class="hint" id="delHint">Elimina questo mezzo con le sue scadenze e il suo diario dei rifornimenti. Non si può annullare: fai prima un backup se vuoi tenerne una copia.</p>
       <button class="btn ghost danger" id="btnDelVeh" type="button">Elimina questo mezzo</button>
-    </div>
+      </div>
+    </details>
   </section>
 
   <!-- SPESE -->
