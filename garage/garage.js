@@ -408,7 +408,7 @@ function renderStat() {
     g2 += '<text x="' + L2 + '" y="' + (H2 - 6) + '" class="ax">' + fmtDate(iso(d0)).slice(0, 5) + '</text><text x="' + (W2 - R2) + '" y="' + (H2 - 6) + '" text-anchor="end" class="ax">' + fmtDate(iso(d1)).slice(0, 5) + '</text></svg>';
     $('stCons').innerHTML = g2 + (ser.length > 1 ? '<p class="legend">' + ser.map(x => '<i style="background:' + x.col + '"></i>' + esc(x.name)).join(' ') + '</p>' : '');
   }
-  loadMarket(); renderMarket(list);
+  renderCost(list, from); loadMarket(); renderMarket(list);
   $('stNote').textContent = 'Il costo al km usa i chilometri tra il primo e l\'ultimo rifornimento o spesa con chilometri nel periodo' + (multi ? ', mezzo per mezzo, e poi li somma' : '') + '. Le statistiche si aggiornano da sole con quello che registri.';
 }
 
@@ -562,6 +562,43 @@ function renderMarket(list) {
   }
   $('mkCards').innerHTML = c;
   $('mkNote').textContent = (my.length ? '' : 'Registra rifornimenti di questo carburante nel diario per confrontarli con il mercato. ') + 'La media è di ' + rname + (rname === 'Italia' && region === 'ALL' ? ' (scegli la zona in Pompa Giusta per vedere la tua regione)' : '') + ', esclude gli impianti autostradali e la modalità è quella scelta qui sopra. Lo storico parte dal ' + fmtDate(days[0]) + '.';
+}
+
+
+/* ---------- il quadro dei costi ---------- */
+const FIXED = ['bollo', 'assicurazione', 'revisione'];
+const dayDiff = (a, b) => Math.round((new Date(b + 'T12:00:00') - new Date(a + 'T12:00:00')) / 86400000);
+function sumRange(list, a, b) { // a incluso, b escluso
+  let fx = 0, va = 0;
+  list.forEach(v => {
+    v.fills.forEach(x => { if (x.date >= a && x.date < b) va += x.total; });
+    v.expenses.forEach(x => { if (x.date >= a && x.date < b) { if (FIXED.includes(x.cat)) fx += x.amount; else va += x.amount; } });
+  });
+  return { fx, va, t: fx + va };
+}
+function renderCost(list, from) {
+  const today = iso(new Date()), tomorrow = (() => { const d = new Date(); d.setDate(d.getDate() + 1); return iso(d); })();
+  const dates = [].concat(...list.map(v => v.fills.map(x => x.date).concat(v.expenses.map(x => x.date)))).sort();
+  const start = dates.length && dates[0] > from ? dates[0] : from;
+  const days = Math.max(1, dayDiff(start, today) + 1), cur2 = sumRange(list, start, tomorrow);
+  const cell = (k, v, sub) => '<div><small>' + k + '</small><b class="num">' + v + '</b>' + (sub ? '<em>' + sub + '</em>' : '') + '</div>';
+  const perMonth = cur2.t / days * 30.44;
+  let c = cell('Al mese', fmtN(perMonth, 0) + ' €', 'media del periodo') + cell('Al giorno', fmtN(cur2.t / days, 2) + ' €', plural(days, 'giorno', 'giorni') + ' considerati');
+  c += cell('In un anno', fmtN(perMonth * 12, 0) + ' €', 'se continui così');
+  if (STP !== 'all') {
+    const p0 = new Date(from + 'T12:00:00'); p0.setDate(p0.getDate() - parseInt(STP, 10));
+    const prev = sumRange(list, iso(p0), from), dl = prev.t > 0 ? (cur2.t - prev.t) / prev.t * 100 : null;
+    c += dl == null ? cell('Periodo precedente', '—', 'nessun dato prima') : cell('Rispetto a prima', (dl >= 0 ? '+' : '−') + fmtN(Math.abs(dl), 0) + '%', 'prima: ' + fmtN(prev.t, 0) + ' €');
+  } else c += cell('Totale', fmtN(cur2.t, 0) + ' €', 'dall\'inizio');
+  // mese più caro (su tutto lo storico)
+  const mm = {}; list.forEach(v => { v.fills.forEach(x => { mm[x.date.slice(0, 7)] = (mm[x.date.slice(0, 7)] || 0) + x.total; }); v.expenses.forEach(x => { mm[x.date.slice(0, 7)] = (mm[x.date.slice(0, 7)] || 0) + x.amount; }); });
+  const mk = Object.keys(mm).filter(k => k + '-31' >= start).sort((a, b) => mm[b] - mm[a])[0];
+  if (mk) { const nm = new Date(mk + '-15T12:00:00').toLocaleDateString('it-IT', { month: 'long', year: 'numeric' }); c += cell('Mese più caro', fmtN(mm[mk], 0) + ' €', cap(nm)); }
+  $('coCards').innerHTML = c;
+  const tot = cur2.t;
+  $('coSplit').innerHTML = tot > 0 ? [['Costi fissi', cur2.fx, 'bollo, assicurazione, revisione', 'var(--warn)'], ['Costi variabili', cur2.va, 'dipendono da come usi il mezzo: carburante, manutenzione, gomme, pedaggi…', 'var(--accent)']].map(([n, a, s, col]) =>
+    '<div class="bar"><div class="bl"><span>' + n + '</span><b class="num">' + fmtN(a, 0) + ' € · ' + fmtN(a / tot * 100, 0) + '%</b></div><div class="bt"><i style="width:' + (a / tot * 100).toFixed(1) + '%;background:' + col + '"></i></div><small class="hint">' + s + '</small></div>').join('') : '';
+  $('coNote').textContent = 'Mette insieme carburante e tutte le spese registrate (anche i rinnovi di bollo, assicurazione, revisione e gomme). Il confronto «rispetto a prima» usa un periodo lungo quanto quello scelto, subito precedente.';
 }
 
 /* ---------- eventi ---------- */
