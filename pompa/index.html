@@ -147,8 +147,9 @@ try{var o=JSON.parse(localStorage.getItem('pg.opts')||'{}');['quick','hero','ver
       <h2 id="optTitle">Opzioni</h2>
     </header>
 
-    <section class="panel og" aria-label="Zona">
-      <h3>Zona</h3>
+    <details class="panel og gd" aria-label="Zona">
+      <summary>Zona</summary>
+      <div class="gb">
       <div class="grid">
         <div class="field"><span>Regione</span><select id="o_reg"></select></div>
         <div class="field"><span>Provincia</span><select id="o_prov"></select></div>
@@ -157,10 +158,12 @@ try{var o=JSON.parse(localStorage.getItem('pg.opts')||'{}');['quick','hero','ver
         <div class="field"><span>Deviazione sul percorso</span><select id="o_detour"></select></div>
       </div>
       <p class="hint">Dalla tua posizione (km 0) cerco i distributori entro il raggio scelto. La zona resta quella che hai scelto anche alla prossima apertura.</p>
-    </section>
+      </div>
+    </details>
 
-    <section class="panel og" aria-label="Carburante e auto">
-      <h3>Carburante e auto</h3>
+    <details class="panel og gd" aria-label="Carburante e auto">
+      <summary>Carburante e auto</summary>
+      <div class="gb">
       <div class="field wide"><span>Carburante</span>
         <div class="seg" id="o_fuel" role="group" aria-label="Carburante">
           <button type="button" data-f="B">Benzina</button><button type="button" data-f="D">Gasolio</button><button type="button" data-f="G">GPL</button><button type="button" data-f="M">Metano</button>
@@ -176,20 +179,24 @@ try{var o=JSON.parse(localStorage.getItem('pg.opts')||'{}');['quick','hero','ver
       <div class="field"><span>Servizi richiesti</span>
         <div class="chips" id="chipsSv2" role="group" aria-label="Servizi richiesti"></div></div>
       <p class="hint">I servizi arrivano da OpenStreetMap, scritta dai volontari: se uno manca, il distributore potrebbe averlo comunque. Puoi segnarlo tu aprendo la scheda del distributore.</p>
-    </section>
+      </div>
+    </details>
 
-    <section class="panel og" aria-label="Aspetto">
-      <h3>Aspetto</h3>
+    <details class="panel og gd" aria-label="Aspetto">
+      <summary>Aspetto</summary>
+      <div class="gb">
       <div class="field"><span>Modo</span>
         <div class="seg" id="segThemeMode" role="group" aria-label="Modo">
           <button type="button" data-tm="auto">Come il telefono</button><button type="button" data-tm="light">Chiaro</button><button type="button" data-tm="dark">Scuro</button>
         </div></div>
       <div class="field"><span>Colore</span><div class="swatches" id="swatches"></div></div>
       <p class="hint">I camouflage sono sempre scuri, per leggere bene i prezzi.</p>
-    </section>
+      </div>
+    </details>
 
-    <section class="panel og" aria-label="Cosa mostrare">
-      <h3>Cosa mostrare</h3>
+    <details class="panel og gd" aria-label="Cosa mostrare">
+      <summary>Cosa mostrare</summary>
+      <div class="gb">
       <p class="hint">Spegni quello che non ti serve: l'app si apre più leggera e pulita.</p>
       <label class="tg"><span>Filtri veloci in alto<small>Carburante, modalità e servizi sotto il titolo</small></span><input type="checkbox" data-o="quick"></label>
       <label class="tg"><span>Scheda grande col prezzo minimo<small>Il prezzo più basso e le medie</small></span><input type="checkbox" data-o="hero"></label>
@@ -202,7 +209,8 @@ try{var o=JSON.parse(localStorage.getItem('pg.opts')||'{}');['quick','hero','ver
         <div class="seg" id="o_speed" role="group" aria-label="Velocità della fascia">
           <button type="button" data-sp="slow">Lenta</button><button type="button" data-sp="normal">Normale</button><button type="button" data-sp="fast">Veloce</button>
         </div></div>
-    </section>
+      </div>
+    </details>
 
     <section class="panel og" aria-label="Car Hub">
       <h3>Car Hub</h3>
