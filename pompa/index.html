@@ -236,14 +236,18 @@ try{var o=JSON.parse(localStorage.getItem('pg.opts')||'{}');['quick','hero','ver
     <section class="panel og" aria-label="Dati">
       <h3>Dati e informazioni</h3>
       <p class="hint" id="optData">—</p>
-      <details class="opt">
-        <summary>Se i prezzi automatici non ci sono</summary>
+    </section>
+
+    <details class="panel og gd" aria-label="Prezzi manuali">
+      <summary>Se i prezzi automatici non ci sono</summary>
+      <div class="gb">
         <p class="hint">Scarica dal sito del Ministero i file «Prezzi alle 8» e «Anagrafica impianti» e trascinali qui: li leggo direttamente nel telefono.</p>
         <div class="drop" id="drop"><span>Trascina qui i file CSV</span><label class="btn small" for="files">Scegli i file</label><input id="files" type="file" accept=".csv,.txt,text/csv" multiple></div>
         <p class="msg" id="msg" role="status" aria-live="polite"></p>
-      </details>
-      <button class="btn ghost" id="btnReset" type="button">Ripristina le impostazioni iniziali</button>
-    </section>
+      </div>
+    </details>
+
+    <button class="btn ghost" id="btnReset" type="button">Ripristina le impostazioni iniziali</button>
   </section>
 
   <footer>
