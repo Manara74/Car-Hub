@@ -130,3 +130,13 @@ details.dl-card .dl-body{display:flex;flex-direction:column;gap:12px;padding:0 1
 .tg2{border-top:0;padding:0;align-self:end;min-height:46px;gap:8px}
 .tg2 span{font-size:.9rem}
 #tOut b{font-size:1.25rem}
+
+.mrow,.malert{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:var(--surface);color:var(--ink);text-decoration:none;font-size:.9rem}
+.mrow .go{color:var(--accent);font-weight:600;font-size:.82rem;flex:none}
+.mrow b{font-weight:700}
+.malert{flex-direction:column;align-items:flex-start;gap:2px;border-left:4px solid var(--accent)}
+.malert.warn{border-left-color:var(--warn)}
+.malert.late{border-left-color:var(--bad)}
+.malert b{font-size:.9rem}
+.malert span{color:var(--muted);font-size:.8rem}
+.mrow[hidden],.malert[hidden]{display:none}

@@ -101,25 +101,30 @@ function route() {
   if (v === 'menu') renderMenu(); if (v === 'scadenze') renderScad(); if (v === 'diario') renderDiario(true); if (v === 'mezzi') renderMezzi(); if (v === 'spese') renderSpese(true); if (v === 'statistiche') renderStat(); if (v === 'backup') renderBackup(); if (v === 'strada') { renderStrada(); tPriceTouched = false; tripInit(); stradaT = setInterval(renderSosta, 1000); }
   window.scrollTo(0, 0);
 }
+let menuSeen = false;
 function renderMenu() {
   const al = alerts(), b = $('scadBadge');
   b.hidden = !al.length; b.textContent = String(al.length); b.classList.toggle('warn', !al.some(x => x.c === 'late'));
-  const m = $('menuAlert');
-  m.hidden = !al.length;
-  m.innerHTML = al.length ? '<b>' + (al.length === 1 ? '1 scadenza da controllare' : al.length + ' scadenze da controllare') + ':</b> ' + esc(al.slice(0, 2).map(x => cap(x.t)).join(' · ')) + (al.length > 2 ? '…' : '') : '';
+  const cv0 = cur(), rows = [];
+  rows.push('<a class="malert" href="#mezzi"><b>Mezzo in uso: ' + esc(vName(cv0)) + '</b><span>' + (cv0.km != null ? fmtN(cv0.km, 0) + ' km · ' : '') + (D.vehicles.length > 1 ? D.vehicles.length + ' mezzi, tocca per cambiare' : 'tocca per modificare') + '</span></a>');
+  al.forEach(x => rows.push('<a class="malert ' + (x.c === 'late' ? 'late' : 'warn') + '" href="#scadenze"><b>' + esc(cap(x.t)) + '</b><span>Scadenza: tocca per aprire</span></a>'));
+  const lb0 = lastBackup(), needB = dataItems() >= 5 && (!lb0 || Date.now() - lb0 > 30 * 86400000);
+  if (needB) rows.push('<a class="malert" href="#backup"><b>' + (lb0 ? 'Backup vecchio di oltre 30 giorni' : 'Nessun backup dei tuoi dati') + '</b><span>Tocca per salvarlo ora</span></a>');
+  $('menuBody').innerHTML = rows.join('');
+  const nAl = al.length + (needB ? 1 : 0);
+  $('menuSum').textContent = nAl ? (nAl === 1 ? '1 da vedere' : nAl + ' da vedere') : 'tutto in ordine';
+  if (!menuSeen) { $('menuBox').open = nAl > 0; menuSeen = true; }
   const vs = D.vehicles, nb = vs.reduce((a, x) => a + Object.keys(x.parts || {}).filter(k => x.parts[k].buy).length, 0);
   $('mezziSub').textContent = (vs.length === 1 ? vName(vs[0]) : vs.length + ' mezzi: ' + vs.map(vName).join(', ')) + (nb ? ' · ' + nb + ' da comprare' : '');
   const lf = cur().fills.slice().sort((a, b) => a.date.localeCompare(b.date) || a.km - b.km), st = fillStats(cur());
-  $('diaSub').textContent = !lf.length ? 'Litri, spesa e consumi reali' : st.avg != null ? 'Consumo medio ' + fmtN(st.avg, 1) + ' l/100 km' : lf.length + (lf.length === 1 ? ' rifornimento registrato' : ' rifornimenti registrati');
+  $('diaSub').textContent = !lf.length ? 'Litri, spesa e consumi' : st.avg != null ? 'Consumo medio ' + fmtN(st.avg, 1) + ' l/100 km' : lf.length + (lf.length === 1 ? ' rifornimento registrato' : ' rifornimenti registrati');
   const cv = cur(), mk = iso(new Date()).slice(0, 7);
   const mm = cv.expenses.filter(x => x.date.slice(0, 7) === mk).reduce((a, x) => a + x.amount, 0);
-  $('spesaSub').textContent = cv.expenses.length ? 'Questo mese ' + fmtN(mm, 2) + ' € (carburante escluso)' : 'Manutenzione, gomme, pedaggi, multe';
+  $('spesaSub').textContent = cv.expenses.length ? 'Questo mese ' + fmtN(mm, 2) + ' € (carburante escluso)' : 'Manutenzione, gomme, pedaggi';
   const tot12 = periodTotals(cv, 365);
-  $('statSub').textContent = tot12.total > 0 ? 'Ultimi 12 mesi: ' + fmtN(tot12.total, 0) + ' € in tutto' : 'Quanto spendi, consumi, costo al km';
-  const lb = lastBackup(), bk = $('bkAlert'), need = dataItems() >= 5 && (!lb || Date.now() - lb > 30 * 86400000);
-  bk.hidden = !need; bk.innerHTML = need ? (lb ? 'L\'ultimo backup risale a più di 30 giorni fa. ' : 'Non hai ancora fatto un backup dei tuoi dati. ') + '<a href="#backup">Salvalo ora</a>' : '';
+  $('statSub').textContent = tot12.total > 0 ? 'Ultimi 12 mesi: ' + fmtN(tot12.total, 0) + ' € in tutto' : 'Quanto spendi e consumi';
   $('stradaSub').textContent = stradaSub(cur());
-  $('scadSub').textContent = al.length ? cap(al[0].t) : 'Bollo, assicurazione, revisione, tagliando, gomme';
+  $('scadSub').textContent = al.length ? cap(al[0].t) : 'Bollo, assicurazione, revisione';
 }
 function renderScad() {
   const v = cur(); renderVbars();
@@ -470,7 +475,7 @@ function leftTxt(ms) {
 function stradaSub(v) {
   if (v.sosta && v.sosta > Date.now()) return 'Sosta: scade alle ' + hhmm(v.sosta);
   if (v.park) return 'Parcheggiata alle ' + hhmm(v.park.at);
-  return 'Parcheggio, sosta, emergenza, costo del viaggio';
+  return 'Parcheggio, sosta, emergenza';
 }
 function parkWhen(at) {
   const d = new Date(at), same = iso(d) === iso(new Date());
