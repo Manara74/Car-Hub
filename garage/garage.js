@@ -400,14 +400,14 @@ function renderStat() {
   const fuel = sum('fuel'), other = sum('other'), total = fuel + other, lt = sum('lt'), il = sum('il'), id = sum('id'), ic = sum('ic'), n = sum('n');
   const withSpan = S.filter(x => x.span > 0), span = withSpan.reduce((a, x) => a + x.span, 0), spanCost = withSpan.reduce((a, x) => a + x.total, 0);
   const cell = (k, val, sub) => '<div><small>' + k + '</small><b class="num">' + val + '</b>' + (sub ? '<em>' + sub + '</em>' : '') + '</div>';
-  const c1 = cell('Spesa totale', fmtN(total, 2) + ' €', 'carburante ' + fmtN(fuel, 0) + ' · altre ' + fmtN(other, 0));
-  const c2 = cell('Costo al km', span > 0 ? fmtN(spanCost / span, 3) + ' €' : '—', span > 0 ? 'su ' + fmtN(span, 0) + ' km' : 'servono più chilometri');
-  const c4 = cell('Prezzo medio', lt > 0 ? fmtN(fuel / lt, 3) + ' €/L' : '—', lt > 0 ? fmtN(lt, 1) + ' litri' : '');
-  const c6 = cell('Rifornimenti', String(n), n ? 'in media ' + fmtN(fuel / n, 0) + ' €' : '');
-  $('stCards').innerHTML = multi
-    ? c1 + c2 + cell('Mezzi', String(S.length), S.map(x => x.v.type === 'moto' ? 'moto' : 'auto').join(' · ')) + c4 + cell('Km misurati', span > 0 ? fmtN(span, 0) : '—', 'somma dei mezzi') + c6
-    : c1 + c2 + cell('Consumo medio', id > 0 ? fmtN(il / id * 100, 1) + ' l/100 km' : '—', id > 0 ? fmtN(id / il, 1) + ' km/l' : 'servono due pieni') + c4 +
-      cell('Carburante al km', id > 0 ? fmtN(ic / id, 3) + ' €' : '—', 'solo carburante') + c6;
+  const co = renderCost(list, from);
+  const cs = [cell('Spesa totale', fmtN(total, 2) + ' €', 'carburante ' + fmtN(fuel, 0) + ' · altre ' + fmtN(other, 0)),
+    cell('Al mese', fmtN(co.pm, 0) + ' €', 'circa ' + fmtN(co.pm * 12, 0) + ' € l\'anno' + (co.days < 180 ? ' (indicativo)' : '')),
+    cell('Costo al km', span > 0 ? fmtN(spanCost / span, 3) + ' €' : '—', span > 0 ? 'su ' + fmtN(span, 0) + ' km' : 'servono più chilometri'),
+    multi ? cell('Mezzi', String(S.length), plural(n, 'rifornimento', 'rifornimenti'))
+      : cell('Consumo medio', id > 0 ? fmtN(il / id * 100, 1) + ' l/100 km' : '—', id > 0 ? fmtN(id / il, 1) + ' km/l' + (lt > 0 ? ' · ' + fmtN(fuel / lt, 3) + ' €/L' : '') : 'servono due pieni'),
+    co.cmp, co.worst];
+  $('stCards').innerHTML = cs.join('');
   // confronto tra mezzi
   $('stVehBox').hidden = !multi;
   if (multi) $('stVeh').innerHTML = S.slice().sort((a, b) => b.total - a.total).map(x =>
@@ -421,14 +421,16 @@ function renderStat() {
     v.fills.forEach(x => { const m = months.find(y => y.k === x.date.slice(0, 7)); if (m) m.f += x.total; });
     v.expenses.forEach(x => { const m = months.find(y => y.k === x.date.slice(0, 7)); if (m) m.o += x.amount; });
   });
-  const MI = 'GFMAMGLASOND', mx = Math.max(1, ...months.map(m => m.f + m.o));
-  const W = 360, H = 170, L = 6, R = 6, T = 22, B = 22, bw = (W - L - R) / 12;
-  let g = '<svg viewBox="0 0 ' + W + ' ' + H + '" class="svgc" role="img" aria-label="Spesa mese per mese"><text x="' + L + '" y="12" class="ax">fino a ' + fmtN(mx, 0) + ' € al mese</text>';
-  months.forEach((m, i) => {
-    const x = L + i * bw + 3, w = bw - 6, hf = m.f / mx * (H - T - B), ho = m.o / mx * (H - T - B), y0 = H - B;
+  const first = months.findIndex(m => m.f + m.o > 0), ms = first < 0 ? months : months.slice(Math.min(first, 10));
+  const MI = ['gen', 'feb', 'mar', 'apr', 'mag', 'giu', 'lug', 'ago', 'set', 'ott', 'nov', 'dic'], mx = Math.max(1, ...ms.map(m => m.f + m.o)), nm = ms.length;
+  const W = 360, H = 170, L = 6, R = 6, T = 22, B = 22, bw = (W - L - R) / nm, bp = Math.min(10, bw * .2);
+  let g = '<svg viewBox="0 0 ' + W + ' ' + H + '" class="svgc" role="img" aria-label="Spesa mese per mese">';
+  ms.forEach((m, i) => {
+    const x = L + i * bw + bp / 2, w = bw - bp, hf = m.f / mx * (H - T - B), ho = m.o / mx * (H - T - B), y0 = H - B, tt = m.f + m.o;
     if (m.f > 0) g += '<rect x="' + x.toFixed(1) + '" y="' + (y0 - hf).toFixed(1) + '" width="' + w.toFixed(1) + '" height="' + hf.toFixed(1) + '" rx="2" fill="var(--accent)"/>';
     if (m.o > 0) g += '<rect x="' + x.toFixed(1) + '" y="' + (y0 - hf - ho).toFixed(1) + '" width="' + w.toFixed(1) + '" height="' + ho.toFixed(1) + '" rx="2" fill="var(--warn)"/>';
-    g += '<text x="' + (x + w / 2).toFixed(1) + '" y="' + (H - 7) + '" text-anchor="middle" class="ax">' + MI[m.m] + '</text>';
+    if (tt > 0 && nm <= 8) g += '<text x="' + (x + w / 2).toFixed(1) + '" y="' + (y0 - hf - ho - 4).toFixed(1) + '" text-anchor="middle" class="ax">' + fmtN(tt, 0) + '</text>';
+    g += '<text x="' + (x + w / 2).toFixed(1) + '" y="' + (H - 7) + '" text-anchor="middle" class="ax">' + (nm <= 8 ? MI[m.m] : MI[m.m].charAt(0)) + '</text>';
   });
   $('stMonths').innerHTML = g + '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + (H - B) + '" y2="' + (H - B) + '" stroke="var(--line)"/></svg><p class="legend"><i style="background:var(--accent)"></i>Carburante <i style="background:var(--warn)"></i>Altre spese</p>';
   // ripartizione
@@ -454,8 +456,8 @@ function renderStat() {
     g2 += '<text x="' + L2 + '" y="' + (H2 - 6) + '" class="ax">' + fmtDate(iso(d0)).slice(0, 5) + '</text><text x="' + (W2 - R2) + '" y="' + (H2 - 6) + '" text-anchor="end" class="ax">' + fmtDate(iso(d1)).slice(0, 5) + '</text></svg>';
     $('stCons').innerHTML = g2 + (ser.length > 1 ? '<p class="legend">' + ser.map(x => '<i style="background:' + x.col + '"></i>' + esc(x.name)).join(' ') + '</p>' : '');
   }
-  CTX = { list, from }; renderCost(list, from); renderStationStats(list, from); loadMarket(); renderMarket(list); renderSpunti(list);
-  $('stNote').textContent = 'Il costo al km usa i chilometri tra il primo e l\'ultimo rifornimento o spesa con chilometri nel periodo' + (multi ? ', mezzo per mezzo, e poi li somma' : '') + '. Le statistiche si aggiornano da sole con quello che registri.';
+  CTX = { list, from }; renderStationStats(list, from); loadMarket(); renderMarket(list); renderSpunti(list);
+  $('stNote').textContent = 'Il costo al km usa i chilometri tra il primo e l\'ultimo rifornimento o spesa con chilometri nel periodo' + (multi ? ', mezzo per mezzo, e poi li somma' : '') + '.';
 }
 
 
@@ -622,7 +624,7 @@ function renderMarket(list) {
     c += '<div class="wide2"><small>IN EURO, SU ' + plural(my.length, 'RIFORNIMENTO', 'RIFORNIMENTI') + '</small><b class="num">' + (tot > 0 ? '+' : '−') + fmtN(Math.abs(tot), 2) + ' €</b><em>' + (tot > 0 ? 'spesi in più' : 'risparmiati') + ' rispetto alla media di ' + esc(rname) + '</em></div>';
   }
   $('mkCards').innerHTML = c;
-  $('mkNote').textContent = (my.length ? '' : 'Registra rifornimenti di questo carburante nel diario per confrontarli con il mercato. ') + 'La media è di ' + rname + (rname === 'Italia' && region === 'ALL' ? ' (scegli la zona in Pompa Giusta per vedere la tua regione)' : '') + ', esclude gli impianti autostradali e la modalità è quella scelta qui sopra. Lo storico parte dal ' + fmtDate(days[0]) + '.';
+  $('mkNote').textContent = (my.length ? '' : 'Registra rifornimenti di questo carburante nel diario per confrontarli. ') + 'Media di ' + rname + (rname === 'Italia' && region === 'ALL' ? ' (scegli la zona in Pompa Giusta per la tua regione)' : '') + ', senza autostrade. Storico dal ' + fmtDate(days[0]) + '.';
 }
 
 
@@ -643,23 +645,20 @@ function renderCost(list, from) {
   const start = dates.length && dates[0] > from ? dates[0] : from;
   const days = Math.max(1, dayDiff(start, today) + 1), cur2 = sumRange(list, start, tomorrow);
   const cell = (k, v, sub) => '<div><small>' + k + '</small><b class="num">' + v + '</b>' + (sub ? '<em>' + sub + '</em>' : '') + '</div>';
-  const perMonth = cur2.t / days * 30.44;
-  let c = cell('Al mese', fmtN(perMonth, 0) + ' €', 'media del periodo') + cell('Al giorno', fmtN(cur2.t / days, 2) + ' €', plural(days, 'giorno', 'giorni') + ' considerati');
-  c += cell('In un anno', fmtN(perMonth * 12, 0) + ' €', days < 180 ? 'indicativo: ancora pochi mesi di dati' : 'se continui così');
+  const pm = cur2.t / days * 30.44; let cmp;
   if (STP !== 'all') {
     const p0 = new Date(from + 'T12:00:00'); p0.setDate(p0.getDate() - parseInt(STP, 10));
     const prev = sumRange(list, iso(p0), from), dl = prev.t > 0 ? (cur2.t - prev.t) / prev.t * 100 : null;
-    c += dl == null ? cell('Periodo precedente', '—', 'nessun dato prima') : cell('Rispetto a prima', (dl >= 0 ? '+' : '−') + fmtN(Math.abs(dl), 0) + '%', 'prima: ' + fmtN(prev.t, 0) + ' €');
-  } else c += cell('Totale', fmtN(cur2.t, 0) + ' €', 'dall\'inizio');
-  // mese più caro (su tutto lo storico)
+    cmp = dl == null ? cell('Rispetto a prima', '—', 'nessun dato prima') : cell('Rispetto a prima', (dl >= 0 ? '+' : '−') + fmtN(Math.abs(dl), 0) + '%', 'prima: ' + fmtN(prev.t, 0) + ' €');
+  } else cmp = cell('Giorni considerati', String(days), 'dall\'inizio');
   const mm = {}; list.forEach(v => { v.fills.forEach(x => { mm[x.date.slice(0, 7)] = (mm[x.date.slice(0, 7)] || 0) + x.total; }); v.expenses.forEach(x => { mm[x.date.slice(0, 7)] = (mm[x.date.slice(0, 7)] || 0) + x.amount; }); });
   const mk = Object.keys(mm).filter(k => k + '-31' >= start).sort((a, b) => mm[b] - mm[a])[0];
-  if (mk) { const nm = new Date(mk + '-15T12:00:00').toLocaleDateString('it-IT', { month: 'long', year: 'numeric' }); c += cell('Mese più caro', fmtN(mm[mk], 0) + ' €', cap(nm)); }
-  $('coCards').innerHTML = c;
+  let worst = cell('Mese più caro', '—', '');
+  if (mk) { const nm = new Date(mk + '-15T12:00:00').toLocaleDateString('it-IT', { month: 'long', year: 'numeric' }); worst = cell('Mese più caro', fmtN(mm[mk], 0) + ' €', cap(nm)); }
   const tot = cur2.t;
-  $('coSplit').innerHTML = tot > 0 ? [['Costi fissi', cur2.fx, 'bollo, assicurazione, revisione', 'var(--warn)'], ['Costi variabili', cur2.va, 'dipendono da come usi il mezzo: carburante, manutenzione, gomme, pedaggi…', 'var(--accent)']].map(([n, a, s, col]) =>
-    '<div class="bar"><div class="bl"><span>' + n + '</span><b class="num">' + fmtN(a, 0) + ' € · ' + fmtN(a / tot * 100, 0) + '%</b></div><div class="bt"><i style="width:' + (a / tot * 100).toFixed(1) + '%;background:' + col + '"></i></div><small class="hint">' + s + '</small></div>').join('') : '';
-  $('coNote').textContent = 'Mette insieme carburante e tutte le spese registrate (anche i rinnovi di bollo, assicurazione, revisione e gomme). Il confronto «rispetto a prima» usa un periodo lungo quanto quello scelto, subito precedente.';
+  $('coSplit').textContent = tot > 0 ? 'Costi fissi (bollo, assicurazione, revisione): ' + fmtN(cur2.fx, 0) + ' € · ' + fmtN(cur2.fx / tot * 100, 0) + '%. Costi variabili: ' + fmtN(cur2.va, 0) + ' € · ' + fmtN(cur2.va / tot * 100, 0) + '%.' : '';
+  $('coNote').textContent = 'Il totale mette insieme carburante e tutte le spese registrate. «Al mese» è la media sul periodo; «rispetto a prima» lo confronta con un periodo uguale subito precedente.';
+  return { pm, days, cmp, worst };
 }
 
 
@@ -967,7 +966,7 @@ function renderStationStats(list, from) {
   box.hidden = false;
   const allL = fills.filter(x => x.date >= from && x.fuel === fuel && x.liters > 0), avg = allL.reduce((a, x) => a + x.total, 0) / allL.reduce((a, x) => a + x.liters, 0);
   $('stStnList').innerHTML = rows.map(r => { const d = (r.p - avg) * 100; return '<div class="vrow"><div class="vi"><b>' + esc(r.name) + '</b><small>' + plural(r.n, 'rifornimento', 'rifornimenti') + ' · ' + fmtN(r.l, 0) + ' litri</small></div><div style="text-align:right"><b class="num">' + fmtN(r.p, 3) + ' €/L</b><br><small style="color:var(' + (d <= -0.05 ? '--good' : d >= 0.05 ? '--bad' : '--muted') + ')">' + (Math.abs(d) < 0.05 ? 'come la tua media' : fmtN(Math.abs(d), 1) + ' cent ' + (d > 0 ? 'in più' : 'in meno')) + '</small></div></div>'; }).join('');
-  $('stStnNote').textContent = 'Solo ' + FN[fuel].toLowerCase() + ', prezzo medio che hai pagato in ogni distributore e differenza dalla tua media (' + fmtN(avg, 3) + ' €/L). Registra il distributore nel diario per vederli qui.' + (rows.length < 2 ? ' Servono almeno due distributori diversi per un confronto.' : '');
+  $('stStnNote').textContent = 'Solo ' + FN[fuel].toLowerCase() + ': prezzo medio per distributore e differenza dalla tua media (' + fmtN(avg, 3) + ' €/L).' + (rows.length < 2 ? ' Servono almeno due distributori diversi.' : '');
   STN_BEST = rows.length >= 2 ? { best: rows[0], avgRest: (allL.reduce((a, x) => a + x.total, 0) - rows[0].c) / (allL.reduce((a, x) => a + x.liters, 0) - rows[0].l), fuel } : null;
 }
 let STN_BEST = null;
