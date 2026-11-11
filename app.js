@@ -723,12 +723,12 @@ function renderNews() {
 /* ---------- pagina Opzioni ---------- */
 let fromHub = false; /* Opzioni aperte dalla rotella di Car Hub: alla chiusura si torna al menu */
 let optScroll = 0;
-function openOpt() {
+function openOpt(restore) {
   if (!$('optPanel').hidden) return;
   optScroll = window.scrollY;
   syncControls(); applyTheme(); applyOpts();
   $('optPanel').hidden = false; document.documentElement.classList.add('optmode');
-  try { history.pushState({ opt: 1 }, ''); } catch (e) { /* senza cronologia si chiude col pulsante */ }
+  try { if (restore) history.replaceState({ opt: 1, hub: fromHub }, ''); else history.pushState({ opt: 1, hub: fromHub }, ''); } catch (e) { /* senza cronologia si chiude col pulsante */ }
   window.scrollTo(0, 0);
 }
 function closeOpt() {
@@ -847,7 +847,7 @@ function wire() {
   const tv = $('ttrack');
   ['pointerdown', 'touchstart'].forEach(n => $('ticker').addEventListener(n, () => tv.classList.add('paused'), { passive: true }));
   ['pointerup', 'pointercancel', 'touchend', 'touchcancel'].forEach(n => $('ticker').addEventListener(n, () => setTimeout(() => tv.classList.remove('paused'), 2500), { passive: true }));
-  $('btnOpt').addEventListener('click', openOpt);
+  $('btnOpt').addEventListener('click', () => openOpt());
   $('btnCloseOpt').addEventListener('click', () => { if (history.state && history.state.opt) history.back(); else closeOpt(); });
   window.addEventListener('popstate', () => { if (!$('optPanel').hidden) closeOpt(); });
   document.querySelectorAll('input[data-o]').forEach(c => c.addEventListener('change', () => {
@@ -878,6 +878,7 @@ function wire() {
   $('o_detour').innerHTML = DETOURS.map(d => '<option value="' + d + '">' + (d < 1 ? (d * 1000) + ' m' : d + ' km') + '</option>').join('');
   wire(); wireTheme(); applyOpts(); syncControls(); setTab(S.tab);
   if (location.hash === '#opzioni') { fromHub = true; try { history.replaceState(null, '', location.pathname + location.search); } catch (e) { /* ok */ } openOpt(); }
+  else if (history.state && history.state.opt) { fromHub = !!history.state.hub; openOpt(true); } /* pagina ricaricata mentre le Opzioni erano aperte */
   try { await loadAll(); }
   catch (e) {
     const c = $('chipData'); c.className = 'chip warn'; c.textContent = 'Prezzi non disponibili';
