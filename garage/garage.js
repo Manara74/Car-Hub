@@ -200,7 +200,7 @@ function fillPrice() {
 }
 function resetForm(keepMsg) {
   const v = cur(), last = v.fills.slice().sort(byDate).pop();
-  editId = null; $('fillTitle').textContent = 'Nuovo rifornimento'; $('btnFill').textContent = 'Salva il rifornimento'; $('btnFillCancel').hidden = true;
+  fSt = null; renderStChip(); editId = null; $('fillTitle').textContent = 'Nuovo rifornimento'; $('btnFill').textContent = 'Salva il rifornimento'; $('btnFillCancel').hidden = true;
   $('fDate').value = iso(new Date()); $('fKm').value = ''; $('fL').value = ''; $('fTot').value = ''; $('fNote').value = ''; $('fFull').checked = true;
   $('fFuel').value = last ? last.fuel : 'B'; $('fKm').placeholder = last ? 'Ultimo: ' + fmtN(last.km, 0) : 'Contachilometri';
   if (!keepMsg) $('fillMsg').textContent = '';
@@ -226,7 +226,7 @@ function renderDiario(reset) {
   $('fillList').innerHTML = f.length ? f.map(x => {
     const r = st.res.get(x.id);
     const cons = r ? fmtN(r.cons, 1) + ' l/100 km · ' + fmtN(r.dist, 0) + ' km dal pieno precedente' : x.full ? 'Primo pieno: il consumo parte dal prossimo' : 'Pieno parziale';
-    return '<div class="fill" data-id="' + esc(x.id) + '"><div class="ft"><b>' + fmtDate(x.date) + '</b><span>' + esc(FUELN[x.fuel] || x.fuel) + (x.note ? ' · ' + esc(x.note) : '') + '</span></div>' +
+    return '<div class="fill" data-id="' + esc(x.id) + '"><div class="ft"><b>' + fmtDate(x.date) + '</b><span>' + esc(FUELN[x.fuel] || x.fuel) + (x.note ? ' · ' + esc(x.note) : '') + '</span></div>' + (x.sn ? '<div class="fk">' + esc(x.sn) + '</div>' : '') +
       '<div class="fv"><span class="num">' + fmtN(x.liters, 2) + ' L</span><span class="num">' + fmtN(x.total, 2) + ' €</span><span class="num">' + fmtN(x.total / x.liters, 3) + ' €/L</span></div>' +
       '<div class="fk">' + fmtN(x.km, 0) + ' km · ' + esc(cons) + '</div>' +
       '<div class="dl-acts"><button type="button" class="btn small ghost" data-act="edit">Modifica</button><button type="button" class="btn small ghost danger" data-act="del">Elimina</button></div></div>';
@@ -245,6 +245,7 @@ function saveFill(e) {
   const bad = others.find(x => (x.date < date && x.km > km) || (x.date > date && x.km < km));
   if (bad) { m.textContent = 'I chilometri non tornano con il rifornimento del ' + fmtDate(bad.date) + ' (' + fmtN(bad.km, 0) + ' km). Controlla data e chilometri.'; return; }
   const rec = { id: editId || uid(), date, km, liters: Math.round(l * 100) / 100, total: Math.round(t * 100) / 100, fuel: $('fFuel').value, full: $('fFull').checked, note: $('fNote').value.trim() };
+  if (fSt) { rec.sid = fSt.id; rec.sn = fSt.name; }
   if (editId) v.fills = v.fills.map(x => x.id === editId ? rec : x); else v.fills.push(rec);
   if (v.km == null || km > v.km) v.km = km;
   save(); resetForm(true); m.className = 'msg'; m.textContent = 'Rifornimento salvato.'; renderDiario(false);
@@ -262,7 +263,7 @@ function fillAction(e) {
   if (b.dataset.act === 'edit') {
     const x = v.fills.find(y => y.id === id); if (!x) return;
     editId = id; $('fillTitle').textContent = 'Modifica rifornimento'; $('btnFill').textContent = 'Salva le modifiche'; $('btnFillCancel').hidden = false;
-    $('fDate').value = x.date; $('fKm').value = x.km; $('fL').value = x.liters; $('fTot').value = x.total; $('fFuel').value = x.fuel; $('fNote').value = x.note || ''; $('fFull').checked = !!x.full;
+    $('fDate').value = x.date; $('fKm').value = x.km; $('fL').value = x.liters; $('fTot').value = x.total; $('fFuel').value = x.fuel; $('fNote').value = x.note || ''; $('fFull').checked = !!x.full; fSt = x.sid || x.sn ? { id: x.sid || '', name: x.sn || '' } : null; renderStChip();
     $('fillMsg').textContent = ''; fillPrice(); $('fillForm').scrollIntoView({ block: 'start' });
   } else if (b.dataset.act === 'del') {
     askDel('Eliminare questo rifornimento?', 'Il rifornimento verrà eliminato dal diario. Non si può annullare.',
@@ -416,7 +417,7 @@ function renderStat() {
     g2 += '<text x="' + L2 + '" y="' + (H2 - 6) + '" class="ax">' + fmtDate(iso(d0)).slice(0, 5) + '</text><text x="' + (W2 - R2) + '" y="' + (H2 - 6) + '" text-anchor="end" class="ax">' + fmtDate(iso(d1)).slice(0, 5) + '</text></svg>';
     $('stCons').innerHTML = g2 + (ser.length > 1 ? '<p class="legend">' + ser.map(x => '<i style="background:' + x.col + '"></i>' + esc(x.name)).join(' ') + '</p>' : '');
   }
-  CTX = { list, from }; renderCost(list, from); loadMarket(); renderMarket(list); renderSpunti(list);
+  CTX = { list, from }; renderCost(list, from); renderStationStats(list, from); loadMarket(); renderMarket(list); renderSpunti(list);
   $('stNote').textContent = 'Il costo al km usa i chilometri tra il primo e l\'ultimo rifornimento o spesa con chilometri nel periodo' + (multi ? ', mezzo per mezzo, e poi li somma' : '') + '. Le statistiche si aggiornano da sole con quello che registri.';
 }
 
@@ -666,6 +667,7 @@ function renderSpunti(list) {
       if (Math.abs(d) >= 0.5) out.push([d > 0 ? 'bad' : 'good', d > 0 ? '▲' : '▼', 'Negli ultimi ' + my.length + ' rifornimenti hai pagato in media <b>' + fmtN(Math.abs(d), 1) + ' cent/L ' + (d > 0 ? 'in più' : 'in meno') + '</b> della media di zona.' + (d > 0 ? ' Con Pompa Giusta puoi cercare un distributore più conveniente.' : '')]);
     }
   }
+  if (STN_BEST) { const d = (STN_BEST.best.p - STN_BEST.avgRest) * 100; if (d <= -1) out.push(['good', '★', 'Il distributore <b>' + esc(STN_BEST.best.name) + '</b> ti costa in media <b>' + fmtN(-d, 1) + ' cent/L in meno</b> degli altri dove hai fatto il pieno.']); }
   const al = alerts(); if (al.length) out.push(['warn', '!', plural(al.length, 'scadenza richiede', 'scadenze richiedono') + ' attenzione: ' + esc(cap(al[0].t)) + (al.length > 1 ? ' e altre.' : '.')]);
   INS = out.map(x => x[2].replace(/<[^>]+>/g, '').replace(/&amp;/g, '&'));
   $('insList').innerHTML = out.length ? out.map(([c, i, t]) => '<li class="' + c + '"><i>' + i + '</i><span>' + t + '</span></li>').join('') : '<li><i>·</i><span>Per ora non ho spunti: registra qualche rifornimento in più e ne troverai.</span></li>';
@@ -683,7 +685,7 @@ function buildReport() {
   cats.sort((a, b) => b[1] - a[1]);
   const rows = [];
   list.forEach(v => {
-    v.fills.filter(x => x.date >= from).forEach(x => rows.push({ d: x.date, v: vName(v), t: 'Rifornimento', c: FN[x.fuel] || x.fuel, a: x.total, l: x.liters, p: x.total / x.liters, km: x.km, n: x.note || '' }));
+    v.fills.filter(x => x.date >= from).forEach(x => rows.push({ d: x.date, v: vName(v), t: 'Rifornimento', c: FN[x.fuel] || x.fuel, a: x.total, l: x.liters, p: x.total / x.liters, km: x.km, n: x.note || '', s: x.sn || '' }));
     v.expenses.filter(x => x.date >= from).forEach(x => rows.push({ d: x.date, v: vName(v), t: 'Spesa', c: CATN[x.cat] || x.cat, a: x.amount, l: null, p: null, km: x.km, n: x.note || '' }));
   });
   rows.sort((a, b) => a.d.localeCompare(b.d));
@@ -733,8 +735,8 @@ function exportXlsx(R) {
   sum.push([], [{ v: 'Come si divide la spesa', s: B }, { v: 'Importo (€)', s: B }, { v: '%', s: B }]);
   R.cats.forEach(c => sum.push([c[0], { v: Math.round(c[1] * 100) / 100, s: MO }, Math.round(c[1] / R.total * 1000) / 10]));
   if (R.ins.length) { sum.push([], [{ v: 'Cosa noto', s: B }]); R.ins.forEach(t => sum.push([t])); }
-  const dat = [['Data', 'Mezzo', 'Tipo', 'Categoria', 'Importo (€)', 'Litri', 'Prezzo (€/L)', 'Km', 'Nota'].map(v => ({ v, s: B }))];
-  R.rows.forEach(r => dat.push([{ v: serial(r.d), s: DT }, r.v, r.t, r.c, { v: Math.round(r.a * 100) / 100, s: MO }, r.l, r.p == null ? null : { v: Math.round(r.p * 1000) / 1000, s: PR }, r.km, r.n]));
+  const dat = [['Data', 'Mezzo', 'Tipo', 'Categoria', 'Distributore', 'Importo (€)', 'Litri', 'Prezzo (€/L)', 'Km', 'Nota'].map(v => ({ v, s: B }))];
+  R.rows.forEach(r => dat.push([{ v: serial(r.d), s: DT }, r.v, r.t, r.c, r.s, { v: Math.round(r.a * 100) / 100, s: MO }, r.l, r.p == null ? null : { v: Math.round(r.p * 1000) / 1000, s: PR }, r.km, r.n]));
   const ns = 'xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"';
   const files = [
     ['[Content_Types].xml', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/worksheets/sheet2.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>'],
@@ -743,7 +745,7 @@ function exportXlsx(R) {
     ['xl/_rels/workbook.xml.rels', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet2.xml"/><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>'],
     ['xl/styles.xml', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet ' + ns + '><numFmts count="1"><numFmt numFmtId="164" formatCode="0.000"/></numFmts><fonts count="2"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font></fonts><fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="5"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"/><xf numFmtId="14" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/><xf numFmtId="2" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/><xf numFmtId="164" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/></cellXfs></styleSheet>'],
     ['xl/worksheets/sheet1.xml', sheetXml(sum, [34, 22, 10])],
-    ['xl/worksheets/sheet2.xml', sheetXml(dat, [12, 16, 14, 26, 12, 9, 12, 10, 30])]
+    ['xl/worksheets/sheet2.xml', sheetXml(dat, [12, 16, 14, 26, 34, 12, 9, 12, 10, 30])]
   ];
   saveBlob(zip(files), 'car-hub-riepilogo-' + iso(new Date()) + '.xlsx');
 }
@@ -875,6 +877,64 @@ function lastCost(v, k) {
   return '<p class="kmline">Ultima spesa: <b>' + fmtN(ex[0].amount, 2) + ' €</b> il ' + fmtDate(ex[0].date) + ' · ultimi 12 mesi: ' + fmtN(y, 2) + ' €</p>';
 }
 
+
+/* ---------- distributori di Pompa Giusta nel diario ---------- */
+let fSt = null, STN = null, STNP = null;
+const stNorm = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+function loadStations() {
+  if (STNP) return STNP;
+  STNP = fetch('data/meta.json', { cache: 'no-store' }).then(r => r.json()).then(m => fetch('data/pompe.json?v=' + encodeURIComponent(m.v))).then(r => r.json())
+    .then(d => { STN = (d.s || []).map(r => ({ id: r.i, brand: r.b || 'Altro', name: r.n || '', addr: r.a || '', comune: r.c || '', prov: r.p, p: r.x || {} })); STN.forEach(s => { s.k = stNorm(s.brand + ' ' + s.name + ' ' + s.addr + ' ' + s.comune); }); return STN; })
+    .catch(() => { STNP = null; return null; });
+  return STNP;
+}
+const stLabel = s => s.brand + ' · ' + (s.addr ? s.addr + ', ' : '') + s.comune;
+function renderStChip() {
+  $('fStName').hidden = !fSt; $('btnStClear').hidden = !fSt; $('fStName').textContent = fSt ? fSt.name : '';
+  $('btnPickSt').textContent = fSt ? 'Cambia' : 'Scegli il distributore';
+}
+function stSearch() {
+  const q = stNorm($('stQ').value).trim(), box = $('stRes'), hint = $('stHint');
+  if (!STN) { box.innerHTML = ''; hint.textContent = 'Carico i distributori…'; return; }
+  let prov = ''; try { prov = (JSON.parse(localStorage.getItem('pg.prefs') || '{}')).prov || ''; } catch (e) { /* niente */ }
+  let favs = []; try { const n = (JSON.parse(localStorage.getItem('pg.user') || '{}')).notes || {}; favs = Object.keys(n).filter(id => n[id].fav); } catch (e) { /* niente */ }
+  let res;
+  if (!q) { res = STN.filter(s => favs.includes(s.id)); hint.textContent = res.length ? 'I tuoi preferiti. Scrivi per cercarne altri' + (prov ? ' in provincia di ' + (PROVL.find(x => x[0] === prov) || [0, prov])[1] : '') + '.' : 'Scrivi la marca, la via o il comune.'; }
+  else {
+    const words = q.split(/\s+/);
+    res = STN.filter(s => words.every(w => s.k.includes(w))); const inP = res.filter(s => !prov || s.prov === prov);
+    res = (inP.length ? inP : res).slice().sort((a, b) => (favs.includes(b.id) ? 1 : 0) - (favs.includes(a.id) ? 1 : 0));
+    hint.textContent = res.length ? (res.length > 30 ? 'Primi 30 risultati: scrivi di più per restringere.' : plural(res.length, 'risultato', 'risultati') + '.') : 'Nessun distributore trovato.';
+  }
+  box.innerHTML = res.slice(0, 30).map(s => '<button type="button" class="stit" data-id="' + esc(s.id) + '"><b>' + esc(s.brand) + '</b><span>' + esc((s.addr ? s.addr + ', ' : '') + s.comune) + '</span></button>').join('');
+}
+function openStPicker() {
+  $('dlgSt').hidden = false; $('stQ').value = ''; stSearch(); $('stQ').focus();
+  loadStations().then(r => { if (!r) { $('stHint').textContent = 'Non riesco a caricare i distributori: controlla la connessione.'; return; } loadMarket(); stSearch(); });
+}
+function stats_byStation(list, from, fuel) {
+  const m = new Map();
+  list.forEach(v => v.fills.forEach(x => {
+    if (x.date < from || !(x.sn || x.sid) || x.fuel !== fuel || !(x.liters > 0)) return;
+    const k = x.sid || x.sn, o = m.get(k) || { name: x.sn || k, n: 0, l: 0, c: 0 };
+    o.n++; o.l += x.liters; o.c += x.total; if (x.sn) o.name = x.sn; m.set(k, o);
+  }));
+  return [...m.values()].map(o => Object.assign(o, { p: o.c / o.l })).sort((a, b) => a.p - b.p);
+}
+function renderStationStats(list, from) {
+  const box = $('stStn'), fills = [].concat(...list.map(v => v.fills)), cnt = {};
+  fills.forEach(x => { if (x.sn || x.sid) cnt[x.fuel] = (cnt[x.fuel] || 0) + 1; });
+  const fuel = Object.keys(cnt).sort((a, b) => cnt[b] - cnt[a])[0];
+  if (!fuel) { box.hidden = true; return; }
+  const rows = stats_byStation(list, from, fuel);
+  box.hidden = false;
+  const allL = fills.filter(x => x.date >= from && x.fuel === fuel && x.liters > 0), avg = allL.reduce((a, x) => a + x.total, 0) / allL.reduce((a, x) => a + x.liters, 0);
+  $('stStnList').innerHTML = rows.map(r => { const d = (r.p - avg) * 100; return '<div class="vrow"><div class="vi"><b>' + esc(r.name) + '</b><small>' + plural(r.n, 'rifornimento', 'rifornimenti') + ' · ' + fmtN(r.l, 0) + ' litri</small></div><div style="text-align:right"><b class="num">' + fmtN(r.p, 3) + ' €/L</b><br><small style="color:var(' + (d <= -0.05 ? '--good' : d >= 0.05 ? '--bad' : '--muted') + ')">' + (Math.abs(d) < 0.05 ? 'come la tua media' : fmtN(Math.abs(d), 1) + ' cent ' + (d > 0 ? 'in più' : 'in meno')) + '</small></div></div>'; }).join('');
+  $('stStnNote').textContent = 'Solo ' + FN[fuel].toLowerCase() + ', prezzo medio che hai pagato in ogni distributore e differenza dalla tua media (' + fmtN(avg, 3) + ' €/L). Registra il distributore nel diario per vederli qui.' + (rows.length < 2 ? ' Servono almeno due distributori diversi per un confronto.' : '');
+  STN_BEST = rows.length >= 2 ? { best: rows[0], avgRest: (allL.reduce((a, x) => a + x.total, 0) - rows[0].c) / (allL.reduce((a, x) => a + x.liters, 0) - rows[0].l), fuel } : null;
+}
+let STN_BEST = null;
+
 /* ---------- eventi ---------- */
 function wire() {
   window.addEventListener('hashchange', route);
@@ -915,6 +975,12 @@ function wire() {
   });
   $('btnBuyCopy').addEventListener('click', buyCopy);
   document.querySelectorAll('[data-info="model"],[data-info="year"]').forEach(i => i.addEventListener('change', () => renderParts()));
+  $('btnPickSt').addEventListener('click', openStPicker);
+  $('btnStClear').addEventListener('click', () => { fSt = null; renderStChip(); });
+  $('btnStNo').addEventListener('click', () => { $('dlgSt').hidden = true; });
+  $('dlgSt').addEventListener('click', e => { if (e.target === $('dlgSt')) $('dlgSt').hidden = true; });
+  $('stQ').addEventListener('input', stSearch);
+  $('stRes').addEventListener('click', e => { const b = e.target.closest('.stit'); if (!b) return; const s = (STN || []).find(x => x.id === b.dataset.id); if (!s) return; fSt = { id: s.id, name: stLabel(s) }; renderStChip(); $('dlgSt').hidden = true; });
   $('btnShareLoc').addEventListener('click', shareLoc);
   $('btnAddVeh').addEventListener('click', () => {
     const x = newVehicle('', D.vehicles.some(y => y.type === 'auto') && !D.vehicles.some(y => y.type === 'moto') ? 'moto' : 'auto');

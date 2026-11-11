@@ -91,7 +91,9 @@ var r=document.documentElement;r.dataset.theme=d;r.dataset.accent=a})();
         <div class="field"><span>Carburante</span><select id="fFuel"><option value="B">Benzina</option><option value="D">Gasolio</option><option value="G">GPL</option><option value="M">Metano</option></select></div>
         <div class="field"><span>Prezzo calcolato</span><div class="calc" id="fPrice">—</div></div>
         <p class="hint wide" id="fMkt" style="grid-column:1/-1;margin:0"></p>
-        <div class="field wide"><span>Distributore o nota (facoltativo)</span><input id="fNote" type="text" maxlength="60" placeholder="Es. Tamoil Via Aurelia" autocomplete="off"></div>
+        <div class="field wide"><span>Distributore di Pompa Giusta (facoltativo)</span>
+          <div class="inline"><button class="btn small ghost" type="button" id="btnPickSt">Scegli il distributore</button><span class="chipn" id="fStName" hidden></span><button class="btn small ghost danger" type="button" id="btnStClear" hidden>Togli</button></div></div>
+        <div class="field wide"><span>Nota (facoltativa)</span><input id="fNote" type="text" maxlength="60" placeholder="Es. Tamoil Via Aurelia" autocomplete="off"></div>
       </div>
       <label class="tg"><span>Pieno completo<small>Spegni se hai messo solo una parte: i consumi restano giusti</small></span><input type="checkbox" id="fFull" checked></label>
       <div class="inline"><button class="btn" type="submit" id="btnFill">Salva il rifornimento</button><button class="btn ghost" type="button" id="btnFillCancel" hidden>Annulla modifica</button></div>
@@ -214,6 +216,7 @@ var r=document.documentElement;r.dataset.theme=d;r.dataset.accent=a})();
         <div class="gstats" id="mkCards"></div>
         <p class="hint" id="mkNote"></p>
       </div>
+      <div class="panel og" id="stStn" hidden><h3>I tuoi distributori</h3><div id="stStnList" class="vtable"></div><p class="hint" id="stStnNote"></p></div>
       <div class="panel og" id="stVehBox" hidden><h3>Confronto tra i mezzi</h3><div id="stVeh" class="vtable"></div></div>
       <div class="panel og"><h3>Spesa mese per mese</h3><div id="stMonths" class="chart"></div></div>
       <div class="panel og"><h3>Come si divide la spesa</h3><div id="stBreak" class="bars"></div></div>
@@ -312,6 +315,15 @@ var r=document.documentElement;r.dataset.theme=d;r.dataset.accent=a})();
     <h4 id="dlgDelT">Eliminare questo mezzo?</h4>
     <p id="dlgDelP"></p>
     <div class="acts"><button type="button" class="btn ghost" id="btnDelNo">Annulla</button><button type="button" class="btn danger" id="btnDelOk">Cancella</button></div>
+  </div>
+</div>
+<div class="dlg" id="dlgSt" role="dialog" aria-modal="true" aria-labelledby="dlgStT" hidden>
+  <div class="box">
+    <h4 id="dlgStT">Scegli il distributore</h4>
+    <input type="text" id="stQ" placeholder="Marca, via o comune" autocomplete="off">
+    <div id="stRes" class="stres"></div>
+    <p class="hint" id="stHint"></p>
+    <div class="acts"><button type="button" class="btn ghost" id="btnStNo">Chiudi</button></div>
   </div>
 </div>
 <script src="version.js"></script>

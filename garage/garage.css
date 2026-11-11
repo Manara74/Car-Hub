@@ -86,3 +86,8 @@ input[type=date]{font:inherit;color:var(--ink);background:var(--bg);border:1px s
 .prow .chk{display:flex;align-items:center;gap:6px;font-size:.8rem;color:var(--muted);white-space:nowrap}
 .prow .chk input{width:20px;height:20px;accent-color:var(--accent)}
 .prow .chk i{font-style:normal}
+.chipn{font-size:.84rem;padding:6px 10px;border-radius:999px;background:color-mix(in srgb,var(--accent) 16%,transparent);color:var(--accent);max-width:100%;overflow-wrap:anywhere}
+#dlgSt .box{width:min(420px,100%);max-height:86vh}
+.stres{display:flex;flex-direction:column;gap:6px;overflow-y:auto;max-height:44vh}
+.stit{display:flex;flex-direction:column;gap:2px;text-align:left;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 12px;cursor:pointer}
+.stit span{color:var(--muted);font-size:.8rem}
