@@ -204,8 +204,9 @@ var r=document.documentElement;r.dataset.theme=d;r.dataset.accent=a})();
       <div class="panel og"><h3>Consumo nel tempo</h3><div id="stCons" class="chart"></div></div>
       <div class="panel og">
         <h3>Esporta</h3>
-        <p class="hint">Scarica tutti i rifornimenti e le spese in una tabella che si apre con Excel o Fogli Google, per esempio per il commercialista o per un tuo archivio.</p>
-        <button class="btn ghost" id="btnCsv" type="button">Scarica la tabella dei dati</button>
+        <p class="hint">Scarica il riepilogo del periodo e del mezzo scelti in alto. Excel per i numeri, PDF da stampare o inviare, immagine da condividere.</p>
+        <div class="inline" id="exBtns"><button class="btn ghost" type="button" data-x="xlsx">Excel</button><button class="btn ghost" type="button" data-x="pdf">PDF</button><button class="btn ghost" type="button" data-x="png">Immagine</button></div>
+        <p class="msg" id="exMsg" role="status" aria-live="polite"></p>
       </div>
       <p class="hint" id="stNote"></p>
     </div>

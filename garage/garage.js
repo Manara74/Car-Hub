@@ -413,7 +413,7 @@ function renderStat() {
     g2 += '<text x="' + L2 + '" y="' + (H2 - 6) + '" class="ax">' + fmtDate(iso(d0)).slice(0, 5) + '</text><text x="' + (W2 - R2) + '" y="' + (H2 - 6) + '" text-anchor="end" class="ax">' + fmtDate(iso(d1)).slice(0, 5) + '</text></svg>';
     $('stCons').innerHTML = g2 + (ser.length > 1 ? '<p class="legend">' + ser.map(x => '<i style="background:' + x.col + '"></i>' + esc(x.name)).join(' ') + '</p>' : '');
   }
-  renderCost(list, from); loadMarket(); renderMarket(list); renderSpunti(list);
+  CTX = { list, from }; renderCost(list, from); loadMarket(); renderMarket(list); renderSpunti(list);
   $('stNote').textContent = 'Il costo al km usa i chilometri tra il primo e l\'ultimo rifornimento o spesa con chilometri nel periodo' + (multi ? ', mezzo per mezzo, e poi li somma' : '') + '. Le statistiche si aggiornano da sole con quello che registri.';
 }
 
@@ -623,6 +623,7 @@ function renderCost(list, from) {
 
 
 /* ---------- spunti automatici ed esportazione ---------- */
+let INS = [], CTX = null;
 function renderSpunti(list) {
   const out = [], today = iso(new Date()), day = new Date().getDate(), fm = today.slice(0, 7) + '-01';
   const tom = (() => { const d = new Date(); d.setDate(d.getDate() + 1); return iso(d); })();
@@ -663,20 +664,172 @@ function renderSpunti(list) {
     }
   }
   const al = alerts(); if (al.length) out.push(['warn', '!', plural(al.length, 'scadenza richiede', 'scadenze richiedono') + ' attenzione: ' + esc(cap(al[0].t)) + (al.length > 1 ? ' e altre.' : '.')]);
+  INS = out.map(x => x[2].replace(/<[^>]+>/g, '').replace(/&amp;/g, '&'));
   $('insList').innerHTML = out.length ? out.map(([c, i, t]) => '<li class="' + c + '"><i>' + i + '</i><span>' + t + '</span></li>').join('') : '<li><i>·</i><span>Per ora non ho spunti: registra qualche rifornimento in più e ne troverai.</span></li>';
 }
-function exportCsv() {
-  const q = s => '"' + String(s == null ? '' : s).replace(/"/g, '""') + '"', n = (x, d) => x == null || x === '' ? '' : Number(x).toFixed(d).replace('.', ',');
-  const rows = [['Data', 'Mezzo', 'Tipo', 'Categoria', 'Importo (€)', 'Litri', 'Prezzo (€/L)', 'Km', 'Nota']];
-  D.vehicles.forEach(v => {
-    v.fills.forEach(x => rows.push([x.date, vName(v), 'Rifornimento', FN[x.fuel] || x.fuel, n(x.total, 2), n(x.liters, 2), n(x.total / x.liters, 3), x.km, x.note || '']));
-    v.expenses.forEach(x => rows.push([x.date, vName(v), 'Spesa', CATN[x.cat] || x.cat, n(x.amount, 2), '', '', x.km == null ? '' : x.km, x.note || '']));
+
+/* ---------- esportazione: Excel, PDF, immagine (tutto sul telefono) ---------- */
+function buildReport() {
+  const list = CTX.list, from = CTX.from, S = list.map(v => vehStat(v, from));
+  const sum = k => S.reduce((a, x) => a + x[k], 0), fuel = sum('fuel'), other = sum('other'), total = fuel + other, lt = sum('lt'), il = sum('il'), id = sum('id'), n = sum('n');
+  const ws = S.filter(x => x.span > 0), span = ws.reduce((a, x) => a + x.span, 0), sc = ws.reduce((a, x) => a + x.total, 0);
+  const cards = [['Spesa totale', fmtN(total, 2) + ' €'], ['Carburante', fmtN(fuel, 2) + ' €'], ['Altre spese', fmtN(other, 2) + ' €'], ['Costo al km', span > 0 ? fmtN(sc / span, 3) + ' €' : '—'],
+    ['Consumo medio', id > 0 ? fmtN(il / id * 100, 1) + ' l/100 km' : '—'], ['Prezzo medio', lt > 0 ? fmtN(fuel / lt, 3) + ' €/L' : '—'], ['Litri', lt > 0 ? fmtN(lt, 1) : '—'], ['Rifornimenti', String(n)]];
+  const cats = []; if (fuel > 0) cats.push(['Carburante', fuel]);
+  CATS.forEach(([k, nm]) => { const a = S.reduce((s2, x) => s2 + (x.cats[k] || 0), 0); if (a > 0) cats.push([nm, a]); });
+  cats.sort((a, b) => b[1] - a[1]);
+  const rows = [];
+  list.forEach(v => {
+    v.fills.filter(x => x.date >= from).forEach(x => rows.push({ d: x.date, v: vName(v), t: 'Rifornimento', c: FN[x.fuel] || x.fuel, a: x.total, l: x.liters, p: x.total / x.liters, km: x.km, n: x.note || '' }));
+    v.expenses.filter(x => x.date >= from).forEach(x => rows.push({ d: x.date, v: vName(v), t: 'Spesa', c: CATN[x.cat] || x.cat, a: x.amount, l: null, p: null, km: x.km, n: x.note || '' }));
   });
-  const body = rows.slice(0, 1).concat(rows.slice(1).sort((a, b) => a[0].localeCompare(b[0]))).map(r => r.map(q).join(';')).join('\r\n');
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob(['\ufeff' + body], { type: 'text/csv;charset=utf-8' }));
-  a.download = 'car-hub-dati-' + iso(new Date()) + '.csv';
-  document.body.appendChild(a); a.click(); a.remove();
+  rows.sort((a, b) => a.d.localeCompare(b.d));
+  const per = STP === 'all' ? 'Tutto lo storico' : STP === '30' ? 'Ultimi 30 giorni' : 'Ultimi 12 mesi';
+  return { title: 'Car Hub · Riepilogo', sub: list.map(vName).join(', ') + ' · ' + per + ' · ' + fmtDate(iso(new Date())), cards, cats, total, ins: INS.slice(), rows };
+}
+function saveBlob(blob, name) {
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name;
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+}
+/* --- Excel (.xlsx scritto a mano: un archivio zip senza compressione) --- */
+const CRCT = (() => { const t = []; for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
+const crc32 = u => { let c = 0xFFFFFFFF; for (let i = 0; i < u.length; i++) c = CRCT[(c ^ u[i]) & 255] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; };
+function zip(files) {
+  const enc = new TextEncoder(), parts = [], cen = []; let off = 0;
+  const u16 = v => [v & 255, v >> 8 & 255], u32 = v => [v & 255, v >> 8 & 255, v >> 16 & 255, v >>> 24 & 255];
+  files.forEach(([name, text]) => {
+    const nb = enc.encode(name), db = enc.encode(text), crc = crc32(db);
+    const lh = new Uint8Array([0x50, 0x4b, 3, 4, 20, 0, 0, 8, 0, 0, 0, 0, 33, 0, ...u32(crc), ...u32(db.length), ...u32(db.length), ...u16(nb.length), 0, 0]);
+    parts.push(lh, nb, db);
+    cen.push(new Uint8Array([0x50, 0x4b, 1, 2, 20, 0, 20, 0, 0, 8, 0, 0, 0, 0, 33, 0, ...u32(crc), ...u32(db.length), ...u32(db.length), ...u16(nb.length), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ...u32(off)]), nb);
+    off += lh.length + nb.length + db.length;
+  });
+  const cl = cen.reduce((a, x) => a + x.length, 0);
+  return new Blob(parts.concat(cen, [new Uint8Array([0x50, 0x4b, 5, 6, 0, 0, 0, 0, ...u16(files.length), ...u16(files.length), ...u32(cl), ...u32(off), 0, 0])]), { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+}
+const xe = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const colL = i => String.fromCharCode(65 + i);
+function sheetXml(rows, widths) {
+  let x = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><cols>' + widths.map((w, i) => '<col min="' + (i + 1) + '" max="' + (i + 1) + '" width="' + w + '" customWidth="1"/>').join('') + '</cols><sheetData>';
+  rows.forEach((r, ri) => {
+    x += '<row r="' + (ri + 1) + '">';
+    r.forEach((c, ci) => {
+      if (c == null || c === '') return;
+      const ref = colL(ci) + (ri + 1), o = typeof c === 'object' ? c : { v: c };
+      if (typeof o.v === 'number') x += '<c r="' + ref + '"' + (o.s ? ' s="' + o.s + '"' : '') + '><v>' + o.v + '</v></c>';
+      else x += '<c r="' + ref + '" t="inlineStr"' + (o.s ? ' s="' + o.s + '"' : '') + '><is><t xml:space="preserve">' + xe(o.v) + '</t></is></c>';
+    });
+    x += '</row>';
+  });
+  return x + '</sheetData></worksheet>';
+}
+function exportXlsx(R) {
+  const serial = s => Math.round((new Date(s + 'T12:00:00Z') - Date.UTC(1899, 11, 30, 12)) / 86400000);
+  const B = 1, DT = 2, MO = 3, PR = 4;
+  const sum = [[{ v: R.title, s: B }], [R.sub], [], [{ v: 'Voce', s: B }, { v: 'Valore', s: B }]].concat(R.cards.map(c => [c[0], c[1]]));
+  sum.push([], [{ v: 'Come si divide la spesa', s: B }, { v: 'Importo (€)', s: B }, { v: '%', s: B }]);
+  R.cats.forEach(c => sum.push([c[0], { v: Math.round(c[1] * 100) / 100, s: MO }, Math.round(c[1] / R.total * 1000) / 10]));
+  if (R.ins.length) { sum.push([], [{ v: 'Cosa noto', s: B }]); R.ins.forEach(t => sum.push([t])); }
+  const dat = [['Data', 'Mezzo', 'Tipo', 'Categoria', 'Importo (€)', 'Litri', 'Prezzo (€/L)', 'Km', 'Nota'].map(v => ({ v, s: B }))];
+  R.rows.forEach(r => dat.push([{ v: serial(r.d), s: DT }, r.v, r.t, r.c, { v: Math.round(r.a * 100) / 100, s: MO }, r.l, r.p == null ? null : { v: Math.round(r.p * 1000) / 1000, s: PR }, r.km, r.n]));
+  const ns = 'xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"';
+  const files = [
+    ['[Content_Types].xml', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/worksheets/sheet2.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>'],
+    ['_rels/.rels', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>'],
+    ['xl/workbook.xml', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook ' + ns + ' xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Riepilogo" sheetId="1" r:id="rId1"/><sheet name="Dati" sheetId="2" r:id="rId2"/></sheets></workbook>'],
+    ['xl/_rels/workbook.xml.rels', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet2.xml"/><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>'],
+    ['xl/styles.xml', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet ' + ns + '><numFmts count="1"><numFmt numFmtId="164" formatCode="0.000"/></numFmts><fonts count="2"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font></fonts><fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="5"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"/><xf numFmtId="14" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/><xf numFmtId="2" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/><xf numFmtId="164" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/></cellXfs></styleSheet>'],
+    ['xl/worksheets/sheet1.xml', sheetXml(sum, [34, 22, 10])],
+    ['xl/worksheets/sheet2.xml', sheetXml(dat, [12, 16, 14, 26, 12, 9, 12, 10, 30])]
+  ];
+  saveBlob(zip(files), 'car-hub-riepilogo-' + iso(new Date()) + '.xlsx');
+}
+/* --- PDF (scritto a mano, testo in Helvetica e Courier) --- */
+function exportPdf(R) {
+  const enc = s => { let o = ''; for (const ch of String(s)) { const c = ch.codePointAt(0); o += ch === '€' ? '\x80' : c < 256 ? ch : ch === '·' ? '\xb7' : '?'; } return o.replace(/[\\()]/g, m => '\\' + m); };
+  const pages = []; let cur = null, y = 0;
+  const np = () => { cur = []; pages.push(cur); y = 800; };
+  const txt = (f, sz, x, s) => { cur.push('BT /' + f + ' ' + sz + ' Tf ' + x + ' ' + y.toFixed(1) + ' Td (' + enc(s) + ') Tj ET'); };
+  const nl = h => { y -= h; if (y < 50) np(); };
+  const wrap = (s, w) => { const out = []; let l = ''; s.split(' ').forEach(wd => { if ((l + ' ' + wd).trim().length > w) { out.push(l); l = wd; } else l = (l + ' ' + wd).trim(); }); if (l) out.push(l); return out; };
+  np(); txt('F2', 20, 50, R.title); nl(20);
+  wrap(R.sub, 95).forEach(l => { txt('F1', 10, 50, l); nl(14); }); nl(8);
+  R.cards.forEach(c => { txt('F1', 11, 50, c[0]); txt('F2', 11, 220, c[1]); nl(16); }); nl(8);
+  if (R.cats.length) { txt('F2', 13, 50, 'Come si divide la spesa'); nl(18); R.cats.forEach(c => { txt('F1', 11, 50, c[0]); txt('F2', 11, 220, fmtN(c[1], 2) + ' €  (' + fmtN(c[1] / R.total * 100, 0) + '%)'); nl(15); }); nl(8); }
+  if (R.ins.length) { txt('F2', 13, 50, 'Cosa noto'); nl(18); R.ins.forEach(t => { wrap('- ' + t, 92).forEach(l => { txt('F1', 10, 50, l); nl(13); }); nl(3); }); nl(8); }
+  if (R.rows.length) {
+    const hdr = () => { txt('F3', 8, 50, pad2('Data', 11) + pad2('Mezzo', 11) + pad2('Voce', 28) + padl('Importo', 10) + padl('Litri', 8) + padl('Km', 9)); nl(12); };
+    const pad2 = (s, w) => String(s).slice(0, w - 1).padEnd(w), padl = (s, w) => String(s).slice(0, w).padStart(w);
+    if (y < 120) np(); txt('F2', 13, 50, 'Registro'); nl(16); hdr();
+    R.rows.forEach(r => { if (y < 62) { np(); hdr(); } txt('F3', 8, 50, pad2(fmtDate(r.d), 11) + pad2(r.v, 11) + pad2(r.c, 28) + padl(fmtN(r.a, 2), 10) + padl(r.l == null ? '' : fmtN(r.l, 2), 8) + padl(r.km == null ? '' : fmtN(r.km, 0), 9)); nl(11); });
+  }
+  const objs = [];
+  const add = s => { objs.push(s); return objs.length; };
+  add('<< /Type /Catalog /Pages 2 0 R >>'); add(''); // pagine al posto 2
+  add('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>');
+  add('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>');
+  add('<< /Type /Font /Subtype /Type1 /BaseFont /Courier /Encoding /WinAnsiEncoding >>');
+  const kids = [];
+  pages.forEach((p, i) => {
+    p.push('BT /F1 8 Tf 50 30 Td (' + enc('Car Hub · pagina ' + (i + 1) + ' di ' + pages.length) + ') Tj ET');
+    const body = p.join('\n'), cid = add('<< /Length ' + body.length + ' >>\nstream\n' + body + '\nendstream');
+    kids.push(add('<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents ' + cid + ' 0 R /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> >>'));
+  });
+  objs[1] = '<< /Type /Pages /Kids [' + kids.map(k => k + ' 0 R').join(' ') + '] /Count ' + kids.length + ' >>';
+  let out = '%PDF-1.4\n'; const offs = [];
+  objs.forEach((o, i) => { offs.push(out.length); out += (i + 1) + ' 0 obj\n' + o + '\nendobj\n'; });
+  const xr = out.length;
+  out += 'xref\n0 ' + (objs.length + 1) + '\n0000000000 65535 f \n' + offs.map(o => String(o).padStart(10, '0') + ' 00000 n \n').join('') + 'trailer\n<< /Size ' + (objs.length + 1) + ' /Root 1 0 R >>\nstartxref\n' + xr + '\n%%EOF';
+  const u = new Uint8Array(out.length); for (let i = 0; i < out.length; i++) u[i] = out.charCodeAt(i) & 255;
+  saveBlob(new Blob([u], { type: 'application/pdf' }), 'car-hub-riepilogo-' + iso(new Date()) + '.pdf');
+}
+/* --- immagine (PNG) --- */
+function exportPng(R) {
+  const W = 1080, P = 56, c = document.createElement('canvas'), ctx = c.getContext('2d'), F = 'Archivo, system-ui, sans-serif';
+  const acc = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#4f8ff7';
+  const wrapC = (s, w, font) => { ctx.font = font; const out = []; let l = ''; s.split(' ').forEach(wd => { const t = l ? l + ' ' + wd : wd; if (ctx.measureText(t).width > w && l) { out.push(l); l = wd; } else l = t; }); if (l) out.push(l); return out; };
+  const insL = R.ins.slice(0, 5).map(t => wrapC(t, W - 2 * P - 40, '500 28px ' + F));
+  const catN = Math.min(5, R.cats.length);
+  const H = 190 + Math.ceil(R.cards.length / 2) * 130 + (catN ? 90 + catN * 62 : 0) + (insL.length ? 90 + insL.reduce((a, l) => a + l.length * 38 + 22, 0) : 0) + 90;
+  c.width = W; c.height = H;
+  ctx.fillStyle = '#0a1226'; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = acc; ctx.fillRect(0, 0, W, 10);
+  ctx.fillStyle = '#fff'; ctx.font = '700 52px ' + F; ctx.fillText('Car Hub · Riepilogo', P, 100);
+  ctx.fillStyle = '#9fb0cf'; ctx.font = '500 26px ' + F; ctx.fillText(R.sub.length > 62 ? R.sub.slice(0, 61) + '…' : R.sub, P, 146);
+  let y = 190; const cw = (W - 2 * P - 24) / 2;
+  R.cards.forEach((cd, i) => {
+    const x = P + (i % 2) * (cw + 24), yy = y + Math.floor(i / 2) * 130;
+    ctx.fillStyle = '#121c36'; ctx.beginPath(); ctx.roundRect(x, yy, cw, 112, 22); ctx.fill();
+    ctx.fillStyle = '#9fb0cf'; ctx.font = '500 24px ' + F; ctx.fillText(cd[0], x + 24, yy + 40);
+    ctx.fillStyle = '#fff'; ctx.font = '700 38px ' + F; ctx.fillText(cd[1], x + 24, yy + 86);
+  });
+  y += Math.ceil(R.cards.length / 2) * 130 + 20;
+  if (catN) {
+    ctx.fillStyle = acc; ctx.font = '700 26px ' + F; ctx.fillText('COME SI DIVIDE LA SPESA', P, y + 30); y += 56;
+    const mx = R.cats[0][1];
+    R.cats.slice(0, catN).forEach(([nm, a]) => {
+      ctx.fillStyle = '#fff'; ctx.font = '500 26px ' + F; ctx.fillText(nm, P, y + 22);
+      ctx.textAlign = 'right'; ctx.fillText(fmtN(a, 0) + ' €  ·  ' + fmtN(a / R.total * 100, 0) + '%', W - P, y + 22); ctx.textAlign = 'left';
+      ctx.fillStyle = '#1b2748'; ctx.beginPath(); ctx.roundRect(P, y + 34, W - 2 * P, 10, 5); ctx.fill();
+      ctx.fillStyle = acc; ctx.beginPath(); ctx.roundRect(P, y + 34, Math.max(10, (W - 2 * P) * a / mx), 10, 5); ctx.fill(); y += 62;
+    });
+    y += 24;
+  }
+  if (insL.length) {
+    ctx.fillStyle = acc; ctx.font = '700 26px ' + F; ctx.fillText('COSA NOTO', P, y + 30); y += 62;
+    insL.forEach(ls => { ctx.fillStyle = acc; ctx.fillText('•', P, y + 4); ctx.fillStyle = '#e6edf9'; ctx.font = '500 28px ' + F; ls.forEach((l, i) => { ctx.fillText(l, P + 40, y + 4 + i * 38); }); y += ls.length * 38 + 22; });
+  }
+  ctx.fillStyle = '#6b7da3'; ctx.font = '500 22px ' + F; ctx.fillText('Car Hub · i dati restano sul tuo telefono', P, H - 40);
+  c.toBlob(b => saveBlob(b, 'car-hub-riepilogo-' + iso(new Date()) + '.png'), 'image/png');
+}
+function doExport(kind) {
+  const m = $('exMsg');
+  try {
+    if (!CTX) return;
+    const R = buildReport();
+    if (kind === 'xlsx') exportXlsx(R); else if (kind === 'pdf') exportPdf(R); else exportPng(R);
+    m.className = 'msg'; m.textContent = 'File creato: lo trovi nei download del telefono.';
+  } catch (e) { m.className = 'msg err'; m.textContent = 'Non riesco a creare il file: ' + (e.message || e); }
 }
 
 /* ---------- eventi ---------- */
@@ -708,7 +861,7 @@ function wire() {
   $('tPrice').addEventListener('input', () => { tPriceTouched = true; });
   $('mkF').addEventListener('change', e => { MKF = e.target.value; renderMarket(); });
   $('mkM').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; MKM = +b.dataset.m; renderMarket(); });
-  $('btnCsv').addEventListener('click', exportCsv);
+  $('exBtns').addEventListener('click', e => { const b = e.target.closest('button[data-x]'); if (b) doExport(b.dataset.x); });
   $('btnShareLoc').addEventListener('click', shareLoc);
   $('btnAddVeh').addEventListener('click', () => {
     const x = newVehicle('', D.vehicles.some(y => y.type === 'auto') && !D.vehicles.some(y => y.type === 'moto') ? 'moto' : 'auto');
