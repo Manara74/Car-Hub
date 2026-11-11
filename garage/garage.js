@@ -98,7 +98,7 @@ function route() {
   const v = VIEWS[h] ? h : 'menu';
   Object.keys(VIEWS).forEach(k => { $(VIEWS[k]).hidden = k !== v; });
   $('ggTitle').textContent = TITLES[v]; $('btnBack').hidden = v === 'menu'; $('btnOpz').hidden = v !== 'menu';
-  if (v === 'menu') renderMenu(); if (v === 'scadenze') renderScad(); if (v === 'diario') renderDiario(true); if (v === 'mezzi') renderMezzi(); if (v === 'spese') renderSpese(true); if (v === 'statistiche') renderStat(); if (v === 'strada') { renderStrada(); tPriceTouched = false; tripInit(); stradaT = setInterval(renderSosta, 1000); }
+  if (v === 'menu') renderMenu(); if (v === 'scadenze') renderScad(); if (v === 'diario') renderDiario(true); if (v === 'mezzi') renderMezzi(); if (v === 'spese') renderSpese(true); if (v === 'statistiche') renderStat(); if (v === 'backup') renderBackup(); if (v === 'strada') { renderStrada(); tPriceTouched = false; tripInit(); stradaT = setInterval(renderSosta, 1000); }
   window.scrollTo(0, 0);
 }
 function renderMenu() {
@@ -116,6 +116,8 @@ function renderMenu() {
   $('spesaSub').textContent = cv.expenses.length ? 'Questo mese ' + fmtN(mm, 2) + ' € (carburante escluso)' : 'Manutenzione, gomme, pedaggi, multe';
   const tot12 = periodTotals(cv, 365);
   $('statSub').textContent = tot12.total > 0 ? 'Ultimi 12 mesi: ' + fmtN(tot12.total, 0) + ' € in tutto' : 'Quanto spendi, consumi, costo al km';
+  const lb = lastBackup(), bk = $('bkAlert'), need = dataItems() >= 5 && (!lb || Date.now() - lb > 30 * 86400000);
+  bk.hidden = !need; bk.innerHTML = need ? (lb ? 'L\'ultimo backup risale a più di 30 giorni fa. ' : 'Non hai ancora fatto un backup dei tuoi dati. ') + '<a href="#backup">Salvalo ora</a>' : '';
   $('stradaSub').textContent = stradaSub(cur());
   $('scadSub').textContent = al.length ? cap(al[0].t) : 'Bollo, assicurazione, revisione, tagliando, gomme';
 }
@@ -273,8 +275,8 @@ function saveFill(e) {
 
 /* ---------- finestra di conferma per eliminare ---------- */
 let delFn = null;
-function askDel(title, text, fn) {
-  delFn = fn; $('dlgDelT').textContent = title; $('dlgDelP').textContent = text; $('dlgDel').hidden = false;
+function askDel(title, text, fn, okLabel) {
+  $('btnDelOk').textContent = okLabel || 'Cancella'; delFn = fn; $('dlgDelT').textContent = title; $('dlgDelP').textContent = text; $('dlgDel').hidden = false;
 }
 
 function fillAction(e) {
@@ -1066,23 +1068,45 @@ function wire() {
   // backup
   $('btnExport').addEventListener('click', exportAll);
   $('impFile').addEventListener('change', pickFile);
-  $('btnImport').addEventListener('click', doImport);
+  $('btnImport').addEventListener('click', () => { if (pending) askDel('Sostituire i dati?', 'I dati di questo telefono (mezzi, rifornimenti, spese, scadenze e impostazioni) verranno sostituiti da quelli del file. Non si può annullare: se non sei sicuro, fai prima un backup.', doImport, 'Sostituisci'); });
+  $('btnShareBk').addEventListener('click', shareBackup);
 }
 
 /* ---------- backup ---------- */
 const OWN = k => /^(gg|pg)\./.test(k);
+const LBK = 'cb.lastbackup'; // fuori dal backup stesso: non viene sovrascritto dal ripristino
+const lastBackup = () => { try { return parseInt(localStorage.getItem(LBK), 10) || 0; } catch (e) { return 0; } };
+const markBackup = () => { try { localStorage.setItem(LBK, String(Date.now())); } catch (e) { /* niente */ } };
+const dataItems = () => D.vehicles.reduce((a, v) => a + v.fills.length + v.expenses.length, 0);
+function backupBody() {
+  const data = {};
+  for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (OWN(k)) data[k] = localStorage.getItem(k); }
+  return { body: JSON.stringify({ app: 'garage-backup', version: 1, created: new Date().toISOString(), data }, null, 1), n: Object.keys(data).length, name: 'car-hub-backup-' + iso(new Date()) + '.json' };
+}
+function renderBackup() {
+  const cell = (k, v) => '<div><small>' + k + '</small><b class="num">' + v + '</b></div>';
+  const dls = D.vehicles.reduce((a, v) => a + Object.keys(v.dl).filter(k => v.dl[k].date).length, 0);
+  $('bkSum').innerHTML = cell('Mezzi', D.vehicles.length) + cell('Rifornimenti', D.vehicles.reduce((a, v) => a + v.fills.length, 0)) + cell('Spese', D.vehicles.reduce((a, v) => a + v.expenses.length, 0)) + cell('Scadenze impostate', dls);
+  const lb = lastBackup(), days = lb ? Math.floor((Date.now() - lb) / 86400000) : null;
+  $('bkLast').textContent = lb ? 'Ultimo backup: ' + fmtDate(iso(new Date(lb))) + (days === 0 ? ' (oggi).' : days === 1 ? ' (ieri).' : ' (' + days + ' giorni fa).') + (days > 30 ? ' Ne è passato un po\': conviene rifarlo.' : '') : 'Non hai ancora fatto nessun backup su questo telefono. Se cancelli i dati del browser o cambi telefono, senza backup perdi tutto.';
+  let canShare = false; try { canShare = !!(navigator.canShare && navigator.canShare({ files: [new File(['x'], 'x.json', { type: 'application/json' })] })); } catch (e) { /* niente */ }
+  $('btnShareBk').hidden = !canShare; $('btnExport').className = canShare ? 'btn ghost' : 'btn';
+}
 function exportAll() {
   const m = $('expMsg');
   try {
-    const data = {};
-    for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (OWN(k)) data[k] = localStorage.getItem(k); }
-    const body = JSON.stringify({ app: 'garage-backup', version: 1, created: new Date().toISOString(), data }, null, 1);
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(new Blob([body], { type: 'application/json' }));
-    a.download = 'garage-backup-' + iso(new Date()) + '.json';
-    document.body.appendChild(a); a.click(); a.remove();
-    m.className = 'msg'; m.textContent = 'File creato con ' + Object.keys(data).length + ' voci. Lo trovi nei download del telefono.';
+    const b = backupBody(), a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([b.body], { type: 'application/json' })); a.download = b.name;
+    document.body.appendChild(a); a.click(); a.remove(); markBackup(); renderBackup();
+    m.className = 'msg'; m.textContent = 'File creato con ' + b.n + ' voci. Lo trovi nei download del telefono.';
   } catch (e) { m.className = 'msg err'; m.textContent = 'Non riesco a creare il file: ' + (e.message || e); }
+}
+function shareBackup() {
+  const m = $('expMsg');
+  try {
+    const b = backupBody(), f = new File([b.body], b.name, { type: 'application/json' });
+    navigator.share({ files: [f], title: 'Backup Car Hub' }).then(() => { markBackup(); renderBackup(); m.className = 'msg'; m.textContent = 'Backup inviato.'; }, () => { /* annullato */ });
+  } catch (e) { m.className = 'msg err'; m.textContent = 'Non riesco a condividere il file: ' + (e.message || e); }
 }
 let pending = null;
 function pickFile(e) {
