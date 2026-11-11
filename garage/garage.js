@@ -107,7 +107,8 @@ function renderMenu() {
   const m = $('menuAlert');
   m.hidden = !al.length;
   m.innerHTML = al.length ? '<b>' + (al.length === 1 ? '1 scadenza da controllare' : al.length + ' scadenze da controllare') + ':</b> ' + esc(al.slice(0, 2).map(x => cap(x.t)).join(' · ')) + (al.length > 2 ? '…' : '') : '';
-  const vs = D.vehicles; $('mezziSub').textContent = vs.length === 1 ? vName(vs[0]) : vs.length + ' mezzi: ' + vs.map(vName).join(', ');
+  const vs = D.vehicles, nb = vs.reduce((a, x) => a + Object.keys(x.parts || {}).filter(k => x.parts[k].buy).length, 0);
+  $('mezziSub').textContent = (vs.length === 1 ? vName(vs[0]) : vs.length + ' mezzi: ' + vs.map(vName).join(', ')) + (nb ? ' · ' + nb + ' da comprare' : '');
   const lf = cur().fills.slice().sort((a, b) => a.date.localeCompare(b.date) || a.km - b.km), st = fillStats(cur());
   $('diaSub').textContent = !lf.length ? 'Litri, spesa e consumi reali' : st.avg != null ? 'Consumo medio ' + fmtN(st.avg, 1) + ' l/100 km' : lf.length + (lf.length === 1 ? ' rifornimento registrato' : ' rifornimenti registrati');
   const cv = cur(), mk = iso(new Date()).slice(0, 7);
@@ -125,13 +126,14 @@ function renderScad() {
   const ks = kmStatus(v);
   $('dlList').innerHTML = TYPES.map(([k, label]) => {
     const dl = v.dl[k], d = daysLeft(dl.date), st = status(d);
+    const cost = lastCost(v, k);
     const km = k === 'tagliando' && ks ? '<p class="kmline ' + ks.c + '">' + esc(ks.t) + '</p>' : '';
     return '<div class="dl-card ' + st.c + '" data-k="' + k + '"><div class="dl-top"><b>' + label + '</b><span class="dl-st ' + st.c + '">' + esc(st.t) + '</span></div>' +
       '<div class="grid"><div class="field"><span>Prossima scadenza</span><input type="date" data-f="date" value="' + esc(dl.date) + '"></div>' +
       '<div class="field"><span>Si ripete ogni</span><select data-f="every">' + EVERY.map(([n, t]) => '<option value="' + n + '"' + (n === dl.every ? ' selected' : '') + '>' + t + '</option>').join('') + '</select></div>' +
       (k === 'tagliando' ? '<div class="field"><span>Km attuali</span><input type="number" inputmode="numeric" min="0" step="1" data-f="vkm" placeholder="Es. 84500" value="' + (v.km == null ? '' : v.km) + '"></div><div class="field"><span>Tagliando ai km</span><input type="number" inputmode="numeric" min="0" step="1" data-f="kmDue" placeholder="Es. 90000" value="' + (dl.kmDue == null ? '' : dl.kmDue) + '"></div>' : '') +
       '<div class="field wide"><span>Nota (facoltativa)</span><input type="text" data-f="note" maxlength="80" placeholder="' + (k === 'assicurazione' ? 'Compagnia, numero polizza' : k === 'bollo' ? 'Regione, importo' : k === 'gomme' ? 'Es. Invernali, dal gommista' : 'Officina, cosa fare') + '" value="' + esc(dl.note) + '" autocomplete="off"></div></div>' +
-      km + (renewK === k
+      km + cost + (renewK === k
         ? '<div class="renew"><div class="field"><span>Quanto hai pagato? (€)</span><input type="number" inputmode="decimal" min="0" step="0.01" id="rAmt" placeholder="Es. 180,00"></div>' +
           '<div class="dl-acts"><button type="button" class="btn small" data-act="renew-save">Rinnova e registra la spesa</button><button type="button" class="btn small ghost" data-act="renew-skip">Rinnova senza spesa</button><button type="button" class="btn small ghost" data-act="renew-cancel">Annulla</button></div></div>'
         : '<div class="dl-acts"><button type="button" class="btn small" data-act="renew">Rinnovata</button>' + (dl.date ? '<button type="button" class="btn small ghost" data-act="clear">Togli data</button>' : '') + '</div>') + '</div>';
@@ -161,6 +163,7 @@ function renderMezzi() {
   document.querySelectorAll('[data-info]').forEach(i => { if (document.activeElement !== i) i.value = (v.info || {})[i.dataset.info] || ''; });
   document.querySelectorAll('[data-phone]').forEach(i => { if (document.activeElement !== i) i.value = (v.phones || {})[i.dataset.phone] || ''; });
   document.querySelectorAll('#vType button').forEach(b => b.classList.toggle('on', b.dataset.t === v.type));
+  renderParts();
   const only = D.vehicles.length < 2;
   $('btnDelVeh').disabled = only;
   $('delHint').textContent = only ? 'Deve restare almeno un mezzo. Aggiungine un altro prima di eliminare questo.' :
@@ -832,6 +835,46 @@ function doExport(kind) {
   } catch (e) { m.className = 'msg err'; m.textContent = 'Non riesco a creare il file: ' + (e.message || e); }
 }
 
+
+/* ---------- lampadine e ricambi ---------- */
+const PARTS = {
+  auto: [['Lampadine', [['low', 'Anabbaglianti', 'Es. H7'], ['high', 'Abbaglianti', 'Es. H7'], ['pos', 'Luci di posizione', 'Es. W5W'], ['fi', 'Frecce anteriori', 'Es. PY21W'], ['fr', 'Frecce posteriori', 'Es. PY21W'], ['stop', 'Stop e luci posteriori', 'Es. P21/5W'],
+    ['rev', 'Retromarcia', 'Es. P21W'], ['fog', 'Retronebbia', 'Es. P21W'], ['ffog', 'Fendinebbia', 'Es. H11'], ['plate', 'Targa', 'Es. C5W'], ['int', 'Luci interne', 'Es. C5W']]],
+    ['Ricambi', [['oilf', 'Filtro olio', 'Codice'], ['airf', 'Filtro aria', 'Codice'], ['cabf', 'Filtro abitacolo', 'Codice'], ['fuelf', 'Filtro carburante', 'Codice'], ['plugs', 'Candele', 'Codice'], ['wip', 'Spazzole tergicristallo', 'Misure'], ['padf', 'Pastiglie davanti', 'Codice'], ['padr', 'Pastiglie dietro', 'Codice'], ['bat', 'Batteria', 'Es. 12V 45Ah']]]],
+  moto: [['Lampadine', [['low', 'Anabbagliante', 'Es. H4'], ['high', 'Abbagliante', 'Es. H4'], ['pos', 'Luce di posizione', 'Es. W5W'], ['fi', 'Frecce anteriori', 'Es. RY10W'], ['fr', 'Frecce posteriori', 'Es. RY10W'], ['stop', 'Stop e luce posteriore', 'Es. P21/5W'], ['plate', 'Targa', 'Es. W5W']]],
+    ['Ricambi', [['oilf', 'Filtro olio', 'Codice'], ['airf', 'Filtro aria', 'Codice'], ['plugs', 'Candela', 'Codice'], ['padf', 'Pastiglie davanti', 'Codice'], ['padr', 'Pastiglie dietro', 'Codice'], ['chain', 'Kit catena', 'Codice'], ['bat', 'Batteria', 'Es. 12V 10Ah']]]]
+};
+const partLabel = (v, k) => { for (const [, rows] of PARTS[v.type === 'moto' ? 'moto' : 'auto']) { const r = rows.find(x => x[0] === k); if (r) return r[1]; } return k; };
+function renderParts() {
+  const v = cur(); v.parts = v.parts || {};
+  $('partsBox').innerHTML = PARTS[v.type === 'moto' ? 'moto' : 'auto'].map(([t, rows]) => '<h4 class="ph">' + t + '</h4>' + rows.map(([k, l, ph]) => {
+    const p = v.parts[k] || {};
+    return '<div class="prow"><span>' + l + '</span><input type="text" data-part="' + k + '" maxlength="30" placeholder="' + ph + '" value="' + esc(p.code || '') + '" autocomplete="off"><label class="chk"><input type="checkbox" data-buy="' + k + '"' + (p.buy ? ' checked' : '') + '><i>Da comprare</i></label></div>';
+  }).join('')).join('');
+  const s = $('partsSearch'), q = [(v.info || {}).model, (v.info || {}).year].filter(Boolean).join(' ');
+  s.hidden = !(v.info || {}).model; if (q) s.href = 'https://www.google.com/search?q=' + encodeURIComponent('lampadine ' + q + ' tipo lampade anabbaglianti abbaglianti posizione retromarcia');
+  renderBuy();
+}
+function renderBuy() {
+  const v = cur(), items = Object.keys(v.parts || {}).filter(k => v.parts[k].buy);
+  $('buyBox').hidden = !items.length;
+  $('buyList').innerHTML = items.map(k => '<li>' + esc(partLabel(v, k)) + (v.parts[k].code ? ': <b>' + esc(v.parts[k].code) + '</b>' : '') + '</li>').join('');
+}
+function buyCopy() {
+  const v = cur(), items = Object.keys(v.parts || {}).filter(k => v.parts[k].buy), m = $('buyMsg');
+  const text = 'Da comprare per ' + vName(v) + (((v.info || {}).model) ? ' (' + v.info.model + ')' : '') + ':\n' + items.map(k => '- ' + partLabel(v, k) + (v.parts[k].code ? ': ' + v.parts[k].code : '')).join('\n');
+  m.className = 'msg';
+  if (navigator.share) navigator.share({ text }).then(() => { m.textContent = ''; }, () => { m.textContent = ''; });
+  else if (navigator.clipboard) navigator.clipboard.writeText(text).then(() => { m.textContent = 'Lista copiata.'; }, () => { m.textContent = text; });
+  else m.textContent = text;
+}
+function lastCost(v, k) {
+  const cat = RENEWCAT[k], from = fromDate('365'), ex = v.expenses.filter(x => x.cat === cat).sort((a, b) => b.date.localeCompare(a.date));
+  if (!ex.length) return '<p class="kmline">Nessuna spesa registrata: usa «Rinnovata» oppure aggiungila in «Spese dell\'auto».</p>';
+  const y = ex.filter(x => x.date >= from).reduce((a, x) => a + x.amount, 0);
+  return '<p class="kmline">Ultima spesa: <b>' + fmtN(ex[0].amount, 2) + ' €</b> il ' + fmtDate(ex[0].date) + ' · ultimi 12 mesi: ' + fmtN(y, 2) + ' €</p>';
+}
+
 /* ---------- eventi ---------- */
 function wire() {
   window.addEventListener('hashchange', route);
@@ -862,6 +905,16 @@ function wire() {
   $('mkF').addEventListener('change', e => { MKF = e.target.value; renderMarket(); });
   $('mkM').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; MKM = +b.dataset.m; renderMarket(); });
   $('exBtns').addEventListener('click', e => { const b = e.target.closest('button[data-x]'); if (b) doExport(b.dataset.x); });
+  $('partsBox').addEventListener('input', e => {
+    const t = e.target, v = cur(); v.parts = v.parts || {};
+    if (t.dataset.part) { (v.parts[t.dataset.part] = v.parts[t.dataset.part] || {}).code = t.value.trim(); save(); renderBuy(); }
+  });
+  $('partsBox').addEventListener('change', e => {
+    const t = e.target, v = cur(); v.parts = v.parts || {};
+    if (t.dataset.buy) { (v.parts[t.dataset.buy] = v.parts[t.dataset.buy] || {}).buy = t.checked; save(); renderBuy(); }
+  });
+  $('btnBuyCopy').addEventListener('click', buyCopy);
+  document.querySelectorAll('[data-info="model"],[data-info="year"]').forEach(i => i.addEventListener('change', () => renderParts()));
   $('btnShareLoc').addEventListener('click', shareLoc);
   $('btnAddVeh').addEventListener('click', () => {
     const x = newVehicle('', D.vehicles.some(y => y.type === 'auto') && !D.vehicles.some(y => y.type === 'moto') ? 'moto' : 'auto');

@@ -80,3 +80,9 @@ input[type=date]{font:inherit;color:var(--ink);background:var(--bg);border:1px s
 .ins li{display:flex;gap:12px;align-items:flex-start;font-size:.92rem;line-height:1.4}
 .ins i{font-style:normal;font-weight:700;flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--chip);color:var(--muted);font-size:.8rem}
 .ins li.bad i{background:var(--bad-bg);color:var(--bad)}.ins li.good i{background:var(--good-bg);color:var(--good)}.ins li.warn i{background:var(--warn-bg);color:var(--warn)}
+.ph{margin:14px 0 4px;font:700 .72rem/1 var(--font-ui);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.prow{display:grid;grid-template-columns:1fr auto;gap:6px 10px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.prow>span{grid-column:1/-1;font-size:.86rem;color:var(--muted)}
+.prow .chk{display:flex;align-items:center;gap:6px;font-size:.8rem;color:var(--muted);white-space:nowrap}
+.prow .chk input{width:20px;height:20px;accent-color:var(--accent)}
+.prow .chk i{font-style:normal}
