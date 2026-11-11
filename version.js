@@ -1,6 +1,6 @@
 /* Numero di versione di Car Hub (vale per tutta l'app, Pompa Giusta compresa).
    Si aggiorna a ogni pubblicazione. */
-window.APP_VERSION = { v: '3.0', date: '2026-11-11' }; // la data non viene mostrata
+window.APP_VERSION = { v: '3.1', date: '2026-11-11' }; // la data non viene mostrata
 
 (function () {
   function etichetta(v) { return 'Versione ' + v; }
