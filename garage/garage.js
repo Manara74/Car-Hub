@@ -497,7 +497,7 @@ function renderSosta() {
   if (v.sosta && !on) { st.textContent = 'Sosta scaduta alle ' + hhmm(v.sosta) + '.'; st.className = 'verdict'; }
   else if (on) { st.textContent = 'Scade alle ' + hhmm(v.sosta) + ': mancano ' + leftTxt(v.sosta - Date.now()) + '.'; }
   else { st.textContent = 'Nessun timer attivo.'; }
-  $('btnSostaOff').hidden = !v.sosta;
+  $('btnSostaOff').hidden = !v.sosta; $('sostaSum').textContent = on ? 'fino alle ' + hhmm(v.sosta) : '';
 }
 function getPos(ok, ko) {
   if (!navigator.geolocation) { ko('Questo telefono non fornisce la posizione.'); return; }
@@ -544,18 +544,25 @@ function tripInit() {
   if (st.avg != null) bits.push('il consumo medio è quello del tuo diario');
   if (a) bits.push('il prezzo è la media self di oggi in ' + a.where + (last ? ' (il tuo ultimo pieno: ' + fmtN(last.total / last.liters, 3) + ' €/L)' : ''));
   else if (last) bits.push('il prezzo è quello del tuo ultimo rifornimento');
-  $('tHint').textContent = bits.length ? 'Compilati in automatico: ' + bits.join('; ') + '. Puoi cambiarli.' : 'Scrivi il consumo e il prezzo del carburante. Con qualche rifornimento nel diario li compilo io.';
+  $('tHint').textContent = bits.length ? 'Compilati dal tuo diario e dal mercato: puoi cambiarli.' : 'Scrivi consumo e prezzo. Con qualche rifornimento nel diario li compilo io.';
   tripCalc();
 }
 function tripCalc() {
   const km = numv('tKm'), c = numv('tCons'), p = numv('tPrice'), toll = numv('tToll') || 0, n = Math.max(1, Math.min(9, parseInt($('tPers').value, 10) || 1));
   const out = $('tOut');
+  const sv = $('btnTripSave'); sv.hidden = true; sv.disabled = false;
   if (!(km > 0) || !(c > 0) || !(p > 0)) { out.hidden = true; return; }
   const d = km * ($('tRound').checked ? 2 : 1), L = d * c / 100, fuel = L * p, tot = fuel + toll;
   out.hidden = false;
   out.innerHTML = '<div><small>CARBURANTE</small><b>' + fmtN(fuel, 2) + ' €</b><em>' + fmtN(L, 1) + ' litri su ' + fmtN(d, 0) + ' km</em></div>' +
     '<div><small>TOTALE</small><b>' + fmtN(tot, 2) + ' €</b><em>' + (toll > 0 ? 'con pedaggi e parcheggi' : 'senza pedaggi') + '</em></div>' +
     (n > 1 ? '<div class="wide2"><small>A PERSONA (' + n + ')</small><b>' + fmtN(tot / n, 2) + ' €</b></div>' : '');
+  if (toll > 0) { sv.hidden = false; sv.textContent = 'Salva ' + fmtN(toll, 2) + ' € di pedaggi nelle spese'; }
+}
+function tripSave() {
+  const toll = numv('tToll'), v = cur(), b = $('btnTripSave'); if (!(toll > 0)) return;
+  v.expenses.push({ id: uid(), date: iso(new Date()), amount: Math.round(toll * 100) / 100, cat: 'pedaggio', km: null, note: 'Viaggio' });
+  save(); b.textContent = 'Salvato nelle spese'; b.disabled = true; setTimeout(() => { b.disabled = false; tripCalc(); }, 2500);
 }
 
 
@@ -995,6 +1002,7 @@ function wire() {
   });
   $('btnParkDel').addEventListener('click', () => askDel('Cancellare la posizione?', 'La posizione e la foto del parcheggio verranno cancellate.', () => { delete cur().park; save(); $('parkMsg').textContent = ''; renderStrada(); }));
   $('sostaBtns').addEventListener('click', e => { const b = e.target.closest('button[data-min]'); if (!b) return; cur().sosta = Date.now() + parseInt(b.dataset.min, 10) * 60000; save(); renderSosta(); });
+  $('btnTripSave').addEventListener('click', tripSave);
   $('btnSostaOff').addEventListener('click', () => { delete cur().sosta; save(); renderSosta(); });
   ['tKm', 'tPers', 'tCons', 'tPrice', 'tToll', 'tRound'].forEach(i => $(i).addEventListener('input', tripCalc));
   $('tPrice').addEventListener('input', () => { tPriceTouched = true; });
