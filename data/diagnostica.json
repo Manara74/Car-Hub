@@ -1,15 +1,15 @@
 {
- "date": "2026-11-11",
+ "date": "2026-11-12",
  "keys": {
   "B0": {
-   "n": 6867,
+   "n": 6694,
    "min": 1.569,
-   "p5": 1.949,
-   "med": 2.15,
-   "p95": 2.299,
+   "p5": 1.939,
+   "med": 2.149,
+   "p95": 2.29,
    "max": 2.999,
    "sotto_1.7": 1,
-   "sopra_2.4": 56,
+   "sopra_2.4": 55,
    "piu_bassi": [
     [
      1.569,
@@ -44,37 +44,37 @@
      false
     ],
     [
+     1.775,
+     "55410",
+     "MM CARBUARNTI ",
+     "Napoli",
+     "NA",
+     false
+    ],
+    [
      1.789,
      "10464",
      "ANGELI SABRINA",
      "Cagli",
      "PU",
      false
-    ],
-    [
-     1.789,
-     "37062",
-     "AdS Agip - Candela Casello A16",
-     "Candela",
-     "FG",
-     false
     ]
    ],
    "piu_alti": [
+    [
+     2.789,
+     "15315",
+     "RUBECA MARIO",
+     "Marsciano",
+     "PG",
+     false
+    ],
     [
      2.789,
      "62304",
      "DAL ZOTTO S.A.S.",
      "Pantelleria",
      "TP",
-     false
-    ],
-    [
-     2.81,
-     "24518",
-     "IP VILLANOVA MONDOVI'",
-     "Villanova Mondovì",
-     "CN",
      false
     ],
     [
@@ -96,14 +96,14 @@
    ]
   },
   "B1": {
-   "n": 9742,
+   "n": 9408,
    "min": 1.569,
-   "p5": 1.939,
-   "med": 1.989,
-   "p95": 2.067,
+   "p5": 1.934,
+   "med": 1.969,
+   "p95": 2.056,
    "max": 2.789,
-   "sotto_1.7": 5,
-   "sopra_2.4": 16,
+   "sotto_1.7": 6,
+   "sopra_2.4": 17,
    "piu_bassi": [
     [
      1.569,
@@ -119,6 +119,14 @@
      "ALA TERRICCIOLA",
      "Terricciola",
      "PI",
+     false
+    ],
+    [
+     1.659,
+     "17918",
+     "di vincenzo gennaro",
+     "Calvizzano",
+     "NA",
      false
     ],
     [
@@ -143,14 +151,6 @@
      "56140 ENI",
      "Napoli",
      "NA",
-     false
-    ],
-    [
-     1.709,
-     "59989",
-     "Easy Service, Via Aurelia",
-     "Roma",
-     "RM",
      false
     ]
    ],
@@ -190,14 +190,14 @@
    ]
   },
   "D0": {
-   "n": 6851,
+   "n": 6676,
    "min": 1.639,
-   "p5": 2.19,
+   "p5": 2.189,
    "med": 2.399,
-   "p95": 2.529,
+   "p95": 2.52,
    "max": 3.225,
    "sotto_1.7": 4,
-   "sopra_2.4": 3138,
+   "sopra_2.4": 3025,
    "piu_bassi": [
     [
      1.639,
@@ -284,14 +284,14 @@
    ]
   },
   "D1": {
-   "n": 9736,
+   "n": 9402,
    "min": 1.619,
-   "p5": 2.187,
-   "med": 2.2,
-   "p95": 2.31,
+   "p5": 2.179,
+   "med": 2.199,
+   "p95": 2.299,
    "max": 2.799,
-   "sotto_1.7": 9,
-   "sopra_2.4": 107,
+   "sotto_1.7": 10,
+   "sopra_2.4": 103,
    "piu_bassi": [
     [
      1.619,
@@ -318,6 +318,14 @@
      false
     ],
     [
+     1.639,
+     "17918",
+     "di vincenzo gennaro",
+     "Calvizzano",
+     "NA",
+     false
+    ],
+    [
      1.649,
      "50492",
      "STAZIONE DI SERVIZIO ENI di Valsecchi Andrea",
@@ -331,14 +339,6 @@
      "ZENO CIRO",
      "Torre Del Greco",
      "NA",
-     false
-    ],
-    [
-     1.669,
-     "6681",
-     "FROSINONE SS. 155 KM 0 767",
-     "Frosinone",
-     "FR",
      false
     ]
    ],
@@ -378,13 +378,13 @@
    ]
   },
   "G0": {
-   "n": 2109,
+   "n": 2041,
    "min": 0.549,
    "p5": 0.759,
    "med": 0.839,
    "p95": 0.939,
    "max": 1.399,
-   "sotto_1.7": 2109,
+   "sotto_1.7": 2041,
    "sopra_2.4": 0,
    "piu_bassi": [
     [
@@ -392,22 +392,6 @@
      "32490",
      "CASTEL VOLTURNO SS 7/IV DOMITIANA KM 30+800",
      "Castel Volturno",
-     "CE",
-     false
-    ],
-    [
-     0.589,
-     "8486",
-     "VULCANGAS CUCCURANO",
-     "Fano",
-     "PU",
-     false
-    ],
-    [
-     0.669,
-     "55084",
-     "GREEN GAS  STAZIONE DI SERVIZIO ",
-     "San Cipriano D'Aversa",
      "CE",
      false
     ],
@@ -433,6 +417,22 @@
      "SERVICE AREA MONTANARELLA SRL",
      "Melfi",
      "PZ",
+     false
+    ],
+    [
+     0.695,
+     "57829",
+     "LEONARDO ENERGY POWER",
+     "San Vitaliano",
+     "NA",
+     false
+    ],
+    [
+     0.697,
+     "34936",
+     "LORO F.LLI SPA - CASTELNUOVO",
+     "Castelnuovo",
+     "TN",
      false
     ]
    ],
@@ -472,13 +472,13 @@
    ]
   },
   "G1": {
-   "n": 83,
+   "n": 84,
    "min": 0.697,
    "p5": 0.702,
-   "med": 0.829,
+   "med": 0.819,
    "p95": 0.919,
    "max": 0.999,
-   "sotto_1.7": 83,
+   "sotto_1.7": 84,
    "sopra_2.4": 0,
    "piu_bassi": [
     [
@@ -566,14 +566,14 @@
    ]
   },
   "M0": {
-   "n": 687,
+   "n": 658,
    "min": 0.936,
-   "p5": 1.732,
-   "med": 2.149,
+   "p5": 1.788,
+   "med": 2.197,
    "p95": 2.499,
    "max": 4.999,
    "sotto_1.7": 30,
-   "sopra_2.4": 56,
+   "sopra_2.4": 51,
    "piu_bassi": [
     [
      0.936,
@@ -662,8 +662,8 @@
   "M1": {
    "n": 42,
    "min": 1.499,
-   "p5": 1.749,
-   "med": 2.099,
+   "p5": 1.799,
+   "med": 2.159,
    "p95": 2.499,
    "max": 2.999,
    "sotto_1.7": 1,
@@ -675,14 +675,6 @@
      "B.CARBURANTI Via Prov.le Pianura",
      "Pozzuoli",
      "NA",
-     false
-    ],
-    [
-     1.732,
-     "50282",
-     "Curno",
-     "Curno",
-     "BG",
      false
     ],
     [
@@ -710,11 +702,19 @@
      false
     ],
     [
-     1.859,
-     "56799",
-     "OG Clean Fuels NOVARA",
-     "Novara",
-     "NO",
+     1.832,
+     "50282",
+     "Curno",
+     "Curno",
+     "BG",
+     false
+    ],
+    [
+     1.889,
+     "57604",
+     "ACQUA E SOLE - NEORISORSE",
+     "Vellezzo Bellini",
+     "PV",
      false
     ]
    ],
