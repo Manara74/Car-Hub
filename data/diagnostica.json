@@ -1,12 +1,12 @@
 {
- "date": "2026-11-12",
+ "date": "2026-11-13",
  "keys": {
   "B0": {
-   "n": 6694,
+   "n": 6552,
    "min": 1.569,
-   "p5": 1.939,
+   "p5": 1.938,
    "med": 2.149,
-   "p95": 2.29,
+   "p95": 2.287,
    "max": 2.999,
    "sotto_1.7": 1,
    "sopra_2.4": 55,
@@ -44,11 +44,11 @@
      false
     ],
     [
-     1.775,
-     "55410",
-     "MM CARBUARNTI ",
-     "Napoli",
-     "NA",
+     1.774,
+     "54145",
+     "STAR OIL",
+     "Avezzano",
+     "AQ",
      false
     ],
     [
@@ -61,6 +61,14 @@
     ]
    ],
    "piu_alti": [
+    [
+     2.763,
+     "61340",
+     "Gestore MBL srl",
+     "Capraia Isola",
+     "LI",
+     false
+    ],
     [
      2.789,
      "15315",
@@ -78,14 +86,6 @@
      false
     ],
     [
-     2.81,
-     "37545",
-     "IP FOSSANO - SAN LORENZO",
-     "Fossano",
-     "CN",
-     false
-    ],
-    [
      2.999,
      "59919",
      "SANTORO PETROLI -  TORELLA DEI LOMBARDI",
@@ -96,13 +96,13 @@
    ]
   },
   "B1": {
-   "n": 9408,
+   "n": 9190,
    "min": 1.569,
-   "p5": 1.934,
-   "med": 1.969,
-   "p95": 2.056,
+   "p5": 1.929,
+   "med": 1.949,
+   "p95": 2.048,
    "max": 2.789,
-   "sotto_1.7": 6,
+   "sotto_1.7": 5,
    "sopra_2.4": 17,
    "piu_bassi": [
     [
@@ -119,14 +119,6 @@
      "ALA TERRICCIOLA",
      "Terricciola",
      "PI",
-     false
-    ],
-    [
-     1.659,
-     "17918",
-     "di vincenzo gennaro",
-     "Calvizzano",
-     "NA",
      false
     ],
     [
@@ -151,6 +143,14 @@
      "56140 ENI",
      "Napoli",
      "NA",
+     false
+    ],
+    [
+     1.709,
+     "59989",
+     "Easy Service, Via Aurelia",
+     "Roma",
+     "RM",
      false
     ]
    ],
@@ -190,14 +190,14 @@
    ]
   },
   "D0": {
-   "n": 6676,
+   "n": 6536,
    "min": 1.639,
-   "p5": 2.189,
+   "p5": 2.188,
    "med": 2.399,
-   "p95": 2.52,
-   "max": 3.225,
+   "p95": 2.519,
+   "max": 3.175,
    "sotto_1.7": 4,
-   "sopra_2.4": 3025,
+   "sopra_2.4": 2901,
    "piu_bassi": [
     [
      1.639,
@@ -274,7 +274,7 @@
      false
     ],
     [
-     3.225,
+     3.175,
      "37545",
      "IP FOSSANO - SAN LORENZO",
      "Fossano",
@@ -284,14 +284,14 @@
    ]
   },
   "D1": {
-   "n": 9402,
+   "n": 9189,
    "min": 1.619,
    "p5": 2.179,
    "med": 2.199,
    "p95": 2.299,
    "max": 2.799,
-   "sotto_1.7": 10,
-   "sopra_2.4": 103,
+   "sotto_1.7": 9,
+   "sopra_2.4": 99,
    "piu_bassi": [
     [
      1.619,
@@ -318,14 +318,6 @@
      false
     ],
     [
-     1.639,
-     "17918",
-     "di vincenzo gennaro",
-     "Calvizzano",
-     "NA",
-     false
-    ],
-    [
      1.649,
      "50492",
      "STAZIONE DI SERVIZIO ENI di Valsecchi Andrea",
@@ -339,6 +331,14 @@
      "ZENO CIRO",
      "Torre Del Greco",
      "NA",
+     false
+    ],
+    [
+     1.669,
+     "6681",
+     "FROSINONE SS. 155 KM 0 767",
+     "Frosinone",
+     "FR",
      false
     ]
    ],
@@ -378,13 +378,13 @@
    ]
   },
   "G0": {
-   "n": 2041,
+   "n": 1993,
    "min": 0.549,
    "p5": 0.759,
    "med": 0.839,
    "p95": 0.939,
    "max": 1.399,
-   "sotto_1.7": 2041,
+   "sotto_1.7": 1993,
    "sopra_2.4": 0,
    "piu_bassi": [
     [
@@ -392,6 +392,14 @@
      "32490",
      "CASTEL VOLTURNO SS 7/IV DOMITIANA KM 30+800",
      "Castel Volturno",
+     "CE",
+     false
+    ],
+    [
+     0.669,
+     "55084",
+     "GREEN GAS  STAZIONE DI SERVIZIO ",
+     "San Cipriano D'Aversa",
      "CE",
      false
     ],
@@ -425,14 +433,6 @@
      "LEONARDO ENERGY POWER",
      "San Vitaliano",
      "NA",
-     false
-    ],
-    [
-     0.697,
-     "34936",
-     "LORO F.LLI SPA - CASTELNUOVO",
-     "Castelnuovo",
-     "TN",
      false
     ]
    ],
@@ -472,13 +472,13 @@
    ]
   },
   "G1": {
-   "n": 84,
+   "n": 81,
    "min": 0.697,
-   "p5": 0.702,
-   "med": 0.819,
+   "p5": 0.725,
+   "med": 0.839,
    "p95": 0.919,
    "max": 0.999,
-   "sotto_1.7": 84,
+   "sotto_1.7": 81,
    "sopra_2.4": 0,
    "piu_bassi": [
     [
@@ -487,14 +487,6 @@
      "GNP CASTELNUOVO",
      "Castelnuovo",
      "TN",
-     false
-    ],
-    [
-     0.699,
-     "49437",
-     "PA135",
-     "Partinico",
-     "PA",
      false
     ],
     [
@@ -527,6 +519,14 @@
      "ESSO 14",
      "Catanzaro",
      "CZ",
+     false
+    ],
+    [
+     0.739,
+     "42264",
+     "ENI via emilia levante faenza",
+     "Faenza",
+     "RA",
      false
     ]
    ],
@@ -566,13 +566,13 @@
    ]
   },
   "M0": {
-   "n": 658,
+   "n": 650,
    "min": 0.936,
-   "p5": 1.788,
+   "p5": 1.789,
    "med": 2.197,
    "p95": 2.499,
    "max": 4.999,
-   "sotto_1.7": 30,
+   "sotto_1.7": 29,
    "sopra_2.4": 51,
    "piu_bassi": [
     [
@@ -626,27 +626,27 @@
    ],
    "piu_alti": [
     [
+     2.799,
+     "4008",
+     "METANO ROMEA s.r.l.s.",
+     "Comacchio",
+     "FE",
+     false
+    ],
+    [
+     2.809,
+     "60977",
+     "TPXX6",
+     "Mazara Del Vallo",
+     "TP",
+     false
+    ],
+    [
      2.867,
      "60378",
      "JONIA CARBURANTI",
      "Riposto",
      "CT",
-     false
-    ],
-    [
-     2.899,
-     "40698",
-     "A2A Energia - Future Fuels srl",
-     "Brescia",
-     "BS",
-     false
-    ],
-    [
-     2.999,
-     "47939",
-     "Castelfranco Veneto Azzalini Energie",
-     "Castelfranco Veneto",
-     "TV",
      false
     ],
     [
@@ -660,14 +660,14 @@
    ]
   },
   "M1": {
-   "n": 42,
+   "n": 40,
    "min": 1.499,
    "p5": 1.799,
-   "med": 2.159,
-   "p95": 2.499,
-   "max": 2.999,
+   "med": 2.099,
+   "p95": 2.479,
+   "max": 2.499,
    "sotto_1.7": 1,
-   "sopra_2.4": 4,
+   "sopra_2.4": 3,
    "piu_bassi": [
     [
      1.499,
@@ -710,15 +710,23 @@
      false
     ],
     [
-     1.889,
-     "57604",
-     "ACQUA E SOLE - NEORISORSE",
-     "Vellezzo Bellini",
-     "PV",
+     1.859,
+     "56799",
+     "OG Clean Fuels NOVARA",
+     "Novara",
+     "NO",
      false
     ]
    ],
    "piu_alti": [
+    [
+     2.359,
+     "58534",
+     "CIS NORD - VILLA BAGNO",
+     "Reggio Nell'Emilia",
+     "RE",
+     false
+    ],
     [
      2.479,
      "54357",
@@ -741,14 +749,6 @@
      "MEBORAST",
      "Appiano Sulla Strada Del Vino",
      "BZ",
-     false
-    ],
-    [
-     2.999,
-     "47939",
-     "Castelfranco Veneto Azzalini Energie",
-     "Castelfranco Veneto",
-     "TV",
      false
     ]
    ]
