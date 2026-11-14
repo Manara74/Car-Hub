@@ -2,14 +2,14 @@
  "date": "2026-11-14",
  "keys": {
   "B0": {
-   "n": 6421,
+   "n": 6279,
    "min": 1.569,
-   "p5": 1.938,
+   "p5": 1.934,
    "med": 2.149,
    "p95": 2.279,
    "max": 2.999,
    "sotto_1.7": 1,
-   "sopra_2.4": 55,
+   "sopra_2.4": 52,
    "piu_bassi": [
     [
      1.569,
@@ -20,11 +20,19 @@
      false
     ],
     [
-     1.738,
-     "42723",
-     "Outlet Carburanti",
-     "Segrate",
-     "MI",
+     1.735,
+     "20970",
+     "b.oil srl",
+     "Napoli",
+     "NA",
+     false
+    ],
+    [
+     1.735,
+     "55410",
+     "MM CARBUARNTI ",
+     "Napoli",
+     "NA",
      false
     ],
     [
@@ -50,25 +58,9 @@
      "Cagli",
      "PU",
      false
-    ],
-    [
-     1.789,
-     "37062",
-     "AdS Agip - Candela Casello A16",
-     "Candela",
-     "FG",
-     false
     ]
    ],
    "piu_alti": [
-    [
-     2.763,
-     "61340",
-     "Gestore MBL srl",
-     "Capraia Isola",
-     "LI",
-     false
-    ],
     [
      2.789,
      "15315",
@@ -86,6 +78,14 @@
      false
     ],
     [
+     2.899,
+     "60725",
+     "SERVICE CAR SAS",
+     "Caserta",
+     "CE",
+     false
+    ],
+    [
      2.999,
      "59919",
      "SANTORO PETROLI -  TORELLA DEI LOMBARDI",
@@ -96,13 +96,13 @@
    ]
   },
   "B1": {
-   "n": 8983,
+   "n": 8721,
    "min": 1.569,
    "p5": 1.929,
-   "med": 1.949,
+   "med": 1.945,
    "p95": 2.039,
    "max": 2.789,
-   "sotto_1.7": 5,
+   "sotto_1.7": 6,
    "sopra_2.4": 17,
    "piu_bassi": [
     [
@@ -119,6 +119,14 @@
      "ALA TERRICCIOLA",
      "Terricciola",
      "PI",
+     false
+    ],
+    [
+     1.659,
+     "17918",
+     "di vincenzo gennaro",
+     "Calvizzano",
+     "NA",
      false
     ],
     [
@@ -143,14 +151,6 @@
      "56140 ENI",
      "Napoli",
      "NA",
-     false
-    ],
-    [
-     1.709,
-     "59989",
-     "Easy Service, Via Aurelia",
-     "Roma",
-     "RM",
      false
     ]
    ],
@@ -190,14 +190,14 @@
    ]
   },
   "D0": {
-   "n": 6405,
+   "n": 6262,
    "min": 1.659,
-   "p5": 2.188,
-   "med": 2.399,
+   "p5": 2.187,
+   "med": 2.398,
    "p95": 2.517,
    "max": 3.175,
    "sotto_1.7": 3,
-   "sopra_2.4": 2842,
+   "sopra_2.4": 2763,
    "piu_bassi": [
     [
      1.659,
@@ -284,14 +284,14 @@
    ]
   },
   "D1": {
-   "n": 8981,
+   "n": 8716,
    "min": 1.619,
    "p5": 2.179,
    "med": 2.199,
    "p95": 2.299,
    "max": 2.799,
-   "sotto_1.7": 9,
-   "sopra_2.4": 96,
+   "sotto_1.7": 10,
+   "sopra_2.4": 88,
    "piu_bassi": [
     [
      1.619,
@@ -318,6 +318,14 @@
      false
     ],
     [
+     1.639,
+     "17918",
+     "di vincenzo gennaro",
+     "Calvizzano",
+     "NA",
+     false
+    ],
+    [
      1.649,
      "50492",
      "STAZIONE DI SERVIZIO ENI di Valsecchi Andrea",
@@ -331,14 +339,6 @@
      "ZENO CIRO",
      "Torre Del Greco",
      "NA",
-     false
-    ],
-    [
-     1.669,
-     "6681",
-     "FROSINONE SS. 155 KM 0 767",
-     "Frosinone",
-     "FR",
      false
     ]
    ],
@@ -378,13 +378,13 @@
    ]
   },
   "G0": {
-   "n": 1924,
+   "n": 1866,
    "min": 0.549,
    "p5": 0.759,
    "med": 0.839,
-   "p95": 0.945,
+   "p95": 0.948,
    "max": 1.111,
-   "sotto_1.7": 1924,
+   "sotto_1.7": 1866,
    "sopra_2.4": 0,
    "piu_bassi": [
     [
@@ -472,13 +472,13 @@
    ]
   },
   "G1": {
-   "n": 78,
+   "n": 80,
    "min": 0.697,
-   "p5": 0.702,
+   "p5": 0.725,
    "med": 0.839,
-   "p95": 0.959,
+   "p95": 0.919,
    "max": 0.999,
-   "sotto_1.7": 78,
+   "sotto_1.7": 80,
    "sopra_2.4": 0,
    "piu_bassi": [
     [
@@ -566,14 +566,14 @@
    ]
   },
   "M0": {
-   "n": 624,
+   "n": 594,
    "min": 0.936,
-   "p5": 1.797,
-   "med": 2.197,
+   "p5": 1.788,
+   "med": 2.198,
    "p95": 2.499,
    "max": 4.999,
-   "sotto_1.7": 27,
-   "sopra_2.4": 48,
+   "sotto_1.7": 28,
+   "sopra_2.4": 44,
    "piu_bassi": [
     [
      0.936,
@@ -663,7 +663,7 @@
    "n": 39,
    "min": 1.499,
    "p5": 1.749,
-   "med": 2.159,
+   "med": 2.179,
    "p95": 2.499,
    "max": 2.499,
    "sotto_1.7": 1,
@@ -720,11 +720,11 @@
    ],
    "piu_alti": [
     [
-     2.359,
-     "58534",
-     "CIS NORD - VILLA BAGNO",
-     "Reggio Nell'Emilia",
-     "RE",
+     2.399,
+     "62224",
+     "IG OIL SRL",
+     "Paolisi",
+     "BN",
      false
     ],
     [
