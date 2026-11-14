@@ -1,15 +1,15 @@
 {
- "date": "2026-11-13",
+ "date": "2026-11-14",
  "keys": {
   "B0": {
-   "n": 6552,
+   "n": 6543,
    "min": 1.569,
    "p5": 1.938,
    "med": 2.149,
    "p95": 2.287,
    "max": 2.999,
    "sotto_1.7": 1,
-   "sopra_2.4": 55,
+   "sopra_2.4": 56,
    "piu_bassi": [
     [
      1.569,
@@ -20,19 +20,27 @@
      false
     ],
     [
+     1.715,
+     "55410",
+     "MM CARBUARNTI ",
+     "Napoli",
+     "NA",
+     false
+    ],
+    [
+     1.735,
+     "20970",
+     "b.oil srl",
+     "Napoli",
+     "NA",
+     false
+    ],
+    [
      1.738,
      "42723",
      "Outlet Carburanti",
      "Segrate",
      "MI",
-     false
-    ],
-    [
-     1.739,
-     "58876",
-     "MONTEPORZIO",
-     "Monte Porzio Catone",
-     "RM",
      false
     ],
     [
@@ -50,25 +58,9 @@
      "Avezzano",
      "AQ",
      false
-    ],
-    [
-     1.789,
-     "10464",
-     "ANGELI SABRINA",
-     "Cagli",
-     "PU",
-     false
     ]
    ],
    "piu_alti": [
-    [
-     2.763,
-     "61340",
-     "Gestore MBL srl",
-     "Capraia Isola",
-     "LI",
-     false
-    ],
     [
      2.789,
      "15315",
@@ -86,6 +78,14 @@
      false
     ],
     [
+     2.899,
+     "60725",
+     "SERVICE CAR SAS",
+     "Caserta",
+     "CE",
+     false
+    ],
+    [
      2.999,
      "59919",
      "SANTORO PETROLI -  TORELLA DEI LOMBARDI",
@@ -96,13 +96,13 @@
    ]
   },
   "B1": {
-   "n": 9190,
+   "n": 9178,
    "min": 1.569,
    "p5": 1.929,
    "med": 1.949,
-   "p95": 2.048,
+   "p95": 2.039,
    "max": 2.789,
-   "sotto_1.7": 5,
+   "sotto_1.7": 6,
    "sopra_2.4": 17,
    "piu_bassi": [
     [
@@ -119,6 +119,14 @@
      "ALA TERRICCIOLA",
      "Terricciola",
      "PI",
+     false
+    ],
+    [
+     1.659,
+     "17918",
+     "di vincenzo gennaro",
+     "Calvizzano",
+     "NA",
      false
     ],
     [
@@ -143,14 +151,6 @@
      "56140 ENI",
      "Napoli",
      "NA",
-     false
-    ],
-    [
-     1.709,
-     "59989",
-     "Easy Service, Via Aurelia",
-     "Roma",
-     "RM",
      false
     ]
    ],
@@ -190,23 +190,15 @@
    ]
   },
   "D0": {
-   "n": 6536,
-   "min": 1.639,
+   "n": 6525,
+   "min": 1.659,
    "p5": 2.188,
    "med": 2.399,
    "p95": 2.519,
    "max": 3.175,
-   "sotto_1.7": 4,
+   "sotto_1.7": 3,
    "sopra_2.4": 2901,
    "piu_bassi": [
-    [
-     1.639,
-     "58876",
-     "MONTEPORZIO",
-     "Monte Porzio Catone",
-     "RM",
-     false
-    ],
     [
      1.659,
      "33454",
@@ -246,6 +238,14 @@
      "Corleto Perticara",
      "PZ",
      false
+    ],
+    [
+     1.869,
+     "50492",
+     "STAZIONE DI SERVIZIO ENI di Valsecchi Andrea",
+     "Bergamo",
+     "BG",
+     false
     ]
    ],
    "piu_alti": [
@@ -284,14 +284,14 @@
    ]
   },
   "D1": {
-   "n": 9189,
+   "n": 9176,
    "min": 1.619,
    "p5": 2.179,
    "med": 2.199,
    "p95": 2.299,
    "max": 2.799,
-   "sotto_1.7": 9,
-   "sopra_2.4": 99,
+   "sotto_1.7": 10,
+   "sopra_2.4": 97,
    "piu_bassi": [
     [
      1.619,
@@ -318,6 +318,14 @@
      false
     ],
     [
+     1.639,
+     "17918",
+     "di vincenzo gennaro",
+     "Calvizzano",
+     "NA",
+     false
+    ],
+    [
      1.649,
      "50492",
      "STAZIONE DI SERVIZIO ENI di Valsecchi Andrea",
@@ -331,14 +339,6 @@
      "ZENO CIRO",
      "Torre Del Greco",
      "NA",
-     false
-    ],
-    [
-     1.669,
-     "6681",
-     "FROSINONE SS. 155 KM 0 767",
-     "Frosinone",
-     "FR",
      false
     ]
    ],
@@ -378,13 +378,13 @@
    ]
   },
   "G0": {
-   "n": 1993,
+   "n": 1985,
    "min": 0.549,
    "p5": 0.759,
    "med": 0.839,
-   "p95": 0.939,
+   "p95": 0.945,
    "max": 1.399,
-   "sotto_1.7": 1993,
+   "sotto_1.7": 1985,
    "sopra_2.4": 0,
    "piu_bassi": [
     [
@@ -392,14 +392,6 @@
      "32490",
      "CASTEL VOLTURNO SS 7/IV DOMITIANA KM 30+800",
      "Castel Volturno",
-     "CE",
-     false
-    ],
-    [
-     0.669,
-     "55084",
-     "GREEN GAS  STAZIONE DI SERVIZIO ",
-     "San Cipriano D'Aversa",
      "CE",
      false
     ],
@@ -433,6 +425,14 @@
      "LEONARDO ENERGY POWER",
      "San Vitaliano",
      "NA",
+     false
+    ],
+    [
+     0.697,
+     "34936",
+     "LORO F.LLI SPA - CASTELNUOVO",
+     "Castelnuovo",
+     "TN",
      false
     ]
    ],
@@ -472,13 +472,13 @@
    ]
   },
   "G1": {
-   "n": 81,
+   "n": 83,
    "min": 0.697,
    "p5": 0.725,
    "med": 0.839,
    "p95": 0.919,
    "max": 0.999,
-   "sotto_1.7": 81,
+   "sotto_1.7": 83,
    "sopra_2.4": 0,
    "piu_bassi": [
     [
@@ -566,14 +566,14 @@
    ]
   },
   "M0": {
-   "n": 650,
+   "n": 641,
    "min": 0.936,
-   "p5": 1.789,
+   "p5": 1.788,
    "med": 2.197,
    "p95": 2.499,
    "max": 4.999,
-   "sotto_1.7": 29,
-   "sopra_2.4": 51,
+   "sotto_1.7": 30,
+   "sopra_2.4": 49,
    "piu_bassi": [
     [
      0.936,
@@ -660,10 +660,10 @@
    ]
   },
   "M1": {
-   "n": 40,
+   "n": 41,
    "min": 1.499,
    "p5": 1.799,
-   "med": 2.099,
+   "med": 2.159,
    "p95": 2.479,
    "max": 2.499,
    "sotto_1.7": 1,
@@ -710,21 +710,21 @@
      false
     ],
     [
-     1.859,
-     "56799",
-     "OG Clean Fuels NOVARA",
-     "Novara",
-     "NO",
+     1.889,
+     "57604",
+     "ACQUA E SOLE - NEORISORSE",
+     "Vellezzo Bellini",
+     "PV",
      false
     ]
    ],
    "piu_alti": [
     [
-     2.359,
-     "58534",
-     "CIS NORD - VILLA BAGNO",
-     "Reggio Nell'Emilia",
-     "RE",
+     2.399,
+     "62224",
+     "IG OIL SRL",
+     "Paolisi",
+     "BN",
      false
     ],
     [
