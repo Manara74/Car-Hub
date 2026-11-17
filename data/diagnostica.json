@@ -1,15 +1,15 @@
 {
- "date": "2026-11-16",
+ "date": "2026-11-17",
  "keys": {
   "B0": {
-   "n": 6215,
+   "n": 6222,
    "min": 1.569,
-   "p5": 1.929,
+   "p5": 1.927,
    "med": 2.139,
-   "p95": 2.27,
+   "p95": 2.267,
    "max": 2.999,
    "sotto_1.7": 1,
-   "sopra_2.4": 51,
+   "sopra_2.4": 50,
    "piu_bassi": [
     [
      1.569,
@@ -17,22 +17,6 @@
      "Via Degli Angeli",
      "Roma",
      "RM",
-     false
-    ],
-    [
-     1.729,
-     "55410",
-     "MM CARBUARNTI ",
-     "Napoli",
-     "NA",
-     false
-    ],
-    [
-     1.735,
-     "20970",
-     "b.oil srl",
-     "Napoli",
-     "NA",
      false
     ],
     [
@@ -57,6 +41,22 @@
      "ANGELI SABRINA",
      "Cagli",
      "PU",
+     false
+    ],
+    [
+     1.789,
+     "37062",
+     "AdS Agip - Candela Casello A16",
+     "Candela",
+     "FG",
+     false
+    ],
+    [
+     1.798,
+     "57528",
+     "via argine 425",
+     "Napoli",
+     "NA",
      false
     ]
    ],
@@ -96,13 +96,13 @@
    ]
   },
   "B1": {
-   "n": 8630,
+   "n": 8635,
    "min": 1.569,
-   "p5": 1.919,
+   "p5": 1.915,
    "med": 1.94,
-   "p95": 2.019,
+   "p95": 1.999,
    "max": 2.789,
-   "sotto_1.7": 6,
+   "sotto_1.7": 5,
    "sopra_2.4": 17,
    "piu_bassi": [
     [
@@ -119,14 +119,6 @@
      "ALA TERRICCIOLA",
      "Terricciola",
      "PI",
-     false
-    ],
-    [
-     1.659,
-     "17918",
-     "di vincenzo gennaro",
-     "Calvizzano",
-     "NA",
      false
     ],
     [
@@ -151,6 +143,14 @@
      "56140 ENI",
      "Napoli",
      "NA",
+     false
+    ],
+    [
+     1.709,
+     "59989",
+     "Easy Service, Via Aurelia",
+     "Roma",
+     "RM",
      false
     ]
    ],
@@ -190,14 +190,14 @@
    ]
   },
   "D0": {
-   "n": 6198,
+   "n": 6207,
    "min": 1.659,
    "p5": 2.179,
    "med": 2.389,
-   "p95": 2.509,
+   "p95": 2.499,
    "max": 3.175,
    "sotto_1.7": 3,
-   "sopra_2.4": 2669,
+   "sopra_2.4": 2642,
    "piu_bassi": [
     [
      1.659,
@@ -284,14 +284,14 @@
    ]
   },
   "D1": {
-   "n": 8624,
+   "n": 8630,
    "min": 1.619,
-   "p5": 2.175,
+   "p5": 2.169,
    "med": 2.199,
    "p95": 2.299,
    "max": 2.799,
-   "sotto_1.7": 10,
-   "sopra_2.4": 75,
+   "sotto_1.7": 9,
+   "sopra_2.4": 72,
    "piu_bassi": [
     [
      1.619,
@@ -318,14 +318,6 @@
      false
     ],
     [
-     1.639,
-     "17918",
-     "di vincenzo gennaro",
-     "Calvizzano",
-     "NA",
-     false
-    ],
-    [
      1.649,
      "50492",
      "STAZIONE DI SERVIZIO ENI di Valsecchi Andrea",
@@ -339,6 +331,14 @@
      "ZENO CIRO",
      "Torre Del Greco",
      "NA",
+     false
+    ],
+    [
+     1.669,
+     "6681",
+     "FROSINONE SS. 155 KM 0 767",
+     "Frosinone",
+     "FR",
      false
     ]
    ],
@@ -378,13 +378,13 @@
    ]
   },
   "G0": {
-   "n": 1844,
+   "n": 1850,
    "min": 0.549,
-   "p5": 0.759,
+   "p5": 0.766,
    "med": 0.839,
-   "p95": 0.948,
-   "max": 1.111,
-   "sotto_1.7": 1844,
+   "p95": 0.945,
+   "max": 1.124,
+   "sotto_1.7": 1850,
    "sopra_2.4": 0,
    "piu_bassi": [
     [
@@ -420,31 +420,23 @@
      false
     ],
     [
-     0.695,
-     "57829",
-     "LEONARDO ENERGY POWER",
-     "San Vitaliano",
-     "NA",
-     false
-    ],
-    [
      0.697,
      "34936",
      "LORO F.LLI SPA - CASTELNUOVO",
      "Castelnuovo",
      "TN",
      false
+    ],
+    [
+     0.699,
+     "24209",
+     "SAN MINIATO",
+     "San Miniato",
+     "PI",
+     false
     ]
    ],
    "piu_alti": [
-    [
-     1.049,
-     "19409",
-     "STAZIONE DI SERVIZIO MELISSA",
-     "Jerzu",
-     "NU",
-     false
-    ],
     [
      1.059,
      "48025",
@@ -468,17 +460,25 @@
      "Sassari",
      "SS",
      false
+    ],
+    [
+     1.124,
+     "28600",
+     "BREAK POINT",
+     "Mamoiada",
+     "NU",
+     false
     ]
    ]
   },
   "G1": {
-   "n": 80,
+   "n": 79,
    "min": 0.697,
-   "p5": 0.725,
+   "p5": 0.702,
    "med": 0.839,
-   "p95": 0.919,
+   "p95": 0.959,
    "max": 0.999,
-   "sotto_1.7": 80,
+   "sotto_1.7": 79,
    "sopra_2.4": 0,
    "piu_bassi": [
     [
@@ -566,14 +566,14 @@
    ]
   },
   "M0": {
-   "n": 588,
+   "n": 596,
    "min": 0.936,
-   "p5": 1.789,
-   "med": 2.198,
+   "p5": 1.797,
+   "med": 2.197,
    "p95": 2.499,
    "max": 4.999,
-   "sotto_1.7": 27,
-   "sopra_2.4": 43,
+   "sotto_1.7": 26,
+   "sopra_2.4": 44,
    "piu_bassi": [
     [
      0.936,
@@ -626,19 +626,19 @@
    ],
    "piu_alti": [
     [
+     2.799,
+     "4008",
+     "METANO ROMEA s.r.l.s.",
+     "Comacchio",
+     "FE",
+     false
+    ],
+    [
      2.809,
      "60977",
      "TPXX6",
      "Mazara Del Vallo",
      "TP",
-     false
-    ],
-    [
-     2.867,
-     "60378",
-     "JONIA CARBURANTI",
-     "Riposto",
-     "CT",
      false
     ],
     [
@@ -660,7 +660,7 @@
    ]
   },
   "M1": {
-   "n": 39,
+   "n": 38,
    "min": 1.699,
    "p5": 1.749,
    "med": 2.179,
@@ -694,7 +694,7 @@
      false
     ],
     [
-     1.799,
+     1.859,
      "56188",
      "IPERAL CARBURANTI GERA LARIO",
      "Gera Lario",
@@ -720,11 +720,11 @@
    ],
    "piu_alti": [
     [
-     2.399,
-     "62224",
-     "IG OIL SRL",
-     "Paolisi",
-     "BN",
+     2.359,
+     "58534",
+     "CIS NORD - VILLA BAGNO",
+     "Reggio Nell'Emilia",
+     "RE",
      false
     ],
     [
