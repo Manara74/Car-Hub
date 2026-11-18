@@ -1,12 +1,12 @@
 {
- "date": "2026-11-17",
+ "date": "2026-11-18",
  "keys": {
   "B0": {
-   "n": 6222,
+   "n": 6238,
    "min": 1.569,
-   "p5": 1.927,
+   "p5": 1.919,
    "med": 2.139,
-   "p95": 2.267,
+   "p95": 2.259,
    "max": 2.999,
    "sotto_1.7": 1,
    "sopra_2.4": 50,
@@ -17,6 +17,14 @@
      "Via Degli Angeli",
      "Roma",
      "RM",
+     false
+    ],
+    [
+     1.735,
+     "20970",
+     "b.oil srl",
+     "Napoli",
+     "NA",
      false
     ],
     [
@@ -36,27 +44,19 @@
      false
     ],
     [
+     1.775,
+     "55410",
+     "MM CARBUARNTI ",
+     "Napoli",
+     "NA",
+     false
+    ],
+    [
      1.789,
      "10464",
      "ANGELI SABRINA",
      "Cagli",
      "PU",
-     false
-    ],
-    [
-     1.789,
-     "37062",
-     "AdS Agip - Candela Casello A16",
-     "Candela",
-     "FG",
-     false
-    ],
-    [
-     1.798,
-     "57528",
-     "via argine 425",
-     "Napoli",
-     "NA",
      false
     ]
    ],
@@ -96,13 +96,13 @@
    ]
   },
   "B1": {
-   "n": 8635,
+   "n": 8665,
    "min": 1.569,
-   "p5": 1.915,
+   "p5": 1.899,
    "med": 1.94,
    "p95": 1.999,
    "max": 2.789,
-   "sotto_1.7": 5,
+   "sotto_1.7": 6,
    "sopra_2.4": 17,
    "piu_bassi": [
     [
@@ -119,6 +119,14 @@
      "ALA TERRICCIOLA",
      "Terricciola",
      "PI",
+     false
+    ],
+    [
+     1.659,
+     "17918",
+     "di vincenzo gennaro",
+     "Calvizzano",
+     "NA",
      false
     ],
     [
@@ -143,14 +151,6 @@
      "56140 ENI",
      "Napoli",
      "NA",
-     false
-    ],
-    [
-     1.709,
-     "59989",
-     "Easy Service, Via Aurelia",
-     "Roma",
-     "RM",
      false
     ]
    ],
@@ -190,14 +190,14 @@
    ]
   },
   "D0": {
-   "n": 6207,
+   "n": 6219,
    "min": 1.659,
    "p5": 2.179,
    "med": 2.389,
    "p95": 2.499,
-   "max": 3.175,
+   "max": 3.189,
    "sotto_1.7": 3,
-   "sopra_2.4": 2642,
+   "sopra_2.4": 2616,
    "piu_bassi": [
     [
      1.659,
@@ -267,31 +267,31 @@
     ],
     [
      3.175,
-     "24518",
-     "IP VILLANOVA MONDOVI'",
-     "Villanova Mondovì",
+     "37545",
+     "IP FOSSANO - SAN LORENZO",
+     "Fossano",
      "CN",
      false
     ],
     [
-     3.175,
-     "37545",
-     "IP FOSSANO - SAN LORENZO",
-     "Fossano",
+     3.189,
+     "24518",
+     "IP VILLANOVA MONDOVI'",
+     "Villanova Mondovì",
      "CN",
      false
     ]
    ]
   },
   "D1": {
-   "n": 8630,
+   "n": 8656,
    "min": 1.619,
    "p5": 2.169,
    "med": 2.199,
-   "p95": 2.299,
+   "p95": 2.295,
    "max": 2.799,
-   "sotto_1.7": 9,
-   "sopra_2.4": 72,
+   "sotto_1.7": 10,
+   "sopra_2.4": 68,
    "piu_bassi": [
     [
      1.619,
@@ -318,6 +318,14 @@
      false
     ],
     [
+     1.639,
+     "17918",
+     "di vincenzo gennaro",
+     "Calvizzano",
+     "NA",
+     false
+    ],
+    [
      1.649,
      "50492",
      "STAZIONE DI SERVIZIO ENI di Valsecchi Andrea",
@@ -331,14 +339,6 @@
      "ZENO CIRO",
      "Torre Del Greco",
      "NA",
-     false
-    ],
-    [
-     1.669,
-     "6681",
-     "FROSINONE SS. 155 KM 0 767",
-     "Frosinone",
-     "FR",
      false
     ]
    ],
@@ -378,13 +378,13 @@
    ]
   },
   "G0": {
-   "n": 1850,
+   "n": 1845,
    "min": 0.549,
-   "p5": 0.766,
-   "med": 0.839,
-   "p95": 0.945,
+   "p5": 0.76,
+   "med": 0.844,
+   "p95": 0.949,
    "max": 1.124,
-   "sotto_1.7": 1850,
+   "sotto_1.7": 1845,
    "sopra_2.4": 0,
    "piu_bassi": [
     [
@@ -566,14 +566,14 @@
    ]
   },
   "M0": {
-   "n": 596,
+   "n": 589,
    "min": 0.936,
-   "p5": 1.797,
-   "med": 2.197,
+   "p5": 1.789,
+   "med": 2.195,
    "p95": 2.499,
    "max": 4.999,
-   "sotto_1.7": 26,
-   "sopra_2.4": 44,
+   "sotto_1.7": 27,
+   "sopra_2.4": 45,
    "piu_bassi": [
     [
      0.936,
@@ -660,14 +660,14 @@
    ]
   },
   "M1": {
-   "n": 38,
+   "n": 39,
    "min": 1.699,
    "p5": 1.749,
    "med": 2.179,
    "p95": 2.499,
-   "max": 2.499,
+   "max": 2.599,
    "sotto_1.7": 1,
-   "sopra_2.4": 3,
+   "sopra_2.4": 4,
    "piu_bassi": [
     [
      1.699,
@@ -720,14 +720,6 @@
    ],
    "piu_alti": [
     [
-     2.359,
-     "58534",
-     "CIS NORD - VILLA BAGNO",
-     "Reggio Nell'Emilia",
-     "RE",
-     false
-    ],
-    [
      2.479,
      "54357",
      "KEROPETROL SPA MIRANDOLA",
@@ -737,17 +729,25 @@
     ],
     [
      2.499,
-     "20257",
-     "Q8 Eisenstecken Mebo 20",
-     "Bolzano",
+     "49587",
+     "MEBORAST",
+     "Appiano Sulla Strada Del Vino",
      "BZ",
      false
     ],
     [
      2.499,
-     "49587",
-     "MEBORAST",
-     "Appiano Sulla Strada Del Vino",
+     "50393",
+     "Delta Petroli Srl (CZ)",
+     "Catanzaro",
+     "CZ",
+     false
+    ],
+    [
+     2.599,
+     "20257",
+     "Q8 Eisenstecken Mebo 20",
+     "Bolzano",
      "BZ",
      false
     ]
