@@ -1,15 +1,15 @@
 {
- "date": "2026-11-21",
+ "date": "2026-11-22",
  "keys": {
   "B0": {
-   "n": 6229,
+   "n": 6207,
    "min": 1.569,
    "p5": 1.899,
    "med": 2.129,
    "p95": 2.249,
    "max": 2.999,
    "sotto_1.7": 1,
-   "sopra_2.4": 43,
+   "sopra_2.4": 44,
    "piu_bassi": [
     [
      1.569,
@@ -17,6 +17,14 @@
      "Via Degli Angeli",
      "Roma",
      "RM",
+     false
+    ],
+    [
+     1.735,
+     "20970",
+     "b.oil srl",
+     "Napoli",
+     "NA",
      false
     ],
     [
@@ -36,39 +44,23 @@
      false
     ],
     [
+     1.755,
+     "55410",
+     "MM CARBUARNTI ",
+     "Napoli",
+     "NA",
+     false
+    ],
+    [
      1.759,
      "54145",
      "STAR OIL",
      "Avezzano",
      "AQ",
      false
-    ],
-    [
-     1.789,
-     "37062",
-     "AdS Agip - Candela Casello A16",
-     "Candela",
-     "FG",
-     false
-    ],
-    [
-     1.799,
-     "41226",
-     "fuccifuel",
-     "Andria",
-     "BT",
-     false
     ]
    ],
    "piu_alti": [
-    [
-     2.763,
-     "61340",
-     "Gestore MBL srl",
-     "Capraia Isola",
-     "LI",
-     false
-    ],
     [
      2.789,
      "15315",
@@ -86,6 +78,14 @@
      false
     ],
     [
+     2.899,
+     "60725",
+     "SERVICE CAR SAS",
+     "Caserta",
+     "CE",
+     false
+    ],
+    [
      2.999,
      "59919",
      "SANTORO PETROLI -  TORELLA DEI LOMBARDI",
@@ -96,13 +96,13 @@
    ]
   },
   "B1": {
-   "n": 8672,
+   "n": 8632,
    "min": 1.569,
-   "p5": 1.898,
+   "p5": 1.897,
    "med": 1.939,
    "p95": 1.999,
    "max": 2.789,
-   "sotto_1.7": 5,
+   "sotto_1.7": 6,
    "sopra_2.4": 16,
    "piu_bassi": [
     [
@@ -119,6 +119,14 @@
      "ALA TERRICCIOLA",
      "Terricciola",
      "PI",
+     false
+    ],
+    [
+     1.659,
+     "17918",
+     "di vincenzo gennaro",
+     "Calvizzano",
+     "NA",
      false
     ],
     [
@@ -143,14 +151,6 @@
      "56140 ENI",
      "Napoli",
      "NA",
-     false
-    ],
-    [
-     1.709,
-     "59989",
-     "Easy Service, Via Aurelia",
-     "Roma",
-     "RM",
      false
     ]
    ],
@@ -190,14 +190,14 @@
    ]
   },
   "D0": {
-   "n": 6211,
+   "n": 6187,
    "min": 1.659,
-   "p5": 2.168,
+   "p5": 2.167,
    "med": 2.379,
    "p95": 2.499,
    "max": 3.189,
    "sotto_1.7": 2,
-   "sopra_2.4": 2540,
+   "sopra_2.4": 2535,
    "piu_bassi": [
     [
      1.659,
@@ -284,14 +284,14 @@
    ]
   },
   "D1": {
-   "n": 8665,
+   "n": 8624,
    "min": 1.619,
-   "p5": 2.159,
+   "p5": 2.158,
    "med": 2.199,
    "p95": 2.269,
    "max": 2.799,
-   "sotto_1.7": 8,
-   "sopra_2.4": 60,
+   "sotto_1.7": 9,
+   "sopra_2.4": 59,
    "piu_bassi": [
     [
      1.619,
@@ -318,6 +318,14 @@
      false
     ],
     [
+     1.639,
+     "17918",
+     "di vincenzo gennaro",
+     "Calvizzano",
+     "NA",
+     false
+    ],
+    [
      1.649,
      "50492",
      "STAZIONE DI SERVIZIO ENI di Valsecchi Andrea",
@@ -331,14 +339,6 @@
      "ZENO CIRO",
      "Torre Del Greco",
      "NA",
-     false
-    ],
-    [
-     1.669,
-     "6681",
-     "FROSINONE SS. 155 KM 0 767",
-     "Frosinone",
-     "FR",
      false
     ]
    ],
@@ -378,13 +378,13 @@
    ]
   },
   "G0": {
-   "n": 1860,
+   "n": 1850,
    "min": 0.549,
    "p5": 0.769,
-   "med": 0.844,
+   "med": 0.846,
    "p95": 0.949,
-   "max": 1.124,
-   "sotto_1.7": 1860,
+   "max": 1.219,
+   "sotto_1.7": 1850,
    "sopra_2.4": 0,
    "piu_bassi": [
     [
@@ -392,14 +392,6 @@
      "32490",
      "CASTEL VOLTURNO SS 7/IV DOMITIANA KM 30+800",
      "Castel Volturno",
-     "CE",
-     false
-    ],
-    [
-     0.669,
-     "55084",
-     "GREEN GAS  STAZIONE DI SERVIZIO ",
-     "San Cipriano D'Aversa",
      "CE",
      false
     ],
@@ -434,6 +426,14 @@
      "San Miniato",
      "PI",
      false
+    ],
+    [
+     0.699,
+     "51220",
+     "USAGAS SRL",
+     "San Giuseppe Vesuviano",
+     "NA",
+     false
     ]
    ],
    "piu_alti": [
@@ -443,14 +443,6 @@
      "Gas Point",
      "Mineo",
      "CT",
-     false
-    ],
-    [
-     1.099,
-     "14928",
-     "SP Energia Siciliana",
-     "Borgetto",
-     "PA",
      false
     ],
     [
@@ -467,6 +459,14 @@
      "BREAK POINT",
      "Mamoiada",
      "NU",
+     false
+    ],
+    [
+     1.219,
+     "14928",
+     "SP Energia Siciliana",
+     "Borgetto",
+     "PA",
      false
     ]
    ]
@@ -566,14 +566,14 @@
    ]
   },
   "M0": {
-   "n": 597,
+   "n": 588,
    "min": 0.936,
-   "p5": 1.797,
-   "med": 2.19,
+   "p5": 1.788,
+   "med": 2.189,
    "p95": 2.499,
    "max": 4.999,
-   "sotto_1.7": 26,
-   "sopra_2.4": 45,
+   "sotto_1.7": 28,
+   "sopra_2.4": 42,
    "piu_bassi": [
     [
      0.936,
@@ -660,7 +660,7 @@
    ]
   },
   "M1": {
-   "n": 38,
+   "n": 39,
    "min": 1.699,
    "p5": 1.749,
    "med": 2.149,
