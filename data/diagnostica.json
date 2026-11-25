@@ -1,10 +1,10 @@
 {
- "date": "2026-11-24",
+ "date": "2026-11-25",
  "keys": {
   "B0": {
-   "n": 6168,
+   "n": 6158,
    "min": 1.569,
-   "p5": 1.898,
+   "p5": 1.895,
    "med": 2.119,
    "p95": 2.249,
    "max": 2.999,
@@ -20,22 +20,6 @@
      false
     ],
     [
-     1.735,
-     "20970",
-     "b.oil srl",
-     "Napoli",
-     "NA",
-     false
-    ],
-    [
-     1.735,
-     "55410",
-     "MM CARBUARNTI ",
-     "Napoli",
-     "NA",
-     false
-    ],
-    [
      1.739,
      "54145",
      "STAR OIL",
@@ -44,18 +28,34 @@
      false
     ],
     [
-     1.744,
-     "14328",
-     "MYLTON S.R.L.",
+     1.745,
+     "57528",
+     "via argine 425",
      "Napoli",
      "NA",
      false
     ],
     [
-     1.745,
-     "57528",
-     "via argine 425",
-     "Napoli",
+     1.749,
+     "33454",
+     "ZENO CIRO",
+     "Torre Del Greco",
+     "NA",
+     false
+    ],
+    [
+     1.77,
+     "51685",
+     "Easy Mariglianella",
+     "Mariglianella",
+     "NA",
+     false
+    ],
+    [
+     1.775,
+     "64084",
+     "BNC POWER SRL - Mariglianella",
+     "Mariglianella",
      "NA",
      false
     ]
@@ -97,22 +97,14 @@
   },
   "B1": {
    "n": 8576,
-   "min": 1.199,
-   "p5": 1.889,
-   "med": 1.939,
+   "min": 1.569,
+   "p5": 1.879,
+   "med": 1.934,
    "p95": 1.999,
    "max": 2.789,
-   "sotto_1.7": 7,
+   "sotto_1.7": 5,
    "sopra_2.4": 16,
    "piu_bassi": [
-    [
-     1.199,
-     "61558",
-     "IB 19- IBLEA PETROLI - MIRTO",
-     "Mirto",
-     "ME",
-     false
-    ],
     [
      1.569,
      "36845",
@@ -130,14 +122,6 @@
      false
     ],
     [
-     1.659,
-     "17918",
-     "di vincenzo gennaro",
-     "Calvizzano",
-     "NA",
-     false
-    ],
-    [
      1.668,
      "50492",
      "STAZIONE DI SERVIZIO ENI di Valsecchi Andrea",
@@ -151,6 +135,22 @@
      "IP San Romano",
      "Montopoli In Val D'Arno",
      "PI",
+     false
+    ],
+    [
+     1.699,
+     "53725",
+     "56140 ENI",
+     "Napoli",
+     "NA",
+     false
+    ],
+    [
+     1.709,
+     "59989",
+     "Easy Service, Via Aurelia",
+     "Roma",
+     "RM",
      false
     ]
    ],
@@ -190,14 +190,14 @@
    ]
   },
   "D0": {
-   "n": 6147,
+   "n": 6138,
    "min": 1.659,
-   "p5": 2.159,
-   "med": 2.379,
+   "p5": 2.155,
+   "med": 2.369,
    "p95": 2.499,
    "max": 3.189,
    "sotto_1.7": 2,
-   "sopra_2.4": 2473,
+   "sopra_2.4": 2436,
    "piu_bassi": [
     [
      1.659,
@@ -284,14 +284,14 @@
    ]
   },
   "D1": {
-   "n": 8566,
+   "n": 8565,
    "min": 1.619,
    "p5": 2.149,
    "med": 2.199,
-   "p95": 2.259,
+   "p95": 2.258,
    "max": 2.799,
    "sotto_1.7": 9,
-   "sopra_2.4": 52,
+   "sopra_2.4": 46,
    "piu_bassi": [
     [
      1.619,
@@ -318,11 +318,11 @@
      false
     ],
     [
-     1.639,
-     "17918",
-     "di vincenzo gennaro",
-     "Calvizzano",
-     "NA",
+     1.647,
+     "26981",
+     "Fra.Ro.Ma (Nautico)",
+     "Venezia",
+     "VE",
      false
     ],
     [
@@ -378,13 +378,13 @@
    ]
   },
   "G0": {
-   "n": 1830,
+   "n": 1840,
    "min": 0.549,
-   "p5": 0.774,
-   "med": 0.848,
+   "p5": 0.779,
+   "med": 0.847,
    "p95": 0.949,
    "max": 1.219,
-   "sotto_1.7": 1830,
+   "sotto_1.7": 1840,
    "sopra_2.4": 0,
    "piu_bassi": [
     [
@@ -396,11 +396,19 @@
      false
     ],
     [
+     0.649,
+     "13558",
+     "BO.GA PETROLI",
+     "Giugliano In Campania",
+     "NA",
+     false
+    ],
+    [
      0.669,
-     "59551",
-     "SHELL BERGAMO",
-     "Bergamo",
-     "BG",
+     "55084",
+     "GREEN GAS  STAZIONE DI SERVIZIO ",
+     "San Cipriano D'Aversa",
+     "CE",
      false
     ],
     [
@@ -425,14 +433,6 @@
      "USAGAS SRL",
      "San Giuseppe Vesuviano",
      "NA",
-     false
-    ],
-    [
-     0.699,
-     "53841",
-     "AG012",
-     "Ribera",
-     "AG",
      false
     ]
    ],
@@ -472,13 +472,13 @@
    ]
   },
   "G1": {
-   "n": 78,
+   "n": 76,
    "min": 0.699,
    "p5": 0.725,
    "med": 0.839,
    "p95": 0.958,
    "max": 0.999,
-   "sotto_1.7": 78,
+   "sotto_1.7": 76,
    "sopra_2.4": 0,
    "piu_bassi": [
     [
@@ -566,14 +566,14 @@
    ]
   },
   "M0": {
-   "n": 582,
+   "n": 586,
    "min": 0.936,
-   "p5": 1.789,
-   "med": 2.179,
+   "p5": 1.799,
+   "med": 2.189,
    "p95": 2.499,
    "max": 4.999,
-   "sotto_1.7": 27,
-   "sopra_2.4": 44,
+   "sotto_1.7": 24,
+   "sopra_2.4": 47,
    "piu_bassi": [
     [
      0.936,
@@ -616,11 +616,11 @@
      false
     ],
     [
-     1.399,
-     "59551",
-     "SHELL BERGAMO",
-     "Bergamo",
-     "BG",
+     1.49,
+     "63365",
+     "G.D.M. S.N.C. DI MARGHERITA GIUSEPPE, DONATO E MARIO",
+     "Viggiano",
+     "PZ",
      false
     ]
    ],
@@ -660,10 +660,10 @@
    ]
   },
   "M1": {
-   "n": 38,
+   "n": 37,
    "min": 1.699,
    "p5": 1.799,
-   "med": 2.149,
+   "med": 2.099,
    "p95": 2.599,
    "max": 2.599,
    "sotto_1.7": 1,

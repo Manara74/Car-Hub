@@ -1,2 +1,1 @@
-Ricerca «prezzi carburanti benzina gasolio» non riuscita: HTTP Error 429: Too Many Requests
 Titoli salvati: 12
