@@ -1,12 +1,12 @@
 {
- "date": "2026-11-25",
+ "date": "2026-11-26",
  "keys": {
   "B0": {
-   "n": 6158,
+   "n": 6169,
    "min": 1.569,
-   "p5": 1.895,
-   "med": 2.119,
-   "p95": 2.249,
+   "p5": 1.889,
+   "med": 2.109,
+   "p95": 2.239,
    "max": 2.999,
    "sotto_1.7": 1,
    "sopra_2.4": 40,
@@ -20,11 +20,27 @@
      false
     ],
     [
+     1.735,
+     "20970",
+     "b.oil srl",
+     "Napoli",
+     "NA",
+     false
+    ],
+    [
      1.739,
      "54145",
      "STAR OIL",
      "Avezzano",
      "AQ",
+     false
+    ],
+    [
+     1.744,
+     "14328",
+     "MYLTON S.R.L.",
+     "Napoli",
+     "NA",
      false
     ],
     [
@@ -42,33 +58,9 @@
      "Torre Del Greco",
      "NA",
      false
-    ],
-    [
-     1.77,
-     "51685",
-     "Easy Mariglianella",
-     "Mariglianella",
-     "NA",
-     false
-    ],
-    [
-     1.775,
-     "64084",
-     "BNC POWER SRL - Mariglianella",
-     "Mariglianella",
-     "NA",
-     false
     ]
    ],
    "piu_alti": [
-    [
-     2.763,
-     "61340",
-     "Gestore MBL srl",
-     "Capraia Isola",
-     "LI",
-     false
-    ],
     [
      2.789,
      "15315",
@@ -86,6 +78,14 @@
      false
     ],
     [
+     2.899,
+     "60725",
+     "SERVICE CAR SAS",
+     "Caserta",
+     "CE",
+     false
+    ],
+    [
      2.999,
      "59919",
      "SANTORO PETROLI -  TORELLA DEI LOMBARDI",
@@ -96,13 +96,13 @@
    ]
   },
   "B1": {
-   "n": 8576,
+   "n": 8571,
    "min": 1.569,
-   "p5": 1.879,
-   "med": 1.934,
+   "p5": 1.877,
+   "med": 1.92,
    "p95": 1.999,
    "max": 2.789,
-   "sotto_1.7": 5,
+   "sotto_1.7": 6,
    "sopra_2.4": 16,
    "piu_bassi": [
     [
@@ -119,6 +119,14 @@
      "ALA TERRICCIOLA",
      "Terricciola",
      "PI",
+     false
+    ],
+    [
+     1.659,
+     "17918",
+     "di vincenzo gennaro",
+     "Calvizzano",
+     "NA",
      false
     ],
     [
@@ -143,14 +151,6 @@
      "56140 ENI",
      "Napoli",
      "NA",
-     false
-    ],
-    [
-     1.709,
-     "59989",
-     "Easy Service, Via Aurelia",
-     "Roma",
-     "RM",
      false
     ]
    ],
@@ -190,14 +190,14 @@
    ]
   },
   "D0": {
-   "n": 6138,
+   "n": 6146,
    "min": 1.659,
-   "p5": 2.155,
+   "p5": 2.149,
    "med": 2.369,
    "p95": 2.499,
    "max": 3.189,
    "sotto_1.7": 2,
-   "sopra_2.4": 2436,
+   "sopra_2.4": 2403,
    "piu_bassi": [
     [
      1.659,
@@ -284,15 +284,23 @@
    ]
   },
   "D1": {
-   "n": 8565,
-   "min": 1.619,
-   "p5": 2.149,
-   "med": 2.199,
-   "p95": 2.258,
+   "n": 8558,
+   "min": 1.198,
+   "p5": 2.145,
+   "med": 2.198,
+   "p95": 2.249,
    "max": 2.799,
-   "sotto_1.7": 9,
-   "sopra_2.4": 46,
+   "sotto_1.7": 11,
+   "sopra_2.4": 40,
    "piu_bassi": [
+    [
+     1.198,
+     "60489",
+     "EUROPAM - CASTELFRANCO VENETO",
+     "Castelfranco Veneto",
+     "TV",
+     false
+    ],
     [
      1.619,
      "62020",
@@ -318,27 +326,19 @@
      false
     ],
     [
+     1.639,
+     "17918",
+     "di vincenzo gennaro",
+     "Calvizzano",
+     "NA",
+     false
+    ],
+    [
      1.647,
      "26981",
      "Fra.Ro.Ma (Nautico)",
      "Venezia",
      "VE",
-     false
-    ],
-    [
-     1.649,
-     "50492",
-     "STAZIONE DI SERVIZIO ENI di Valsecchi Andrea",
-     "Bergamo",
-     "BG",
-     false
-    ],
-    [
-     1.659,
-     "33454",
-     "ZENO CIRO",
-     "Torre Del Greco",
-     "NA",
      false
     ]
    ],
@@ -378,13 +378,13 @@
    ]
   },
   "G0": {
-   "n": 1840,
+   "n": 1835,
    "min": 0.549,
    "p5": 0.779,
-   "med": 0.847,
+   "med": 0.848,
    "p95": 0.949,
    "max": 1.219,
-   "sotto_1.7": 1840,
+   "sotto_1.7": 1835,
    "sopra_2.4": 0,
    "piu_bassi": [
     [
@@ -392,22 +392,6 @@
      "32490",
      "CASTEL VOLTURNO SS 7/IV DOMITIANA KM 30+800",
      "Castel Volturno",
-     "CE",
-     false
-    ],
-    [
-     0.649,
-     "13558",
-     "BO.GA PETROLI",
-     "Giugliano In Campania",
-     "NA",
-     false
-    ],
-    [
-     0.669,
-     "55084",
-     "GREEN GAS  STAZIONE DI SERVIZIO ",
-     "San Cipriano D'Aversa",
      "CE",
      false
     ],
@@ -433,6 +417,22 @@
      "USAGAS SRL",
      "San Giuseppe Vesuviano",
      "NA",
+     false
+    ],
+    [
+     0.699,
+     "53841",
+     "AG012",
+     "Ribera",
+     "AG",
+     false
+    ],
+    [
+     0.699,
+     "58665",
+     "IP - FAGGIANO SP105 KM 1.100",
+     "Faggiano",
+     "TA",
      false
     ]
    ],
@@ -472,13 +472,13 @@
    ]
   },
   "G1": {
-   "n": 76,
+   "n": 77,
    "min": 0.699,
    "p5": 0.725,
-   "med": 0.839,
+   "med": 0.829,
    "p95": 0.958,
    "max": 0.999,
-   "sotto_1.7": 76,
+   "sotto_1.7": 77,
    "sopra_2.4": 0,
    "piu_bassi": [
     [
@@ -566,14 +566,14 @@
    ]
   },
   "M0": {
-   "n": 586,
+   "n": 578,
    "min": 0.936,
-   "p5": 1.799,
+   "p5": 1.797,
    "med": 2.189,
    "p95": 2.499,
    "max": 4.999,
-   "sotto_1.7": 24,
-   "sopra_2.4": 47,
+   "sotto_1.7": 25,
+   "sopra_2.4": 44,
    "piu_bassi": [
     [
      0.936,
@@ -660,10 +660,10 @@
    ]
   },
   "M1": {
-   "n": 37,
+   "n": 38,
    "min": 1.699,
    "p5": 1.799,
-   "med": 2.099,
+   "med": 2.149,
    "p95": 2.599,
    "max": 2.599,
    "sotto_1.7": 1,
