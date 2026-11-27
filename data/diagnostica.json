@@ -1,15 +1,15 @@
 {
- "date": "2026-11-26",
+ "date": "2026-11-27",
  "keys": {
   "B0": {
-   "n": 6169,
+   "n": 6166,
    "min": 1.569,
-   "p5": 1.889,
-   "med": 2.109,
+   "p5": 1.879,
+   "med": 2.099,
    "p95": 2.239,
-   "max": 2.999,
+   "max": 3.85,
    "sotto_1.7": 1,
-   "sopra_2.4": 40,
+   "sopra_2.4": 41,
    "piu_bassi": [
     [
      1.569,
@@ -20,27 +20,11 @@
      false
     ],
     [
-     1.735,
-     "20970",
-     "b.oil srl",
-     "Napoli",
-     "NA",
-     false
-    ],
-    [
      1.739,
      "54145",
      "STAR OIL",
      "Avezzano",
      "AQ",
-     false
-    ],
-    [
-     1.744,
-     "14328",
-     "MYLTON S.R.L.",
-     "Napoli",
-     "NA",
      false
     ],
     [
@@ -56,6 +40,22 @@
      "33454",
      "ZENO CIRO",
      "Torre Del Greco",
+     "NA",
+     false
+    ],
+    [
+     1.77,
+     "51685",
+     "Easy Mariglianella",
+     "Mariglianella",
+     "NA",
+     false
+    ],
+    [
+     1.775,
+     "64084",
+     "BNC POWER SRL - Mariglianella",
+     "Mariglianella",
      "NA",
      false
     ]
@@ -78,31 +78,31 @@
      false
     ],
     [
-     2.899,
-     "60725",
-     "SERVICE CAR SAS",
-     "Caserta",
-     "CE",
-     false
-    ],
-    [
      2.999,
      "59919",
      "SANTORO PETROLI -  TORELLA DEI LOMBARDI",
      "Torella Dei Lombardi",
      "AV",
      false
+    ],
+    [
+     3.85,
+     "17435",
+     "EniCafè Arseni Sergio",
+     "Cavallino",
+     "LE",
+     false
     ]
    ]
   },
   "B1": {
-   "n": 8571,
+   "n": 8581,
    "min": 1.569,
-   "p5": 1.877,
+   "p5": 1.869,
    "med": 1.92,
-   "p95": 1.999,
+   "p95": 1.997,
    "max": 2.789,
-   "sotto_1.7": 6,
+   "sotto_1.7": 5,
    "sopra_2.4": 16,
    "piu_bassi": [
     [
@@ -119,14 +119,6 @@
      "ALA TERRICCIOLA",
      "Terricciola",
      "PI",
-     false
-    ],
-    [
-     1.659,
-     "17918",
-     "di vincenzo gennaro",
-     "Calvizzano",
-     "NA",
      false
     ],
     [
@@ -151,6 +143,14 @@
      "56140 ENI",
      "Napoli",
      "NA",
+     false
+    ],
+    [
+     1.709,
+     "59989",
+     "Easy Service, Via Aurelia",
+     "Roma",
+     "RM",
      false
     ]
    ],
@@ -190,14 +190,14 @@
    ]
   },
   "D0": {
-   "n": 6146,
+   "n": 6144,
    "min": 1.659,
    "p5": 2.149,
    "med": 2.369,
    "p95": 2.499,
-   "max": 3.189,
+   "max": 4.41,
    "sotto_1.7": 2,
-   "sopra_2.4": 2403,
+   "sopra_2.4": 2364,
    "piu_bassi": [
     [
      1.659,
@@ -250,14 +250,6 @@
    ],
    "piu_alti": [
     [
-     2.899,
-     "62304",
-     "DAL ZOTTO S.A.S.",
-     "Pantelleria",
-     "TP",
-     false
-    ],
-    [
      2.999,
      "59919",
      "SANTORO PETROLI -  TORELLA DEI LOMBARDI",
@@ -280,17 +272,25 @@
      "Villanova Mondovì",
      "CN",
      false
+    ],
+    [
+     4.41,
+     "17435",
+     "EniCafè Arseni Sergio",
+     "Cavallino",
+     "LE",
+     false
     ]
    ]
   },
   "D1": {
-   "n": 8558,
+   "n": 8569,
    "min": 1.198,
-   "p5": 2.145,
-   "med": 2.198,
-   "p95": 2.249,
+   "p5": 2.139,
+   "med": 2.196,
+   "p95": 2.246,
    "max": 2.799,
-   "sotto_1.7": 11,
+   "sotto_1.7": 10,
    "sopra_2.4": 40,
    "piu_bassi": [
     [
@@ -326,19 +326,19 @@
      false
     ],
     [
-     1.639,
-     "17918",
-     "di vincenzo gennaro",
-     "Calvizzano",
-     "NA",
-     false
-    ],
-    [
      1.647,
      "26981",
      "Fra.Ro.Ma (Nautico)",
      "Venezia",
      "VE",
+     false
+    ],
+    [
+     1.649,
+     "50492",
+     "STAZIONE DI SERVIZIO ENI di Valsecchi Andrea",
+     "Bergamo",
+     "BG",
      false
     ]
    ],
@@ -378,13 +378,13 @@
    ]
   },
   "G0": {
-   "n": 1835,
+   "n": 1841,
    "min": 0.549,
    "p5": 0.779,
-   "med": 0.848,
+   "med": 0.847,
    "p95": 0.949,
    "max": 1.219,
-   "sotto_1.7": 1835,
+   "sotto_1.7": 1841,
    "sopra_2.4": 0,
    "piu_bassi": [
     [
@@ -392,6 +392,14 @@
      "32490",
      "CASTEL VOLTURNO SS 7/IV DOMITIANA KM 30+800",
      "Castel Volturno",
+     "CE",
+     false
+    ],
+    [
+     0.669,
+     "55084",
+     "GREEN GAS  STAZIONE DI SERVIZIO ",
+     "San Cipriano D'Aversa",
      "CE",
      false
     ],
@@ -425,14 +433,6 @@
      "AG012",
      "Ribera",
      "AG",
-     false
-    ],
-    [
-     0.699,
-     "58665",
-     "IP - FAGGIANO SP105 KM 1.100",
-     "Faggiano",
-     "TA",
      false
     ]
    ],
@@ -472,13 +472,13 @@
    ]
   },
   "G1": {
-   "n": 77,
+   "n": 74,
    "min": 0.699,
    "p5": 0.725,
-   "med": 0.829,
+   "med": 0.839,
    "p95": 0.958,
    "max": 0.999,
-   "sotto_1.7": 77,
+   "sotto_1.7": 74,
    "sopra_2.4": 0,
    "piu_bassi": [
     [
@@ -566,14 +566,14 @@
    ]
   },
   "M0": {
-   "n": 578,
+   "n": 586,
    "min": 0.936,
-   "p5": 1.797,
+   "p5": 1.799,
    "med": 2.189,
    "p95": 2.499,
    "max": 4.999,
-   "sotto_1.7": 25,
-   "sopra_2.4": 44,
+   "sotto_1.7": 24,
+   "sopra_2.4": 46,
    "piu_bassi": [
     [
      0.936,
@@ -626,19 +626,19 @@
    ],
    "piu_alti": [
     [
-     2.799,
-     "4008",
-     "METANO ROMEA s.r.l.s.",
-     "Comacchio",
-     "FE",
-     false
-    ],
-    [
      2.809,
      "60977",
      "TPXX6",
      "Mazara Del Vallo",
      "TP",
+     false
+    ],
+    [
+     2.999,
+     "42534",
+     "DR CARBURANTI",
+     "Castello Di Cisterna",
+     "NA",
      false
     ],
     [
@@ -660,10 +660,10 @@
    ]
   },
   "M1": {
-   "n": 38,
+   "n": 37,
    "min": 1.699,
    "p5": 1.799,
-   "med": 2.149,
+   "med": 2.099,
    "p95": 2.599,
    "max": 2.599,
    "sotto_1.7": 1,
